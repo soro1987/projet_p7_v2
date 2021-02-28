@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Mes emprunts</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../css/modern-business.css" rel="stylesheet">
+
+</head>
+<style>
+    body {
+    background: radial-gradient(circle at bottom, #7efff5 0%, #ffcccc 100%);
+
+}
+  </style>
+<body>
+<!-- Navigation -->
+<th:block th:insert="fragments/navbar::navbar"></th:block>
+
+<!-- Page Content -->
+<div class="container">
+
+    <!-- Page Heading/Breadcrumbs -->
+    <h1 class="mt-4 mb-3">Mes emprunts
+        <small></small>
+    </h1>
+
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a th:href="@{/accueil}">Acceuil</a>
+        </li>
+    </ol>
+    <div class="row">
+        <th:block th:each="emprunt : ${emprunts}">
+            <!-- Content Row -->
+
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100">
+                    <h3 class="card-header" style="background-color: #ff9ff3">Numéro d'emprunts : <span th:text="${emprunt.id}"></span></h3>
+                    <div class="card-body" style="background-color:#ffdd59">
+                        <div class="border-text">Date limite : <span th:class="border-text"
+                                                                     th:text="${emprunt.dateEcheance}"></span></div>
+                        <th:block th:if="${emprunt.prolongation == false}">
+                            <a th:href="@{/user/prolonger/emprunts/{id}(id=${emprunt.id})}" th:object="${userLogin}"
+                               class="btn btn-primary">Prolonger!</a>
+                        </th:block>
+                        <th:block th:if="${emprunt.prolongation ==  true}">
+                            <span class="badge badge-danger">Prolongation utiliser</span>
+                        </th:block>
+                    </div>
+                </div>
+                <!--           <th:block th:each="exemplaire : ${emprunt.exemplaires}"> -->
+
+                <!--           <ul class="list-group list-group-flush"> -->
+                <!--             <li th:each="ouvrage : ${exemplaire.ouvrage}" class="list-group-item">Ouvrage :  <span th:text="${ouvrage.titre}"></span></li> -->
+                <!--           </ul> -->
+                <!--           <a href="#" class="btn btn-primary">Prolonger!</a> -->
+
+                <!--           </th:block> -->
+            </div>
+    </div>
+    </th:block>
+</div>
+<!-- /.row -->
+
+</div>
+<!-- /.container -->
+<br><br><br><br><br><br><br><br><br><br><br><br><br>
+<!-- Footer -->
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+    </div>
+    <!-- /.container -->
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+<script src="../vendor/jquery/jquery.min.js"></script>
+<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

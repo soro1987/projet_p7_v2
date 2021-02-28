@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Recherche</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/modern-business.css" rel="stylesheet">
+
+    <!-- Custom styles  -->
+    <link href="css/selfStyle.css" rel="stylesheet">
+
+<style>
+  body {
+  background: radial-gradient(circle at bottom, #fffa65 0%, #ffcccc 100%);
+
+  }
+  .radial-gradient{
+  background: radial-gradient(circle at bottom, #f5f6fa 0%, #dff9fb 100%);
+  border-radius: 30px;
+  }
+
+
+  }
+  </style>
+</head>
+
+<body>
+<th:block th:insert="fragments/navbar::navbar"></th:block>
+<!-- Page Content -->
+<div class="container">
+    <!-- Page Heading/Breadcrumbs -->
+    <br><br>
+    <ol class="breadcrumb radial-gradient">
+        <li class="breadcrumb-item">
+            <h4 class="align-center ">Effectuer votre recherche</h4>
+        </li>
+    </ol>
+
+        <!-- Search Widget -->
+    <div class="row " >
+        <div class="col-md-8 ">
+            <div class="card-body">
+                <form class="form-inline form-group  mx-auto mt-1 " th:action="@{/search}" method="get" >
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Titre ou auteur" name="motcle">&nbsp&nbsp
+                        <span class="input-group-append">
+                <button class="btn btn-outline-info" type="submit">Go!</button>
+              </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <div class="row">
+
+        <!-- Blog Entries Column -->
+        <div class="col-md-8">
+
+            <!-- Blog Post -->
+            <th:block th:each="ouvrage : ${ouvragesRechercher}">
+                <div class="card mb-4">
+                    <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
+                    <div class="card-body">
+                        <h2 class="card-title" th:text="${ouvrage.titre}"></h2>
+                        <small th:text="${ouvrage.auteur}"></small>
+                        <p class="card-text" th:text="${ouvrage.description}"></p>
+                        <!--             Verifier dispo ds differente biblio -->
+                        <form class="form-inline form-group  mx-auto mt-1" th:action="@{/dispo/{ouvrageId}(ouvrageId=${ouvrage.id})}" method="get" >
+                            <button class="btn btn-secondary" type="submit">Voir disponibilité</button>
+                        </form>
+
+                    </div>
+                    <div class="card-footer text-muted">
+                        Date de parution :  <span th:text="${ouvrage.dateParution}"></span>
+                    </div>
+                </div>
+            </th:block>
+
+
+            <!-- Pagination -->
+            <!--         <ul class="pagination justify-content-center mb-4"> -->
+            <!--           <li class="page-item"> -->
+            <!--             <a class="page-link" href="#">&larr; Older</a> -->
+            <!--           </li> -->
+            <!--           <li class="page-item disabled"> -->
+            <!--             <a class="page-link" href="#">Newer &rarr;</a> -->
+            <!--           </li> -->
+            <!--         </ul> -->
+
+        </div>
+
+        <!-- Sidebar Widgets Column -->
+
+
+            <!-- Categories Widget -->
+
+        <div class="card-body">
+            <h5 class="align-center ">Categories</h5>
+            <div class="row">
+                <div class="col-lg-6">
+
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a class="" th:href ="@{/category/Bande-dessine}">Bande-dessiner</a>
+                        </li>
+                        <li>
+                            <a th:href ="@{/category/roman}">Roman</a>
+                        </li>
+                        <li>
+                            <a th:href ="@{/category/scolaire}">Scolaire</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="col-lg-6">
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a th:href ="@{/category/Histoire}">Histoire</a>
+                        </li>
+                        <li>
+                            <a th:href ="@{/category/Science}">Science</a>
+                        </li>
+                        <li>
+                            <a th:href ="@{/category/Psychologie}">Psychologie</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+
+        </div>
+
+    </div>
+
+    
+    <!-- /.row -->
+
+</div>
+<!-- /.container -->
+<br><br><br><br><br><br><br><br><br><br>        <br><br><br><br><br><br><br><br><br><br>
+
+<!-- Footer -->
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+    </div>
+    <!-- /.container -->
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
