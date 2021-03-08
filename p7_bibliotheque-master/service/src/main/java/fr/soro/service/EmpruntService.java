@@ -1,25 +1,26 @@
 package fr.soro.service;
 
-import fr.soro.entities.Emprunt;
-import fr.soro.entities.Exemplaire;
-import fr.soro.entities.Ouvrage;
-import fr.soro.entities.User;
+import fr.soro.entities.*;
 import fr.soro.repositories.EmpruntRepository;
 import fr.soro.repositories.ExemplaireRepository;
+import fr.soro.repositories.ReservationRepository;
 import fr.soro.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.Trigger;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Service
 public class EmpruntService {
 	@Autowired
 	private EmpruntRepository empruntRepository;
+
+	@Autowired
+	private ReservationRepository reservationRepository;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -115,8 +116,14 @@ public class EmpruntService {
 		exemplaire.setEmprunt(null);
 		exemplaire.setDisponible(true);
 		// check if there are any reservation made for the ouvrage returned
-		Ouvrage ouv = exemplaire.getOuvrage();
+		//Trigger  runs when book is returned
 
+		Ouvrage ouv = exemplaire.getOuvrage();
+		Optional<Reservation> topReserved =
+				reservationRepository.findTopByOuvrageIdOrderByRankAsc(ouv.getId());
+		//Mail sender to alert the No.1 user of availability of the book
+		EmailTemplate
+		//Timer to start 48 hour countdown after user has been alerted of availability
 		this.exemplaireRepository.save(exemplaire);
 		this.empruntRepository.deleteById(idEmprunt);
 	}
