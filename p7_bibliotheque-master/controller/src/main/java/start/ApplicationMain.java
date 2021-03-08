@@ -22,7 +22,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableAutoConfiguration
 @ComponentScan(basePackages = {
 		"start",
-		"controller", 
+        "fr/soro/controller",
 		"fr.soro.service",
 		"fr.soro.security",
 		"fr.soro.security.jwt",

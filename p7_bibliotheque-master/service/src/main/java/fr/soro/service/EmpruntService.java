@@ -2,6 +2,7 @@ package fr.soro.service;
 
 import fr.soro.entities.Emprunt;
 import fr.soro.entities.Exemplaire;
+import fr.soro.entities.Ouvrage;
 import fr.soro.entities.User;
 import fr.soro.repositories.EmpruntRepository;
 import fr.soro.repositories.ExemplaireRepository;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 
 
 @Service
@@ -114,6 +114,9 @@ public class EmpruntService {
 		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
 		exemplaire.setEmprunt(null);
 		exemplaire.setDisponible(true);
+		// check if there are any reservation made for the ouvrage returned
+		Ouvrage ouv = exemplaire.getOuvrage();
+
 		this.exemplaireRepository.save(exemplaire);
 		this.empruntRepository.deleteById(idEmprunt);
 	}

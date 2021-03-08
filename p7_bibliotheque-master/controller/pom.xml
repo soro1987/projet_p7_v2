@@ -8,7 +8,8 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>controller</artifactId>
-        <dependencies>
+	<properties><org.mapstruct.version>1.4.1.Final</org.mapstruct.version></properties>
+	<dependencies>
         <dependency>
 			<groupId>fr.soro</groupId>
 			<artifactId>modele</artifactId>
@@ -26,6 +27,11 @@
             <artifactId>jjwt</artifactId>
             <version>0.8.0</version>
         </dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${org.mapstruct.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
