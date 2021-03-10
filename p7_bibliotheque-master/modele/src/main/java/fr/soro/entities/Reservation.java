@@ -4,6 +4,7 @@ package fr.soro.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "reservation")
@@ -11,7 +12,7 @@ public class Reservation implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @ManyToOne
@@ -25,7 +26,7 @@ public class Reservation implements Serializable {
     private Ouvrage ouvrage;
 
 
-    private int rank;
+    private Integer rank;
 
     public Reservation(User user, Ouvrage ouvrage) {
         this.user = user;
@@ -74,5 +75,18 @@ public class Reservation implements Serializable {
 
     public int getRank() {
         return rank;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation that = (Reservation) o;
+        return Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(dateReservation, that.dateReservation) && Objects.equals(ouvrage, that.ouvrage) && Objects.equals(rank, that.rank);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user, dateReservation, ouvrage, rank);
     }
 }

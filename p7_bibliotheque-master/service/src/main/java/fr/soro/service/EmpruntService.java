@@ -1,32 +1,47 @@
 package fr.soro.service;
 
+import fr.soro.dto.EmailTemplateDTO;
 import fr.soro.entities.*;
-import fr.soro.repositories.EmpruntRepository;
-import fr.soro.repositories.ExemplaireRepository;
-import fr.soro.repositories.ReservationRepository;
-import fr.soro.repositories.UserRepository;
+import fr.soro.repositories.*;
+import fr.soro.utilities.ReservationTimerTask;
+import fr.soro.utilities.ReservationTimers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.Trigger;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 
 @Service
 public class EmpruntService {
+
+	@Autowired
+	private RestTemplate restTemplate;
+
 	@Autowired
 	private EmpruntRepository empruntRepository;
 
 	@Autowired
 	private ReservationRepository reservationRepository;
+
+	@Autowired
+	ReservationTimers timers;
 	
 	@Autowired
 	private UserRepository userRepository;
 	
 	@Autowired
 	private ExemplaireRepository exemplaireRepository;
+
+	@Autowired
+	private OuvrageRepository ouvrageRepository;
+
+	private final String EMAIL_SENDER_SERVICE = "http://localhost:8083/sendEmail";
 
 	public EmpruntService(EmpruntRepository empruntRepository) {
 		this.empruntRepository = empruntRepository;
@@ -111,7 +126,7 @@ public class EmpruntService {
 		return emprunt;
 	}
 
-	public void delete(Long idEmprunt,Long idExmplaire) {
+	public void returnEmprunt(Long idEmprunt, Long idExmplaire) {
 		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
 		exemplaire.setEmprunt(null);
 		exemplaire.setDisponible(true);
@@ -119,14 +134,35 @@ public class EmpruntService {
 		//Trigger  runs when book is returned
 
 		Ouvrage ouv = exemplaire.getOuvrage();
+		ouv.setNbreExemplaireDispo(ouv.getNbreExemplaireDispo() + 1);
+		ouvrageRepository.save(ouv);
+
 		Optional<Reservation> topReserved =
 				reservationRepository.findTopByOuvrageIdOrderByRankAsc(ouv.getId());
-		//Mail sender to alert the No.1 user of availability of the book
-		EmailTemplate
-		//Timer to start 48 hour countdown after user has been alerted of availability
+		if(topReserved.isPresent()) {
+			String email = topReserved.get().getUser().getEmail();
+			//Mail sender to alert the No.1 user of availability of the book
+			EmailTemplateDTO dto = new EmailTemplateDTO(email, ouv.getTitre() + " is available", " This book has become available. " +
+					"You have 48 hours to pick it up.");
+			send_email(dto);
+			//Timer to start 48 hour countdown after user has been alerted of availability
+
+		}
 		this.exemplaireRepository.save(exemplaire);
 		this.empruntRepository.deleteById(idEmprunt);
 	}
-		 
+
+	@Async
+	private void send_email(EmailTemplateDTO dto){
+		ResponseEntity<String> result = restTemplate.postForEntity(EMAIL_SENDER_SERVICE, dto, String.class);
+	}
+
+	@Async
+	private void startTimer(Reservation reservation){
+		Timer timer = new Timer();
+		timer.schedule(new ReservationTimerTask(reservation), 172800000 ); // delay period
+		timers.put(reservation, timer);
+	}
+
 	
 }

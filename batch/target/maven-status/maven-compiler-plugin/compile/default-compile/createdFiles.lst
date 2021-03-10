@@ -1,0 +1,8 @@
+fr/soro/batch/modele/EmpruntDto.class
+fr/soro/batch/client/EmpruntClient.class
+fr/soro/batch/modele/UserDto.class
+fr/soro/batch/MyMailScheduler.class
+fr/soro/batch/service/UserService.class
+fr/soro/batch/service/EmailService.class
+fr/soro/batch/modele/EmailTemplate.class
+fr/soro/batch/BatchApplication.class

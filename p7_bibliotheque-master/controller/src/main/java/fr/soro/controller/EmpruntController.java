@@ -44,7 +44,7 @@ public class EmpruntController {
 
 	@DeleteMapping(value = "/emprunts/delete/{empruntId}/{exemplaireId}")
 	public ResponseEntity<Void> deleteEmprunt(@PathVariable(value = "exemplaireId") Long exemplaireId,@PathVariable(value = "empruntId") Long empruntId) {
-		empruntService.delete( empruntId,exemplaireId);
+		empruntService.returnEmprunt( empruntId,exemplaireId);
 		return new ResponseEntity<Void>(HttpStatus.GONE);
  	}
 

@@ -1,0 +1,7 @@
+fr/soro/service/OuvrageService.class
+fr/soro/service/EmpruntService.class
+fr/soro/service/ReservationService.class
+fr/soro/service/BibliothequeService.class
+fr/soro/service/ExemplaireService.class
+fr/soro/exeption/FunctionalException.class
+fr/soro/service/UserService.class

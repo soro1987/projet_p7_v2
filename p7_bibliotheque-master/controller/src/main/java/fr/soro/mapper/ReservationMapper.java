@@ -11,7 +11,7 @@ public interface ReservationMapper {
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "ouvrage.titre",target = "ouvrageName")
-    @Mapping(source = "user.name",target = "userName")
+    @Mapping(source = "user.nom",target = "userName")
     @Mapping(source = "dateReservation",target = "dateReservation")
     @Mapping(source = "id",target = "id")
     ReservationDto from(Reservation reservation);

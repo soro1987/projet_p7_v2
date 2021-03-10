@@ -30,10 +30,8 @@ import java.io.Serializable;
 
 
 @Entity
-@Table(name="user")
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name="sys_user")
+@Data
 public class User implements UserDetails, Serializable {
     /**
 	 * 
@@ -62,8 +60,8 @@ public class User implements UserDetails, Serializable {
     @NotEmpty
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
+    @ElementCollection(fetch = FetchType.LAZY)
+
     private List<String> roles = new ArrayList<>();
 
     @Override

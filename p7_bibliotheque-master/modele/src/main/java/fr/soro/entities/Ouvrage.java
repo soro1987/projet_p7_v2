@@ -35,7 +35,7 @@ public class Ouvrage implements Serializable {
 	@Lob
 	private byte[] image;
 	@JsonManagedReference(value = "ouvr-ex")
-	@OneToMany(mappedBy = "ouvrage", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "ouvrage", fetch = FetchType.LAZY)
 	private List<Exemplaire> exemplaires;
 
 	public void setNbreExemplaireDispo() {

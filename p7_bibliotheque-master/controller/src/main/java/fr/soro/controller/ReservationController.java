@@ -6,6 +6,7 @@ import fr.soro.entities.Reservation;
 import fr.soro.mapper.ReservationMapper;
 import fr.soro.repositories.ReservationRepository;
 import fr.soro.service.ReservationService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,16 +14,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-//@AllArgsConstructor
+@AllArgsConstructor
 @RestController
 public class ReservationController {
 
-    @Autowired
-    private  ReservationService reservationService;
-    @Autowired
-    private ReservationMapper reservationMapper;
-    @Autowired
-    private  ReservationRepository reservationRepository;
+
+    private final ReservationService reservationService;
+
+    private final ReservationMapper reservationMapper;
+
+    private final ReservationRepository reservationRepository;
 
     @GetMapping(value = "/v1/ouvrages/{id}/reservations")
     public ResponseEntity<Page<ReservationDto>> getReservation(@PathVariable Long id, Pageable pageable) {
