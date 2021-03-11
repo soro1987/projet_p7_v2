@@ -7,9 +7,13 @@ import fr.soro.exeption.FunctionalException;
 import fr.soro.repositories.OuvrageRepository;
 import fr.soro.repositories.ReservationRepository;
 import fr.soro.repositories.UserRepository;
+import fr.soro.utilities.ReservationTimers;
+import fr.soro.utilities.UtilitiesComponent;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.Utilities;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -19,6 +23,10 @@ public class ReservationService {
     private OuvrageRepository ouvrageRepository;
     private UserRepository userRepository;
     private final ReservationRepository reservationRepository;
+    @Autowired
+    ReservationTimers timers;
+    @Autowired
+    UtilitiesComponent utilitiesComponent;
 
     public Reservation createReservation(Long userId, Long ouvrageId){
         User user = this.userRepository.getOne(userId);
@@ -47,6 +55,15 @@ public class ReservationService {
         }
     }
 
+    private void cancelReservation(long reservationId){
+        Optional<Reservation> reservation = reservationRepository.findById(reservationId);
+        if(reservation.isPresent()){
+            Reservation reserved = reservation.get();
+            timers.remove(reserved);
+            reservationRepository.delete(reserved);
+            // sennd email to user telling him his reservation has been cancelled
+        }
+    }
     private void failIfUserAlreadyHasBooking(Reservation reservation) {
         Optional<Reservation> byUserIdAndOuvrageId = reservationRepository
                 .findByUserIdAndOuvrageId(reservation.getUser().getId(), reservation.getOuvrage().getId());

@@ -5,6 +5,7 @@ import fr.soro.entities.*;
 import fr.soro.repositories.*;
 import fr.soro.utilities.ReservationTimerTask;
 import fr.soro.utilities.ReservationTimers;
+import fr.soro.utilities.UtilitiesComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,6 @@ import java.util.*;
 
 @Service
 public class EmpruntService {
-
-	@Autowired
-	private RestTemplate restTemplate;
 
 	@Autowired
 	private EmpruntRepository empruntRepository;
@@ -41,7 +39,8 @@ public class EmpruntService {
 	@Autowired
 	private OuvrageRepository ouvrageRepository;
 
-	private final String EMAIL_SENDER_SERVICE = "http://localhost:8083/sendEmail";
+	@Autowired
+	private UtilitiesComponent utilitiesComponent;
 
 	public EmpruntService(EmpruntRepository empruntRepository) {
 		this.empruntRepository = empruntRepository;
@@ -140,28 +139,19 @@ public class EmpruntService {
 		Optional<Reservation> topReserved =
 				reservationRepository.findTopByOuvrageIdOrderByRankAsc(ouv.getId());
 		if(topReserved.isPresent()) {
-			String email = topReserved.get().getUser().getEmail();
-			//Mail sender to alert the No.1 user of availability of the book
-			EmailTemplateDTO dto = new EmailTemplateDTO(email, ouv.getTitre() + " is available", " This book has become available. " +
-					"You have 48 hours to pick it up.");
-			send_email(dto);
-			//Timer to start 48 hour countdown after user has been alerted of availability
-
+			Reservation topReserrvationOnTheList = topReserved.get();
+			if(!timers.containsKey(topReserrvationOnTheList)) {
+				String email = topReserved.get().getUser().getEmail();
+				//Mail sender to alert the No.1 user of availability of the book
+				EmailTemplateDTO dto = new EmailTemplateDTO(email, ouv.getTitre() + " is available", " This book has become available. " +
+						"You have 48 hours to pick it up.");
+				utilitiesComponent.send_email(dto);
+				//Timer to start 48 hour countdown after user has been alerted of availability
+				utilitiesComponent.startTimer(topReserrvationOnTheList);
+			}
 		}
 		this.exemplaireRepository.save(exemplaire);
 		this.empruntRepository.deleteById(idEmprunt);
-	}
-
-	@Async
-	private void send_email(EmailTemplateDTO dto){
-		ResponseEntity<String> result = restTemplate.postForEntity(EMAIL_SENDER_SERVICE, dto, String.class);
-	}
-
-	@Async
-	private void startTimer(Reservation reservation){
-		Timer timer = new Timer();
-		timer.schedule(new ReservationTimerTask(reservation), 172800000 ); // delay period
-		timers.put(reservation, timer);
 	}
 
 	
