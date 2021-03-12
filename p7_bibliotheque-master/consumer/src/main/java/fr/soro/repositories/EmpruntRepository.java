@@ -18,6 +18,7 @@ public interface EmpruntRepository extends JpaRepository<Emprunt, Long> {
 
 	List<Emprunt> findByDepassement(int depassement);
 
+
 	
 
 }

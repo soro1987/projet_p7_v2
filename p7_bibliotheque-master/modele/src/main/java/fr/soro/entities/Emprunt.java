@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "emprunt")
-public class Emprunt implements Serializable {
+public class Emprunt implements Serializable, Comparable<Emprunt> {
 
 	
 	/**
@@ -120,6 +120,16 @@ public class Emprunt implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	
+
+
+	@Override
+	public int compareTo(Emprunt emprunt) {
+		if(this.dateEcheance.before(emprunt.getDateEcheance())){
+			return 1;
+		}
+		else if(this.dateEcheance.after(emprunt.getDateEcheance())){
+			return -1;
+		}
+		return 0;
+	}
 }

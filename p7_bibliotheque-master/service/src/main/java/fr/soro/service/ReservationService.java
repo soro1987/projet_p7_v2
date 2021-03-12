@@ -1,5 +1,6 @@
 package fr.soro.service;
 
+import fr.soro.dto.EmailTemplateDTO;
 import fr.soro.entities.Ouvrage;
 import fr.soro.entities.Reservation;
 import fr.soro.entities.User;
@@ -55,15 +56,6 @@ public class ReservationService {
         }
     }
 
-    private void cancelReservation(long reservationId){
-        Optional<Reservation> reservation = reservationRepository.findById(reservationId);
-        if(reservation.isPresent()){
-            Reservation reserved = reservation.get();
-            timers.remove(reserved);
-            reservationRepository.delete(reserved);
-            // sennd email to user telling him his reservation has been cancelled
-        }
-    }
     private void failIfUserAlreadyHasBooking(Reservation reservation) {
         Optional<Reservation> byUserIdAndOuvrageId = reservationRepository
                 .findByUserIdAndOuvrageId(reservation.getUser().getId(), reservation.getOuvrage().getId());
@@ -102,14 +94,18 @@ public class ReservationService {
     public void cancel(Long reservationId) {
         Optional<Reservation> reservation = Optional.of(this.reservationRepository.getOne(reservationId));
         if (reservation.isPresent()){
+            timers.remove(reservation.get());
             this.reservationRepository.deleteById(reservation.get().getId());
-
+            // send email to user telling him his reservation has been cancelled
+            EmailTemplateDTO dto = new EmailTemplateDTO(reservation.get().getUser().getEmail(),
+                    "Reservation cancelled",
+                    "Reservation for " + reservation.get().getOuvrage().getTitre() + "  has been cancelled");
+            utilitiesComponent.send_email(dto);
         }else {
             throw new FunctionalException("Error reservation not exist");
         }
 
     }
-
 
 
 }
