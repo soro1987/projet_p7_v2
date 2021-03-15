@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@Data
+
 @Entity
 
 public class EarliestReturnDate {
@@ -19,8 +19,35 @@ public class EarliestReturnDate {
 
     Date expectedReturnDate;
 
+    public EarliestReturnDate() {
+    }
+
     public EarliestReturnDate(Ouvrage ouvrage, Date expectedReturnDate) {
         this.ouvrage = ouvrage;
+        this.expectedReturnDate = expectedReturnDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Ouvrage getOuvrage() {
+        return ouvrage;
+    }
+
+    public void setOuvrage(Ouvrage ouvrage) {
+        this.ouvrage = ouvrage;
+    }
+
+    public Date getExpectedReturnDate() {
+        return expectedReturnDate;
+    }
+
+    public void setExpectedReturnDate(Date expectedReturnDate) {
         this.expectedReturnDate = expectedReturnDate;
     }
 }

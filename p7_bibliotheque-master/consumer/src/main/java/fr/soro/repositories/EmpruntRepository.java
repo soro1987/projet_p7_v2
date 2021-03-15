@@ -22,7 +22,7 @@ public interface EmpruntRepository extends JpaRepository<Emprunt, Long> {
 	List<Emprunt> findByDepassement(int depassement);
 
 
-    Optional<Reservation> findByOuvrageIdAndUserId(Long id, Long id1);
+   // Optional<Reservation> findByOuvrageIdAndUserId(Long ouvrageId, Long userId);
 
 	List<Emprunt> findAllByUser(User user);
 }
