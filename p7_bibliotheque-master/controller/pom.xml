@@ -1,47 +1,50 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>fr.soro</groupId>
-		<artifactId>p7_bibliotheque</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
-	<artifactId>controller</artifactId>
-	<properties><org.mapstruct.version>1.4.1.Final</org.mapstruct.version></properties>
-	<dependencies>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>fr.soro</groupId>
+        <artifactId>p7_bibliotheque</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>controller</artifactId>
+    <properties>
+        <org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
+    </properties>
+    <dependencies>
         <dependency>
-			<groupId>fr.soro</groupId>
-			<artifactId>modele</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>fr.soro</groupId>
-			<artifactId>consumer</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>fr.soro</groupId>
-			<artifactId>service</artifactId>
-		</dependency>
+            <groupId>fr.soro</groupId>
+            <artifactId>modele</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>fr.soro</groupId>
+            <artifactId>consumer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>fr.soro</groupId>
+            <artifactId>service</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.8.0</version>
         </dependency>
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct</artifactId>
-			<version>${org.mapstruct.version}</version>
-		</dependency>
-	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
 
-		</plugins>
-	</build>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+        </plugins>
+    </build>
 </project>
 
 

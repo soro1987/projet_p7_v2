@@ -1,10 +1,9 @@
 fr/soro/web/AuthenticationRequest$AuthenticationRequestBuilder.class
-fr/soro/mapper/OuvrageMapperImpl.class
 fr/soro/config/SwaggerConfig.class
 fr/soro/security/CustomUserDetailsService.class
 fr/soro/security/jwt/JwtAuthenticationEntryPoint.class
 fr/soro/dto/OuvrageDto.class
-fr/soro/mapper/ReservationMapperImpl.class
+fr/soro/ApplicationMain.class
 fr/soro/controller/ExemplaireController.class
 fr/soro/security/jwt/JwtTokenProvider.class
 fr/soro/security/jwt/JwtProperties.class
@@ -16,7 +15,6 @@ fr/soro/dto/ReservationDto.class
 fr/soro/web/AuthenticationController.class
 fr/soro/mapper/EmpruntMapper.class
 fr/soro/mapper/ExemplaireMapper.class
-fr/soro/mapper/EmpruntMapperImpl.class
 fr/soro/security/jwt/JwtTokenAuthenticationFilter.class
 fr/soro/web/UserinfoController.class
 fr/soro/dto/UserDto.class
@@ -27,12 +25,9 @@ fr/soro/config/SecurityConfig.class
 fr/soro/dto/BibliothequeDto.class
 fr/soro/dto/ExemplaireDto.class
 fr/soro/dto/EmpruntDto.class
-start/ApplicationMain.class
 fr/soro/controller/EmpruntController.class
-fr/soro/mapper/UserMapperImpl.class
 fr/soro/controller/OuvrageController.class
 fr/soro/controller/BibliothequeController.class
 fr/soro/mapper/ReservationMapper.class
 fr/soro/dto/CreateReservationDto.class
 fr/soro/web/AuthenticationRequest.class
-fr/soro/mapper/ExemplaireMapperImpl.class

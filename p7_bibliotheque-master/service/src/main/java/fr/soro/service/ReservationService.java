@@ -1,10 +1,12 @@
 package fr.soro.service;
 
 import fr.soro.dto.EmailTemplateDTO;
+import fr.soro.entities.Emprunt;
 import fr.soro.entities.Ouvrage;
 import fr.soro.entities.Reservation;
 import fr.soro.entities.User;
 import fr.soro.exeption.FunctionalException;
+import fr.soro.repositories.EmpruntRepository;
 import fr.soro.repositories.OuvrageRepository;
 import fr.soro.repositories.ReservationRepository;
 import fr.soro.repositories.UserRepository;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.Utilities;
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -24,10 +27,15 @@ public class ReservationService {
     private OuvrageRepository ouvrageRepository;
     private UserRepository userRepository;
     private final ReservationRepository reservationRepository;
+
     @Autowired
     ReservationTimers timers;
     @Autowired
     UtilitiesComponent utilitiesComponent;
+    @Autowired
+    EmpruntRepository empruntRepository;
+    @Autowired
+    ExemplaireService exemplaireService;
 
     public Reservation createReservation(Long userId, Long ouvrageId){
         User user = this.userRepository.getOne(userId);
@@ -58,7 +66,7 @@ public class ReservationService {
 
     private void failIfUserAlreadyHasBooking(Reservation reservation) {
         Optional<Reservation> byUserIdAndOuvrageId = reservationRepository
-                .findByUserIdAndOuvrageId(reservation.getUser().getId(), reservation.getOuvrage().getId());
+                .findByUserId(reservation.getUser().getId());
         if (byUserIdAndOuvrageId.isPresent()){
             throw new FunctionalException("Utilisateur a deja réservé cet ouvrage");
 
@@ -80,9 +88,10 @@ public class ReservationService {
     }
 
     public void failIfUserAlreadyHaveExemple(Reservation reservation) {
-        Optional<Reservation> exemplaire = reservationRepository
-                .findByOuvrageIdAndUserId(reservation.getOuvrage().getId(),reservation.getUser().getId());
-        if (exemplaire.isPresent()){
+        //Optional<Reservation> exemplaire = empruntRepository
+        //        .findByOuvrageIdAndUserId(reservation.getOuvrage().getId(),reservation.getUser().getId());
+        boolean found = exemplaireService.doesUserCurrentlyPossessThisBook(reservation.getUser(), reservation.getOuvrage());
+        if (found){
             throw new FunctionalException("L'utilisateur a déja l'ouvrage en cours d'emprunt");
 
         }
@@ -105,6 +114,11 @@ public class ReservationService {
             throw new FunctionalException("Error reservation not exist");
         }
 
+    }
+
+    public List<Reservation> listActiveReservatonsMadeByUser(User user){
+        // find all reservations by user
+        return reservationRepository.findAllByUser(user);
     }
 
 

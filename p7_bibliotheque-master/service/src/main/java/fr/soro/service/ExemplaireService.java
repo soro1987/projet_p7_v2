@@ -1,8 +1,6 @@
 package fr.soro.service;
 
-import fr.soro.entities.Bibliotheque;
-import fr.soro.entities.Exemplaire;
-import fr.soro.entities.Ouvrage;
+import fr.soro.entities.*;
 import fr.soro.repositories.BibliothequeRepository;
 import fr.soro.repositories.ExemplaireRepository;
 import fr.soro.repositories.OuvrageRepository;
@@ -73,5 +71,18 @@ public class ExemplaireService {
 		
 		
 	}
-	
+
+	public boolean doesUserCurrentlyPossessThisBook(User user, Ouvrage ouvrage){
+		/// find exemplaire where ouvrageid is ?
+		List<Exemplaire> exemplaires = exemplaireRepository.findAllByOuvrageAndDisponible(ouvrage, false);
+		// for every exemplaire found check if its emprunt has a user like ?
+		boolean found = false;
+		for (Exemplaire exemplaire : exemplaires) {
+			if(exemplaire.getEmprunt().getUser().getId() == user.getId()){
+				found = true;
+				break;
+			}
+		}
+		return found;
+	}
 }

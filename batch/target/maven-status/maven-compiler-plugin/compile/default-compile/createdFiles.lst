@@ -5,4 +5,5 @@ fr/soro/batch/MyMailScheduler.class
 fr/soro/batch/service/UserService.class
 fr/soro/batch/service/EmailService.class
 fr/soro/batch/modele/EmailTemplate.class
+fr/soro/batch/controller/EmailController.class
 fr/soro/batch/BatchApplication.class

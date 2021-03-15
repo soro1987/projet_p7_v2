@@ -8,6 +8,7 @@ import fr.soro.repositories.EarliestReturnDateRepository;
 import fr.soro.repositories.ExemplaireRepository;
 import org.hibernate.validator.internal.metadata.aggregated.ExecutableMetaData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class EarliestReturnDateService {
     @Autowired
     EarliestReturnDateRepository earliestReturnDateRepository;
 
+    @Async
     public Date computeEarliestReturnDate(Ouvrage ouvrage){
         // get all examplaire for particular ouvrage which is not available,
         List<Exemplaire> exemplaireList = exemplaireRepository.findAllByOuvrageAndDisponible(ouvrage, false);

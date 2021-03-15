@@ -3,5 +3,5 @@ fr/soro/entities/User.class
 fr/soro/entities/Ouvrage.class
 fr/soro/entities/Emprunt.class
 fr/soro/entities/Exemplaire.class
+fr/soro/entities/EarliestReturnDate.class
 fr/soro/entities/Reservation.class
-fr/soro/entities/User$UserBuilder.class

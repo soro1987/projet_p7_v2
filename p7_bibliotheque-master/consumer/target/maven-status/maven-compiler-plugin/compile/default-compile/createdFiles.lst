@@ -1,5 +1,6 @@
 fr/soro/repositories/OuvrageRepository.class
 fr/soro/repositories/ReservationRepository.class
+fr/soro/repositories/EarliestReturnDateRepository.class
 fr/soro/repositories/EmpruntRepository.class
 fr/soro/repositories/ExemplaireRepository.class
 fr/soro/repositories/UserRepository.class

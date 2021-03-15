@@ -1,6 +1,7 @@
 package fr.soro.repositories;
 
 import fr.soro.entities.Reservation;
+import fr.soro.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    Optional<Reservation> findByUserIdAndOuvrageId(Long userId, Long ouvrageId);
+    Optional<Reservation> findByUserId(Long userId);
 
     Optional<Long> countByOuvrageId(Long ouvrageId);
 
@@ -22,4 +23,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     // find the reservation made by No.1 ranked user
     Optional<Reservation> findTopByOuvrageIdOrderByRankAsc(Long ouvrageId);
 
+    List<Reservation> findAllByUser(User user);
 }

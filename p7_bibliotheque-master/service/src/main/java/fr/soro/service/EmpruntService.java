@@ -41,6 +41,8 @@ public class EmpruntService {
 
 	@Autowired
 	private UtilitiesComponent utilitiesComponent;
+	@Autowired
+	private EarliestReturnDateService earliestReturnDateService;
 
 	public EmpruntService(EmpruntRepository empruntRepository) {
 		this.empruntRepository = empruntRepository;
@@ -108,6 +110,8 @@ public class EmpruntService {
 		
 		this.userRepository.save(user);
 		this.exemplaireRepository.save(exemplaire);
+		// calculate the earliest return date after this new book loan
+		earliestReturnDateService.computeEarliestReturnDate(exemplaire.getOuvrage());
 		return empruntSaved;
 	}
 	
@@ -153,6 +157,8 @@ public class EmpruntService {
 		this.exemplaireRepository.save(exemplaire);
 		this.empruntRepository.deleteById(idEmprunt);
 	}
+
+
 
 	
 }

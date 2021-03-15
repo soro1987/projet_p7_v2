@@ -49,6 +49,7 @@ public class Exemplaire implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
+
 	public Exemplaire(Long id, boolean disponible, Ouvrage ouvrage, Bibliotheque bibliotheque, Emprunt emprunt) {
 		super();
 		this.id = id;
