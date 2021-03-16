@@ -1,12 +1,12 @@
 package fr.soro.service;
 
+import fr.soro.dto.ReservationAvailabilityDTO;
 import fr.soro.entities.EarliestReturnDate;
 import fr.soro.entities.Emprunt;
 import fr.soro.entities.Exemplaire;
 import fr.soro.entities.Ouvrage;
 import fr.soro.repositories.EarliestReturnDateRepository;
 import fr.soro.repositories.ExemplaireRepository;
-import org.hibernate.validator.internal.metadata.aggregated.ExecutableMetaData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -40,6 +40,11 @@ public class EarliestReturnDateService {
 
         // fetch the EarliestReturnDate for this book and update it with new date
         return fetchAndUpdateEarliestReturnDate(topEmpruntByDate,ouvrage);
+    }
+
+    public Date getEarliestReturnDate(Ouvrage ouvrage){
+        EarliestReturnDate date = earliestReturnDateRepository.findByOuvrage(ouvrage);
+        return date.getExpectedReturnDate();
     }
 
     private Date fetchAndUpdateEarliestReturnDate(Emprunt topEmpruntByDate, Ouvrage ouvrage){
@@ -78,4 +83,7 @@ public class EarliestReturnDateService {
         }
         return emprunts;
     }
+
+
+
 }

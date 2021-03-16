@@ -85,7 +85,7 @@ public class OuvrageController {
 		@GetMapping(value = "/ouvrages")
 		public ResponseEntity<List<Ouvrage>> getAllOuvrages() {
 			List<Ouvrage> ouvrages = ouvrageService.getAll();
-			ouvrages.forEach(o-> {o.setNbreExemplaireDispo();});
+			ouvrages.forEach(Ouvrage::setNbreExemplaireDispo);
 			return new ResponseEntity<List<Ouvrage>>(ouvrages, HttpStatus.FOUND);
 		}
 		
@@ -99,6 +99,7 @@ public class OuvrageController {
 		@GetMapping(value = "/ouvrages-titre/{titre}")
 		public ResponseEntity<List<Ouvrage>> getBytitre(@PathVariable(value = "titre") String titre) {
 			List<Ouvrage> ouvrageFound = ouvrageService.getByTitre(titre);
+			// if
 			return new ResponseEntity<List<Ouvrage>>(ouvrageFound, HttpStatus.FOUND);
 		}
 		

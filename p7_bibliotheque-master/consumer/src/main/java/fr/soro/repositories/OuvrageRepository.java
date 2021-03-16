@@ -21,7 +21,7 @@ public interface OuvrageRepository extends JpaRepository<Ouvrage, Long> {
 
 
 	
-	@Query("Select o from Ouvrage o where ('%all%' = :auteur or o.auteur like :auteur ) or ('%all%' = :titre or o.titre like :titre)")
+	@Query("Select o from #{#entityName} o where ('%all%' = :auteur or o.auteur like :auteur ) or ('%all%' = :titre or o.titre like :titre)")
 	List<Ouvrage> findByTitreAuteur(@Param("titre") String titre,@Param("auteur")String auteur );
 
 
@@ -30,5 +30,6 @@ public interface OuvrageRepository extends JpaRepository<Ouvrage, Long> {
 
 	List<Ouvrage> findByCategorieContains(String categorie);
 
-
+	@Query("select o from #{#entityName} o left join fetch o.exemplaires")
+	List<Ouvrage> findAllWithExemplaires();
 }

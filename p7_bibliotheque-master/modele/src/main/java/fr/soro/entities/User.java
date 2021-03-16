@@ -18,9 +18,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -39,7 +37,7 @@ public class User implements UserDetails, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     
     private String nom;
@@ -62,7 +60,7 @@ public class User implements UserDetails, Serializable {
 
     @ElementCollection(fetch = FetchType.LAZY)
 
-    private List<String> roles = new ArrayList<>();
+    private Set<String> roles = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -99,7 +97,7 @@ public class User implements UserDetails, Serializable {
         return true;
     }
 
-	public List<String> getRoles() {
+	public Set<String> getRoles() {
 		// TODO Auto-generated method stub
 		return this.roles;
 	}
@@ -120,7 +118,7 @@ public class User implements UserDetails, Serializable {
 		this.password = password;
 	}
 
-	public void setRoles(List<String> roles) {
+	public void setRoles(Set<String> roles) {
 		this.roles = roles;
 	}
 

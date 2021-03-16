@@ -34,7 +34,7 @@ public class OuvrageClient {
 
 	public Optional<byte[]> downloadImage(Long id){
 		ResponseEntity<byte[]> entity = restTemplate.getForEntity(appUrl + "ouvrages/{id}/image", byte[].class, id);
-		return Optional.of(entity.getBody());
+		return Optional.ofNullable(entity.getBody());
 
 	}
 

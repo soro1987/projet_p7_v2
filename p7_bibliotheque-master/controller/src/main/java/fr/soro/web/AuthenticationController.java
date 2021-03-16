@@ -17,10 +17,7 @@ import fr.soro.entities.User;
 import fr.soro.repositories.UserRepository;
 import fr.soro.security.jwt.JwtTokenProvider;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -45,7 +42,7 @@ public class AuthenticationController {
         try {
             String username = data.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
-            String token = jwtTokenProvider.createToken(username, this.users.findByUsername(username).getRoles());       
+            String token = jwtTokenProvider.createToken(username, new ArrayList<>(this.users.findByUsernameWithAll(username).getRoles()));
             return ok(token);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username/password supplied");

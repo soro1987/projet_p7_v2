@@ -15,8 +15,6 @@ public class UserDto {
 
     private int user_active;
 
-    private String password;
-
     private String username;
 
     public UserDto() {
@@ -28,7 +26,6 @@ public class UserDto {
         this.email = email;
         this.telephone = telephone;
         this.user_active = user_active;
-        this.password = password;
         this.username = username;
     }
 
@@ -70,14 +67,6 @@ public class UserDto {
 
     public void setUser_active(int user_active) {
         this.user_active = user_active;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getUsername() {

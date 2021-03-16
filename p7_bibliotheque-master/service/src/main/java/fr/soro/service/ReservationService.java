@@ -1,6 +1,7 @@
 package fr.soro.service;
 
 import fr.soro.dto.EmailTemplateDTO;
+import fr.soro.dto.ReservationAvailabilityDTO;
 import fr.soro.entities.Emprunt;
 import fr.soro.entities.Ouvrage;
 import fr.soro.entities.Reservation;
@@ -17,17 +18,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.Utilities;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
 @Service
 public class ReservationService {
-
+    @Autowired
     private OuvrageRepository ouvrageRepository;
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private final ReservationRepository reservationRepository;
-
     @Autowired
     ReservationTimers timers;
     @Autowired
@@ -36,6 +39,9 @@ public class ReservationService {
     EmpruntRepository empruntRepository;
     @Autowired
     ExemplaireService exemplaireService;
+    @Autowired
+    EarliestReturnDateService earliestReturnDateService;
+
 
     public Reservation createReservation(Long userId, Long ouvrageId){
         User user = this.userRepository.getOne(userId);
@@ -119,6 +125,27 @@ public class ReservationService {
     public List<Reservation> listActiveReservatonsMadeByUser(User user){
         // find all reservations by user
         return reservationRepository.findAllByUser(user);
+    }
+
+    public ReservationAvailabilityDTO findAvailabilityDetails(long ouvrageID){
+        // max reservation number has been reached for this book
+
+        Ouvrage ouvrage = ouvrageRepository.getOne(ouvrageID);
+        long count = countReservationNumber(ouvrageID);
+        if (count >= ouvrage.getNbreExemplaireDispo()*2){
+            return new ReservationAvailabilityDTO(null, -1, true);
+        }
+        else{
+            // get the ealiest date
+            Date date = earliestReturnDateService.getEarliestReturnDate(ouvrage);
+            return new ReservationAvailabilityDTO(date, (int) count, false);
+        }
+    }
+
+    private long countReservationNumber(long ouvrageID){
+        return reservationRepository
+                .countByOuvrageId(ouvrageID)
+                .orElse(0L);
     }
 
 

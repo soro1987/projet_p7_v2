@@ -37,7 +37,7 @@ public class OuvrageService {
 		}
 		
 		public List<Ouvrage> getAll(){
-			return ouvrageRepository.findAll();
+			return ouvrageRepository.findAllWithExemplaires();
 		}
 	    
 		public List<Ouvrage> getByTitre(String titre) {

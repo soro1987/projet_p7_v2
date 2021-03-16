@@ -80,7 +80,7 @@
 
     <th:block th:each="ouvrage : ${ouvrages}">
       <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-        <a th:href="@{/ouvrages/{id}(id=${ouvrage.id})}"> <img class="card-img-top" th:src="@{/ouvrages/{id}/image(id=${ouvrage.id})}"></a> <!--<img class="card-img-top" th:src="${ouvrage.imageUrl}" alt="">-->
+        <a th:href="@{/ouvrages/{id}(id=${ouvrage.id})}">  <img class="card-img-top" th:src="${ouvrage.imageUrl}" alt=""><!--<img class="card-img-top" th:src="@{/ouvrages/{id}/image(id=${ouvrage.id})}"></a>-->
       </div>
     </th:block>
     <!-- Marketing Icons Section -->
