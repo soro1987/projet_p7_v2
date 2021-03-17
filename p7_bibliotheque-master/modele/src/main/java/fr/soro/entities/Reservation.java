@@ -4,11 +4,11 @@ package fr.soro.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "reservation")
-public class Reservation implements Serializable {
+public class Reservation implements Serializable, Comparable<Reservation> {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -89,4 +89,27 @@ public class Reservation implements Serializable {
     public int hashCode() {
         return Objects.hash(id, user, dateReservation, ouvrage, rank);
     }
+
+    @Override
+    public int compareTo(Reservation reservation) {
+        if(this.getRank() < reservation.getRank()){
+            return 1;
+        }
+        else if(this.getRank() > reservation.getRank()){
+            return -1;
+        }
+        return 0;
+    }
+/*
+    public static void main(String[] args) {
+        Reservation r1 = new Reservation();
+        Reservation r5 = new Reservation();
+        List<Reservation> list = new ArrayList<>();
+        list.add(r1);
+        list.add(r5);
+        Collections.sort(list);
+        // loop through arraylist
+    }
+
+ */
 }

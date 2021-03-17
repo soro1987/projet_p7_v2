@@ -55,6 +55,7 @@ public class ReservationTimerTask extends TimerTask {
             }
         }
         timers.remove(reservation);
+        utilitiesComponent.recalculateUpdateReservationRanking(reservation.getOuvrage());
     }
 
 }

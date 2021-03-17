@@ -2,6 +2,7 @@ package fr.soro.service;
 
 import fr.soro.dto.EmailTemplateDTO;
 import fr.soro.dto.ReservationAvailabilityDTO;
+import fr.soro.dto.ReservationWaitingListDTO;
 import fr.soro.entities.Emprunt;
 import fr.soro.entities.Ouvrage;
 import fr.soro.entities.Reservation;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.Utilities;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +45,8 @@ public class ReservationService {
     EarliestReturnDateService earliestReturnDateService;
 
 
+
+
     public Reservation createReservation(Long userId, Long ouvrageId){
         User user = this.userRepository.getOne(userId);
         Ouvrage ouvrage = this.ouvrageRepository.getOne(ouvrageId);
@@ -56,7 +60,9 @@ public class ReservationService {
         failIfUserAlreadyHasBooking(reservation);
         int lowestRank = getHighestRankNumberForExistingReservations(reservation.getOuvrage());
         reservation.setRank(++lowestRank);
-        return reservationRepository.save(reservation) ;
+        Reservation saved = reservationRepository.save(reservation) ;
+        utilitiesComponent.recalculateUpdateReservationRanking(saved.getOuvrage());
+        return saved;
     }
 
 
@@ -85,7 +91,10 @@ public class ReservationService {
        Long count = reservationRepository
                 .countByOuvrageId(reservation.getOuvrage().getId())
                 .orElse(0L);
-       if (count >= reservation.getOuvrage().getNbreExemplaireDispo()*2){
+       Ouvrage ouvrage =ouvrageRepository.findById(reservation.getOuvrage().getId()).get();
+       if(count >= ouvrage.getNbreExemplaireDispo()*2){
+       //if (count >= reservation.getOuvrage().getNbreExemplaireDispo()*2){
+           System.out.println("==========================================================================ReservationService.failIfBookCountLimitHasReach");
            throw new FunctionalException("Le nombre maximal de reservation est atteint");
 
        }
@@ -116,17 +125,26 @@ public class ReservationService {
                     "Reservation cancelled",
                     "Reservation for " + reservation.get().getOuvrage().getTitre() + "  has been cancelled");
             utilitiesComponent.send_email(dto);
+            utilitiesComponent.recalculateUpdateReservationRanking(reservation.get().getOuvrage());
         }else {
             throw new FunctionalException("Error reservation not exist");
         }
 
     }
 
-    public List<Reservation> listActiveReservatonsMadeByUser(User user){
+    public List<ReservationWaitingListDTO> listActiveReservatonsMadeByUser(User user){
         // find all reservations by user
-        return reservationRepository.findAllByUser(user);
+        List<Reservation> userReservations = reservationRepository.findAllByUser(user);
+        List<ReservationWaitingListDTO> reservationWaitingListDTOS = new ArrayList<>();
+        for (Reservation reservation : userReservations) {
+            Date earliestDate = earliestReturnDateService.getEarliestReturnDate(reservation.getOuvrage());
+            ReservationWaitingListDTO reservationWaitingListDTO = new ReservationWaitingListDTO(reservation, earliestDate);
+            reservationWaitingListDTOS.add(reservationWaitingListDTO);
+        }
+        return reservationWaitingListDTOS;
     }
 
+    // on click button "Check Availability"
     public ReservationAvailabilityDTO findAvailabilityDetails(long ouvrageID){
         // max reservation number has been reached for this book
 

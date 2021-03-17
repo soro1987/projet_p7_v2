@@ -12,15 +12,15 @@ import java.util.List;
 public interface OuvrageRepository extends JpaRepository<Ouvrage, Long> {
 
 	List<Ouvrage> findByTitreContains(String titre);
-	
+
 	List<Ouvrage> findByTitre(String titre);
 
 	List<Ouvrage> findByAuteur(String auteur);
-	
+
 	List<Ouvrage> findByDateParution(Date parution);
 
 
-	
+
 	@Query("Select o from #{#entityName} o where ('%all%' = :auteur or o.auteur like :auteur ) or ('%all%' = :titre or o.titre like :titre)")
 	List<Ouvrage> findByTitreAuteur(@Param("titre") String titre,@Param("auteur")String auteur );
 
@@ -32,4 +32,5 @@ public interface OuvrageRepository extends JpaRepository<Ouvrage, Long> {
 
 	@Query("select o from #{#entityName} o left join fetch o.exemplaires")
 	List<Ouvrage> findAllWithExemplaires();
+
 }

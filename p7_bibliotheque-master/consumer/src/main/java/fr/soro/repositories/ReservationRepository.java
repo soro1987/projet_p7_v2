@@ -1,5 +1,6 @@
 package fr.soro.repositories;
 
+import fr.soro.entities.Ouvrage;
 import fr.soro.entities.Reservation;
 import fr.soro.entities.User;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Optional<Long> countByOuvrageId(Long ouvrageId);
 
     Optional<Reservation> findByOuvrageIdAndUserId(Long OuvrageId, Long UserId);
+
+    List<Reservation> findAllByOuvrageId(Long ouvrageId);
 
     Page<Reservation> findByOuvrageId(Long ouvrageId, Pageable pageable);
     // find the reservation made by the lowest ranking user
