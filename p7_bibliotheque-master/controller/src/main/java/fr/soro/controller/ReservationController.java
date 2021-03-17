@@ -42,17 +42,17 @@ public class ReservationController {
     }
 
 
-    @PostMapping(value = "/v1/reservations")
+    @PostMapping(value = "/reservations")
     public ResponseEntity<ReservationDto> createReservation(@RequestBody CreateReservationDto createReservationDto) {
         Reservation createReservation = reservationService.createReservation(createReservationDto.getUserId(), createReservationDto.getOuvrageId());
         Reservation newReservationAdded = reservationService.addNew(createReservation);
         return new ResponseEntity<>(reservationMapper.from(newReservationAdded), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/reservation/{reservationId}")
+    @DeleteMapping(value = "/reservations/{reservationId}")
     public ResponseEntity<Void> deleteReservation(@PathVariable(value = "reservationId") Long reservationId) {
         reservationService.cancel(reservationId);
-        return new ResponseEntity<Void>(HttpStatus.GONE);
+        return  ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "/v1/listUserReservations/{userId}")

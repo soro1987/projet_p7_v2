@@ -17,6 +17,8 @@ public class UserDto {
 
     private String username;
 
+    private String password;
+
     public UserDto() {
     }
 
@@ -28,6 +30,17 @@ public class UserDto {
         this.user_active = user_active;
         this.username = username;
     }
+
+
+//    public UserDto(String nom, String prenom, String email, String telephone, int user_active, String username, String password) {
+//        this.nom = nom;
+//        this.prenom = prenom;
+//        this.email = email;
+//        this.telephone = telephone;
+//        this.user_active = user_active;
+//        this.username = username;
+////        this.password = password;
+//    }
 
     public String getNom() {
         return nom;
@@ -76,4 +89,12 @@ public class UserDto {
     public void setUsername(String username) {
         this.username = username;
     }
+
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
 }

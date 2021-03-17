@@ -3,15 +3,9 @@ package fr.soro.service;
 import fr.soro.dto.EmailTemplateDTO;
 import fr.soro.dto.ReservationAvailabilityDTO;
 import fr.soro.dto.ReservationWaitingListDTO;
-import fr.soro.entities.Emprunt;
-import fr.soro.entities.Ouvrage;
-import fr.soro.entities.Reservation;
-import fr.soro.entities.User;
+import fr.soro.entities.*;
 import fr.soro.exeption.FunctionalException;
-import fr.soro.repositories.EmpruntRepository;
-import fr.soro.repositories.OuvrageRepository;
-import fr.soro.repositories.ReservationRepository;
-import fr.soro.repositories.UserRepository;
+import fr.soro.repositories.*;
 import fr.soro.utilities.ReservationTimers;
 import fr.soro.utilities.UtilitiesComponent;
 import lombok.AllArgsConstructor;
@@ -43,15 +37,16 @@ public class ReservationService {
     ExemplaireService exemplaireService;
     @Autowired
     EarliestReturnDateService earliestReturnDateService;
+    @Autowired
+    ExemplaireRepository exemplaireRepository;
 
 
 
 
     public Reservation createReservation(Long userId, Long ouvrageId){
-        User user = this.userRepository.getOne(userId);
-        Ouvrage ouvrage = this.ouvrageRepository.getOne(ouvrageId);
-        Reservation reservation = new Reservation(user,ouvrage);
-        return  reservation;
+        User user = this.userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        Ouvrage ouvrage = this.ouvrageRepository.findById(ouvrageId).orElseThrow(IllegalArgumentException::new);
+        return new Reservation(user,ouvrage);
     }
 
     public Reservation addNew(Reservation reservation) {
@@ -94,7 +89,6 @@ public class ReservationService {
        Ouvrage ouvrage =ouvrageRepository.findById(reservation.getOuvrage().getId()).get();
        if(count >= ouvrage.getNbreExemplaireDispo()*2){
        //if (count >= reservation.getOuvrage().getNbreExemplaireDispo()*2){
-           System.out.println("==========================================================================ReservationService.failIfBookCountLimitHasReach");
            throw new FunctionalException("Le nombre maximal de reservation est atteint");
 
        }
@@ -116,7 +110,7 @@ public class ReservationService {
 
 
     public void cancel(Long reservationId) {
-        Optional<Reservation> reservation = Optional.of(this.reservationRepository.getOne(reservationId));
+        Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
         if (reservation.isPresent()){
             timers.remove(reservation.get());
             this.reservationRepository.deleteById(reservation.get().getId());
@@ -126,6 +120,12 @@ public class ReservationService {
                     "Reservation for " + reservation.get().getOuvrage().getTitre() + "  has been cancelled");
             utilitiesComponent.send_email(dto);
             utilitiesComponent.recalculateUpdateReservationRanking(reservation.get().getOuvrage());
+            Exemplaire exemplaire = this.exemplaireRepository.findFirstByOuvrageIdAndDisponibleTrue(reservation.get().getOuvrage().getId());
+            exemplaire.setDisponible(false);
+            reservation.get().getOuvrage().increase();
+            this.exemplaireRepository.save(exemplaire);
+            this.ouvrageRepository.save(reservation.get().getOuvrage());
+
         }else {
             throw new FunctionalException("Error reservation not exist");
         }

@@ -104,12 +104,15 @@ public class EmpruntService {
 		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
 		emprunt.getExemplaires().add(exemplaire);
 		exemplaire.setDisponible(false);
+		exemplaire.getOuvrage().setNbreExemplaireDispo(exemplaire.getOuvrage().getNbreExemplaireDispo() -1);
 		Emprunt empruntSaved  = this.empruntRepository.save(emprunt);
 		user.getEmprunts().add(empruntSaved);
 		exemplaire.setEmprunt(empruntSaved);
 		
 		this.userRepository.save(user);
+		this.ouvrageRepository.saveAndFlush(exemplaire.getOuvrage());
 		this.exemplaireRepository.save(exemplaire);
+
 		// calculate the earliest return date after this new book loan
 		earliestReturnDateService.computeEarliestReturnDate(exemplaire.getOuvrage());
 		return empruntSaved;

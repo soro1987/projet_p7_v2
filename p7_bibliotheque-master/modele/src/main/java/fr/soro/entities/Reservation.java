@@ -28,6 +28,9 @@ public class Reservation implements Serializable, Comparable<Reservation> {
 
     private Integer rank;
 
+    public Reservation() {
+    }
+
     public Reservation(User user, Ouvrage ouvrage) {
         this.user = user;
         this.ouvrage = ouvrage;
@@ -82,12 +85,12 @@ public class Reservation implements Serializable, Comparable<Reservation> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reservation that = (Reservation) o;
-        return Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(dateReservation, that.dateReservation) && Objects.equals(ouvrage, that.ouvrage) && Objects.equals(rank, that.rank);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, dateReservation, ouvrage, rank);
+        return Objects.hash(id);
     }
 
     @Override

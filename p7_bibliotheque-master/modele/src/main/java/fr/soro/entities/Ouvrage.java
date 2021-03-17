@@ -48,6 +48,14 @@ public class Ouvrage implements Serializable {
 		}
 	}
 
+	public void decrease(){
+		this.nbreExemplaireDispo--;
+	}
+
+	public void increase(){
+		this.nbreExemplaireDispo++;
+	}
+
 	public Long getId() {
 		return id;
 	}
