@@ -3,9 +3,11 @@ package fr.soro.dto;
 import java.util.Date;
 
 public class ReservationAvailabilityDTO {
+
     Date earliestReturnDate;// used
     int numberPeopleReserveList;
     boolean maximunSlotReach;
+
     public ReservationAvailabilityDTO() {
     }
 

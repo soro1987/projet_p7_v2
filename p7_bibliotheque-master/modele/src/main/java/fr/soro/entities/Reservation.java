@@ -19,7 +19,7 @@ public class Reservation implements Serializable, Comparable<Reservation> {
     @JoinColumn(name="user_id")
     private User user;
 
-    private LocalDateTime dateReservation;
+    private LocalDateTime dateReservation = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name="ouvrage_id")

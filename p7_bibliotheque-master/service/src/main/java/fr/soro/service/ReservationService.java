@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.Utilities;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -118,7 +117,7 @@ public class ReservationService {
             EmailTemplateDTO dto = new EmailTemplateDTO(reservation.get().getUser().getEmail(),
                     "Reservation cancelled",
                     "Reservation for " + reservation.get().getOuvrage().getTitre() + "  has been cancelled");
-            utilitiesComponent.send_email(dto);
+            utilitiesComponent.sendEmail(dto);
             utilitiesComponent.recalculateUpdateReservationRanking(reservation.get().getOuvrage());
             Exemplaire exemplaire = this.exemplaireRepository.findFirstByOuvrageIdAndDisponibleTrue(reservation.get().getOuvrage().getId());
             exemplaire.setDisponible(false);

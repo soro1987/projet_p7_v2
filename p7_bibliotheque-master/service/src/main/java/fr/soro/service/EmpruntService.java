@@ -3,17 +3,10 @@ package fr.soro.service;
 import fr.soro.dto.EmailTemplateDTO;
 import fr.soro.entities.*;
 import fr.soro.repositories.*;
-import fr.soro.utilities.ReservationTimerTask;
 import fr.soro.utilities.ReservationTimers;
 import fr.soro.utilities.UtilitiesComponent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.Trigger;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -133,35 +126,49 @@ public class EmpruntService {
 	}
 
 	public void returnEmprunt(Long idEmprunt, Long idExmplaire) {
-		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
-		exemplaire.setEmprunt(null);
-		exemplaire.setDisponible(true);
+		//Retrieve exemplaire reset object Emprunt and setDisponible to true
+		Exemplaire exemplaire = resetExemplaire(idExmplaire);
 		// check if there are any reservation made for the ouvrage returned
 		//Trigger  runs when book is returned
-
-		Ouvrage ouv = exemplaire.getOuvrage();
-		ouv.setNbreExemplaireDispo(ouv.getNbreExemplaireDispo() + 1);
-		ouvrageRepository.save(ouv);
-
-		Optional<Reservation> topReserved =
-				reservationRepository.findTopByOuvrageIdOrderByRankAsc(ouv.getId());
-		if(topReserved.isPresent()) {
-			Reservation topReserrvationOnTheList = topReserved.get();
-			if(!timers.containsKey(topReserrvationOnTheList)) {
-				String email = topReserved.get().getUser().getEmail();
-				//Mail sender to alert the No.1 user of availability of the book
-				EmailTemplateDTO dto = new EmailTemplateDTO(email, ouv.getTitre() + " is available", " This book has become available. " +
-						"You have 48 hours to pick it up.");
-				utilitiesComponent.send_email(dto);
-				//Timer to start 48 hour countdown after user has been alerted of availability
-				utilitiesComponent.startTimer(topReserrvationOnTheList);
-			}
-		}
+		Ouvrage ouv = retrieveAndUpdateOuvrage(exemplaire);
+        //Check if there is a reservation for this ouvrage
+		sendMailIfBookIsReserved(ouv);
 		this.exemplaireRepository.save(exemplaire);
 		this.empruntRepository.deleteById(idEmprunt);
 	}
 
+	private void sendMailIfBookIsReserved(Ouvrage ouv) {
+		//Find if there is a first reservation in line
+		Optional<Reservation> topReserved = reservationRepository.findTopByOuvrageIdOrderByRankAsc(ouv.getId());
+		if(topReserved.isPresent()) {
+			//Convert from optional to Reservation Object
+			Reservation topReservationOnTheList = topReserved.get();
+			//Check if timer doesn t already contains this reservation
+			if(!timers.containsKey(topReservationOnTheList)) {
+				String email = topReservationOnTheList.getUser().getEmail();
+				//Mail sender to alert the No.1 user of availability of the book
+				EmailTemplateDTO dto = new EmailTemplateDTO(email, ouv.getTitre() + " is available", " This book has become available. " +
+						"You have 48 hours to pick it up.");
+				utilitiesComponent.sendEmail(dto);
+				//Timer to start 48 hour countdown after user has been alerted of availability
+				utilitiesComponent.startTimer(topReservationOnTheList);
+			}
+		}
+	}
+
+	private Ouvrage retrieveAndUpdateOuvrage(Exemplaire exemplaire) {
+		Ouvrage ouv = exemplaire.getOuvrage();
+		ouv.setNbreExemplaireDispo(ouv.getNbreExemplaireDispo() + 1);
+		ouvrageRepository.save(ouv);
+		return ouv;
+	}
+
+	private Exemplaire resetExemplaire(Long idExmplaire) {
+		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
+		exemplaire.setEmprunt(null);
+		exemplaire.setDisponible(true);
+		return exemplaire;
+	}
 
 
-	
 }

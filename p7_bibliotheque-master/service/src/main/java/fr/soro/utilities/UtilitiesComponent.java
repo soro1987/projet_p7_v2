@@ -30,7 +30,7 @@ public class UtilitiesComponent {
     private final String EMAIL_SENDER_SERVICE = "http://localhost:8083/sendEmail";
 
     @Async
-    public void send_email(EmailTemplateDTO dto){
+    public void sendEmail(EmailTemplateDTO dto){
         ResponseEntity<String> result = restTemplate.postForEntity(EMAIL_SENDER_SERVICE, dto, String.class);
     }
 

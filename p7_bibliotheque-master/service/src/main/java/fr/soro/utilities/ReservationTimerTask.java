@@ -5,12 +5,8 @@ import fr.soro.entities.Ouvrage;
 import fr.soro.entities.Reservation;
 import fr.soro.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
-import java.util.Timer;
 import java.util.TimerTask;
 
 public class ReservationTimerTask extends TimerTask {
@@ -48,7 +44,7 @@ public class ReservationTimerTask extends TimerTask {
                     //Mail sender to alert the No.1 user of availability of the book
                     EmailTemplateDTO dto = new EmailTemplateDTO(email, ouv.getTitre() + " is available", " This book has become available. " +
                             "You have 48 hours to pick it up.");
-                    utilitiesComponent.send_email(dto);
+                    utilitiesComponent.sendEmail(dto);
                     //Timer to start 48 hour countdown after user has been alerted of availability
                     utilitiesComponent.startTimer(topReserved.get());
                 }

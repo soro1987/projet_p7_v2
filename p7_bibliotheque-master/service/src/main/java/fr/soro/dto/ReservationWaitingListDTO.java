@@ -5,6 +5,7 @@ import fr.soro.entities.Reservation;
 import java.util.Date;
 
 public class ReservationWaitingListDTO {
+
     public Reservation reservation;
     public Date earliestReturnDate;
 
