@@ -15,18 +15,19 @@ public class Reservation implements Serializable, Comparable<Reservation> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    private Integer rank;
+
+    private LocalDateTime dateReservation = LocalDateTime.now();
+
+    public LocalDateTime mailSendTime;
+
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
 
-    private LocalDateTime dateReservation = LocalDateTime.now();
-
     @ManyToOne
     @JoinColumn(name="ouvrage_id")
     private Ouvrage ouvrage;
-
-
-    private Integer rank;
 
     public Reservation() {
     }
@@ -36,8 +37,29 @@ public class Reservation implements Serializable, Comparable<Reservation> {
         this.ouvrage = ouvrage;
     }
 
+    public Reservation(Long id, User user, LocalDateTime dateReservation, LocalDateTime mailSendTime, Ouvrage ouvrage, Integer rank) {
+        this.id = id;
+        this.user = user;
+        this.dateReservation = dateReservation;
+        this.mailSendTime = mailSendTime;
+        this.ouvrage = ouvrage;
+        this.rank = rank;
+    }
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
+    }
+
+    public LocalDateTime getMailSendTime() {
+        return mailSendTime;
+    }
+
+    public void setMailSendTime(LocalDateTime mailSendTime) {
+        this.mailSendTime = mailSendTime;
+    }
+
+    public void setRank(Integer rank) {
+        this.rank = rank;
     }
 
     public Long getId() {

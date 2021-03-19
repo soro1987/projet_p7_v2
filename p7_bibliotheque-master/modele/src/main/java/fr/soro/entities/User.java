@@ -67,6 +67,10 @@ public class User implements UserDetails, Serializable {
         return this.roles.stream().map(SimpleGrantedAuthority::new).collect(toList());
     }
 
+    public String getFullName(){
+	return nom+" "+prenom;
+	}
+
     @Override
     public String getPassword() {
         return this.password;

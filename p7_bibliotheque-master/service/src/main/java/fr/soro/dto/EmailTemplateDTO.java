@@ -24,6 +24,9 @@ public class EmailTemplateDTO {
         this.body = body;
     }
 
+    public EmailTemplateDTO(String email, String s) {
+    }
+
     public String getSendTo() {
         return sendTo;
     }

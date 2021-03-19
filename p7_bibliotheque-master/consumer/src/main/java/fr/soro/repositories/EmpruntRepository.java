@@ -25,4 +25,8 @@ public interface EmpruntRepository extends JpaRepository<Emprunt, Long> {
    // Optional<Reservation> findByOuvrageIdAndUserId(Long ouvrageId, Long userId);
 
 	List<Emprunt> findAllByUser(User user);
+
+    Emprunt findFirstByOuvrageIdOrderByDateEcheanceDesc(Long ouvrageId);
+
+	Long countByOuvrageId(Long ouvrageId);
 }

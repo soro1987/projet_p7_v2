@@ -1,14 +1,12 @@
 package fr.soro.controller;
 
-import fr.soro.dto.CreateReservationDto;
-import fr.soro.dto.ReservationAvailabilityDTO;
-import fr.soro.dto.ReservationDto;
-import fr.soro.dto.ReservationWaitingListDTO;
-import fr.soro.entities.Ouvrage;
+import fr.soro.dto.*;
+import fr.soro.entities.Emprunt;
 import fr.soro.entities.Reservation;
-import fr.soro.entities.User;
 import fr.soro.mapper.ReservationMapper;
+import fr.soro.repositories.EmpruntRepository;
 import fr.soro.repositories.ReservationRepository;
+import fr.soro.service.EmpruntService;
 import fr.soro.service.ReservationService;
 import fr.soro.service.UserService;
 import lombok.AllArgsConstructor;
@@ -19,21 +17,34 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @RestController
 public class ReservationController {
 
 
     private final ReservationService reservationService;
-
     private final ReservationMapper reservationMapper;
-
     private final ReservationRepository reservationRepository;
+    private final MailForExpiredReservationDto mailForExpiredReservationDto;
+    private final UserService userService;
+    private final EmpruntService empruntService;
+    private final WaitingListCredentialsDto waitingListCredentialsDto;
+    private final EmpruntRepository empruntRepository;
 
-    @Autowired
-    UserService userService;
+    public ReservationController(ReservationService reservationService, ReservationMapper reservationMapper, ReservationRepository reservationRepository, MailForExpiredReservationDto mailForExpiredReservationDto, UserService userService, EmpruntService empruntService, WaitingListCredentialsDto waitingListCredentialsDto, EmpruntRepository empruntRepository) {
+        this.reservationService = reservationService;
+        this.reservationMapper = reservationMapper;
+        this.reservationRepository = reservationRepository;
+        this.mailForExpiredReservationDto = mailForExpiredReservationDto;
+        this.userService = userService;
+        this.empruntService = empruntService;
+        this.waitingListCredentialsDto = waitingListCredentialsDto;
+        this.empruntRepository = empruntRepository;
+    }
 
     @GetMapping(value = "/v1/ouvrages/{id}/reservations")
     public ResponseEntity<Page<ReservationDto>> getReservation(@PathVariable Long id, Pageable pageable) {
@@ -55,21 +66,30 @@ public class ReservationController {
         return  ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/v1/listUserReservations/{userId}")
-    public ResponseEntity<List<ReservationWaitingListDTO>> listUserReservations(@PathVariable(value = "userId") Long userId) {
-        // load user object from DB
-        User user = userService.getUser(userId);
+    //Recuperer toutes les reservation de + de 48h
+    //Les supprimer de la db
+    @GetMapping (value = "/reservations/expired")
+    public ResponseEntity <List<MailForExpiredReservationDto>> expireReservations(){
+           return  ResponseEntity.ok (this.reservationService.expireReservations()
+                   .stream().map(reservation -> new MailForExpiredReservationDto(reservation.getUser().getFullName(),
+                           reservation.getUser().getEmail(),reservation.getOuvrage().getTitre()))
+                   .collect(Collectors.toList()));
 
-        // call service method
-        List<ReservationWaitingListDTO> reservationList = reservationService.listActiveReservatonsMadeByUser(user);
-        return ResponseEntity.ok(reservationList);
     }
 
-    @GetMapping(value = "/v1/reservations/{ouvrageId}")
-    public ResponseEntity<ReservationAvailabilityDTO> getReservationAvailability(@PathVariable(value = "ouvrageId") Long ouvrageId) {
-        ReservationAvailabilityDTO availabilityDetails = reservationService.findAvailabilityDetails(ouvrageId);
-        return ResponseEntity.ok(availabilityDetails);
+    @GetMapping(value = "/v1/reservations/waitingList/{ouvrageId}")
+    public ResponseEntity<WaitingListCredentialsDto> checkOuvrageWaitingList(@PathVariable Long ouvrageId) {
+        Date empruntEarliestReturnDate = empruntService.findEmpruntEarliestReturnDate(ouvrageId);
+        Optional<Long> numberOfReservationForTheBook = reservationService.numberOfReservationForTheBook(ouvrageId);
+        boolean canBeBooked = empruntService.canBeBooked(ouvrageId);
+        WaitingListCredentialsDto waitingListCredentialsDto = new WaitingListCredentialsDto(empruntEarliestReturnDate,
+                numberOfReservationForTheBook.get(),canBeBooked);
+        return ResponseEntity.ok(waitingListCredentialsDto);
     }
+
+
+
+
 
 
 

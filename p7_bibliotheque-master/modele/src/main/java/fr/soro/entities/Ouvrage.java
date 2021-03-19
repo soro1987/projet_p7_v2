@@ -38,6 +38,9 @@ public class Ouvrage implements Serializable {
 	@OneToMany(mappedBy = "ouvrage", fetch = FetchType.LAZY)
 	private List<Exemplaire> exemplaires;
 
+	@OneToMany(mappedBy = "ouvrage", fetch = FetchType.LAZY)
+	private List<Reservation> reservations;
+
 	public void setNbreExemplaireDispo() {
 		if(this.exemplaires != null) {
 			for(Exemplaire expl: this.exemplaires) {

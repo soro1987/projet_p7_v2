@@ -1,46 +1,39 @@
 package fr.soro.service;
 
-import fr.soro.dto.EmailTemplateDTO;
-import fr.soro.dto.ReservationAvailabilityDTO;
-import fr.soro.dto.ReservationWaitingListDTO;
 import fr.soro.entities.*;
 import fr.soro.exeption.FunctionalException;
 import fr.soro.repositories.*;
-import fr.soro.utilities.ReservationTimers;
+import fr.soro.service.job.ReservationJob;
 import fr.soro.utilities.UtilitiesComponent;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
 @Service
 public class ReservationService {
-    @Autowired
-    private OuvrageRepository ouvrageRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
+
+    private final ReservationJob reservationJob;
+    private final OuvrageRepository ouvrageRepository;
+    private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
-    @Autowired
-    ReservationTimers timers;
-    @Autowired
-    UtilitiesComponent utilitiesComponent;
-    @Autowired
-    EmpruntRepository empruntRepository;
-    @Autowired
-    ExemplaireService exemplaireService;
-    @Autowired
-    EarliestReturnDateService earliestReturnDateService;
-    @Autowired
-    ExemplaireRepository exemplaireRepository;
+    private final UtilitiesComponent utilitiesComponent;
+    private final ExemplaireService exemplaireService;
+    private final ExemplaireRepository exemplaireRepository;
 
-
-
+    public ReservationService(ReservationJob reservationJob, OuvrageRepository ouvrageRepository, UserRepository userRepository, ReservationRepository reservationRepository,
+                              UtilitiesComponent utilitiesComponent, ExemplaireService exemplaireService, ExemplaireRepository exemplaireRepository)
+    {
+        this.reservationJob = reservationJob;
+        this.ouvrageRepository = ouvrageRepository;
+        this.userRepository = userRepository;
+        this.reservationRepository = reservationRepository;
+        this.utilitiesComponent = utilitiesComponent;
+        this.exemplaireService = exemplaireService;
+        this.exemplaireRepository = exemplaireRepository;
+    }
 
     public Reservation createReservation(Long userId, Long ouvrageId){
         User user = this.userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
@@ -52,21 +45,26 @@ public class ReservationService {
         failIfUserAlreadyHaveExemple(reservation);
         failIfBookCountLimitHasReach(reservation);
         failIfUserAlreadyHasBooking(reservation);
-        int lowestRank = getHighestRankNumberForExistingReservations(reservation.getOuvrage());
-        reservation.setRank(++lowestRank);
         Reservation saved = reservationRepository.save(reservation) ;
         utilitiesComponent.recalculateUpdateReservationRanking(saved.getOuvrage());
+        this.sendMailToPrioritaryReservationWhenOuvrageIsDisponible(saved.getOuvrage());
         return saved;
     }
 
-
-    public int getHighestRankNumberForExistingReservations(Ouvrage ouvrage){
-        Optional<Reservation> lowestRanked = reservationRepository.findTopByOuvrageIdOrderByRankDesc(ouvrage.getId());
-        if(lowestRanked.isPresent()){
-            return lowestRanked.get().getRank();
-        }
-        else{
-            return 0;
+    public void sendMailToPrioritaryReservationWhenOuvrageIsDisponible(Ouvrage ouvrage) {
+        //If ouvrage is available check if there is a reservation for this ouvrage
+        if (ouvrage.getNbreExemplaireDispo() > 0) {
+            Optional<Reservation> firstReservation = this.reservationRepository.findFirstByOuvrageIdOrderByDateReservationAsc(ouvrage.getId());
+            //if reservation is present  send mail to warn the user
+            if (firstReservation.isPresent()) {
+                this.utilitiesComponent.sendMailBuilder(
+                        firstReservation.get().getUser().getEmail(),
+                        ouvrage.getTitre(),
+                        "is available, You have 48 hours to pick it up.");
+                //Persist the attribut mailSendTime of reservation in db
+                firstReservation.get().setMailSendTime(LocalDateTime.now());
+                this.reservationRepository.save(firstReservation.get());
+            }
         }
     }
 
@@ -79,8 +77,6 @@ public class ReservationService {
         }
     }
 
-
-
     private void failIfBookCountLimitHasReach(Reservation reservation) {
        Long count = reservationRepository
                 .countByOuvrageId(reservation.getOuvrage().getId())
@@ -91,8 +87,6 @@ public class ReservationService {
            throw new FunctionalException("Le nombre maximal de reservation est atteint");
 
        }
-
-
     }
 
     public void failIfUserAlreadyHaveExemple(Reservation reservation) {
@@ -111,59 +105,26 @@ public class ReservationService {
     public void cancel(Long reservationId) {
         Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
         if (reservation.isPresent()){
-            timers.remove(reservation.get());
             this.reservationRepository.deleteById(reservation.get().getId());
-            // send email to user telling him his reservation has been cancelled
-            EmailTemplateDTO dto = new EmailTemplateDTO(reservation.get().getUser().getEmail(),
-                    "Reservation cancelled",
-                    "Reservation for " + reservation.get().getOuvrage().getTitre() + "  has been cancelled");
-            utilitiesComponent.sendEmail(dto);
-            utilitiesComponent.recalculateUpdateReservationRanking(reservation.get().getOuvrage());
-            Exemplaire exemplaire = this.exemplaireRepository.findFirstByOuvrageIdAndDisponibleTrue(reservation.get().getOuvrage().getId());
-            exemplaire.setDisponible(false);
-            reservation.get().getOuvrage().increase();
-            this.exemplaireRepository.save(exemplaire);
-            this.ouvrageRepository.save(reservation.get().getOuvrage());
-
         }else {
             throw new FunctionalException("Error reservation not exist");
         }
-
     }
 
-    public List<ReservationWaitingListDTO> listActiveReservatonsMadeByUser(User user){
-        // find all reservations by user
-        List<Reservation> userReservations = reservationRepository.findAllByUser(user);
-        List<ReservationWaitingListDTO> reservationWaitingListDTOS = new ArrayList<>();
-        for (Reservation reservation : userReservations) {
-            Date earliestDate = earliestReturnDateService.getEarliestReturnDate(reservation.getOuvrage());
-            ReservationWaitingListDTO reservationWaitingListDTO = new ReservationWaitingListDTO(reservation, earliestDate);
-            reservationWaitingListDTOS.add(reservationWaitingListDTO);
-        }
-        return reservationWaitingListDTOS;
+    public List<Reservation> expireReservations() {
+        List<Reservation> reservations = reservationRepository.findListReservationMailSentTimePast(
+                LocalDateTime.now().minus(48, ChronoUnit.HOURS));
+        reservations.forEach(reservation -> {
+            this.cancel(reservation.getId());
+            this.sendMailToPrioritaryReservationWhenOuvrageIsDisponible(reservation.getOuvrage());
+        });
+        return reservations;
     }
 
-    // on click button "Check Availability"
-    public ReservationAvailabilityDTO findAvailabilityDetails(long ouvrageID){
-        // max reservation number has been reached for this book
-
-        Ouvrage ouvrage = ouvrageRepository.getOne(ouvrageID);
-        long count = countReservationNumber(ouvrageID);
-        if (count >= ouvrage.getNbreExemplaireDispo()*2){
-            return new ReservationAvailabilityDTO(null, -1, true);
-        }
-        else{
-            // get the ealiest date
-            Date date = earliestReturnDateService.getEarliestReturnDate(ouvrage);
-            return new ReservationAvailabilityDTO(date, (int) count, false);
-        }
+    public Optional<Long> numberOfReservationForTheBook(Long ouvrageId) {
+        return reservationRepository.countByOuvrageId(ouvrageId);
     }
-
-    private long countReservationNumber(long ouvrageID){
-        return reservationRepository
-                .countByOuvrageId(ouvrageID)
-                .orElse(0L);
-    }
-
-
 }
+
+
+

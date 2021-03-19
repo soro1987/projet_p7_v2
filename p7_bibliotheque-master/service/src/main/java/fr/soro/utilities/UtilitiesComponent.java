@@ -29,9 +29,16 @@ public class UtilitiesComponent {
 
     private final String EMAIL_SENDER_SERVICE = "http://localhost:8083/sendEmail";
 
+
+    public void sendMailBuilder(String userEmail, String ouvrageTitle,String message) {
+        //Mail sender to alert the No.1 user of availability of the book
+        EmailTemplateDTO emailTemplateDTO = new EmailTemplateDTO(userEmail, ouvrageTitle + message);
+        this.sendEmail(emailTemplateDTO);
+    }
+
     @Async
-    public void sendEmail(EmailTemplateDTO dto){
-        ResponseEntity<String> result = restTemplate.postForEntity(EMAIL_SENDER_SERVICE, dto, String.class);
+    public void sendEmail(EmailTemplateDTO emailTemplateDTO){
+        ResponseEntity<String> result = restTemplate.postForEntity(EMAIL_SENDER_SERVICE, emailTemplateDTO, String.class);
     }
 
     @Async
