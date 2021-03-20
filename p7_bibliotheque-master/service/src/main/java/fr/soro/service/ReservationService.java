@@ -15,6 +15,9 @@ import java.util.Optional;
 @Service
 public class ReservationService {
 
+
+
+
     private final ReservationJob reservationJob;
     private final OuvrageRepository ouvrageRepository;
     private final UserRepository userRepository;
@@ -22,9 +25,11 @@ public class ReservationService {
     private final UtilitiesComponent utilitiesComponent;
     private final ExemplaireService exemplaireService;
     private final ExemplaireRepository exemplaireRepository;
+    private final EmpruntService empruntService;
+
 
     public ReservationService(ReservationJob reservationJob, OuvrageRepository ouvrageRepository, UserRepository userRepository, ReservationRepository reservationRepository,
-                              UtilitiesComponent utilitiesComponent, ExemplaireService exemplaireService, ExemplaireRepository exemplaireRepository)
+                              UtilitiesComponent utilitiesComponent, ExemplaireService exemplaireService, ExemplaireRepository exemplaireRepository, EmpruntService empruntService)
     {
         this.reservationJob = reservationJob;
         this.ouvrageRepository = ouvrageRepository;
@@ -33,6 +38,7 @@ public class ReservationService {
         this.utilitiesComponent = utilitiesComponent;
         this.exemplaireService = exemplaireService;
         this.exemplaireRepository = exemplaireRepository;
+        this.empruntService = empruntService;
     }
 
     public Reservation createReservation(Long userId, Long ouvrageId){
@@ -123,6 +129,23 @@ public class ReservationService {
 
     public Optional<Long> numberOfReservationForTheBook(Long ouvrageId) {
         return reservationRepository.countByOuvrageId(ouvrageId);
+    }
+
+    public UserReservationsCredentialsDto findUserReservationsCredentials(Long reservationId) {
+        UserReservationsCredentialsDto userReservationsCredentialsDto = new UserReservationsCredentialsDto();
+        Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
+
+            userReservationsCredentialsDto.setBookEarliestReturnDate( this.empruntService.findEmpruntEarliestReturnDate(reservation.get().getOuvrage().getId()));
+            userReservationsCredentialsDto.setTitle(reservation.get().getOuvrage().getTitre());
+            userReservationsCredentialsDto.setPositionInWaitingList(this.positionInWaitingList(reservation.get()));
+            return userReservationsCredentialsDto;
+
+    }
+
+    private Integer positionInWaitingList(Reservation reservation) {
+        List<Reservation> reservations =this.reservationRepository.findAllByOuvrageIdOrderByDateReservationDesc(reservation.getOuvrage().getId());
+        return reservations.indexOf(reservation)+1;
+
     }
 }
 

@@ -1,16 +1,14 @@
 package fr.soro.controller;
 
 import fr.soro.dto.*;
-import fr.soro.entities.Emprunt;
 import fr.soro.entities.Reservation;
 import fr.soro.mapper.ReservationMapper;
 import fr.soro.repositories.EmpruntRepository;
 import fr.soro.repositories.ReservationRepository;
 import fr.soro.service.EmpruntService;
 import fr.soro.service.ReservationService;
+import fr.soro.service.UserReservationsCredentialsDto;
 import fr.soro.service.UserService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -34,8 +32,11 @@ public class ReservationController {
     private final EmpruntService empruntService;
     private final WaitingListCredentialsDto waitingListCredentialsDto;
     private final EmpruntRepository empruntRepository;
+    private UserReservationsCredentialsDto userReservationsCredentialsDto;
 
-    public ReservationController(ReservationService reservationService, ReservationMapper reservationMapper, ReservationRepository reservationRepository, MailForExpiredReservationDto mailForExpiredReservationDto, UserService userService, EmpruntService empruntService, WaitingListCredentialsDto waitingListCredentialsDto, EmpruntRepository empruntRepository) {
+    public ReservationController(ReservationService reservationService, ReservationMapper reservationMapper, ReservationRepository reservationRepository,
+                                 MailForExpiredReservationDto mailForExpiredReservationDto, UserService userService, EmpruntService empruntService,
+                                 WaitingListCredentialsDto waitingListCredentialsDto, EmpruntRepository empruntRepository ,UserReservationsCredentialsDto userReservationsCredentialsDto) {
         this.reservationService = reservationService;
         this.reservationMapper = reservationMapper;
         this.reservationRepository = reservationRepository;
@@ -44,6 +45,8 @@ public class ReservationController {
         this.empruntService = empruntService;
         this.waitingListCredentialsDto = waitingListCredentialsDto;
         this.empruntRepository = empruntRepository;
+
+        this.userReservationsCredentialsDto = userReservationsCredentialsDto;
     }
 
     @GetMapping(value = "/v1/ouvrages/{id}/reservations")
@@ -86,6 +89,14 @@ public class ReservationController {
                 numberOfReservationForTheBook.get(),canBeBooked);
         return ResponseEntity.ok(waitingListCredentialsDto);
     }
+
+    @GetMapping(value = "/v1/reservation/userCredentials/{userId}")
+    public ResponseEntity<UserReservationsCredentialsDto> userReservationsCredentials(@PathVariable Long reservationId){
+        UserReservationsCredentialsDto userReservationsCredentialsDto = this.reservationService.findUserReservationsCredentials(reservationId);
+          return ResponseEntity.ok(userReservationsCredentialsDto);
+    }
+
+
 
 
 
