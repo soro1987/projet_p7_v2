@@ -1,9 +1,7 @@
 package fr.soro.dto;
 
-import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 import java.util.Date;
+
 
 public class WaitingListCredentialsDto {
 
@@ -17,6 +15,10 @@ public class WaitingListCredentialsDto {
         this.canBeBooked = canBeBooked;
     }
 
+    public WaitingListCredentialsDto() {
+
+    }
+
     public Date getEarliestBookReturnDate() {
         return earliestBookReturnDate;
     }
@@ -27,5 +29,17 @@ public class WaitingListCredentialsDto {
 
     public boolean isCanBeBooked() {
         return canBeBooked;
+    }
+
+    public void setEarliestBookReturnDate(Date earliestBookReturnDate) {
+        this.earliestBookReturnDate = earliestBookReturnDate;
+    }
+
+    public void setNumberOfReservation(Long numberOfReservation) {
+        this.numberOfReservation = numberOfReservation;
+    }
+
+    public void setCanBeBooked(boolean canBeBooked) {
+        this.canBeBooked = canBeBooked;
     }
 }

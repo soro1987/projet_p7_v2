@@ -1,5 +1,6 @@
 package fr.soro.service;
 
+import fr.soro.dto.WaitingListCredentialsDto;
 import fr.soro.entities.*;
 import fr.soro.exeption.FunctionalException;
 import fr.soro.repositories.*;
@@ -26,10 +27,12 @@ public class ReservationService {
     private final ExemplaireService exemplaireService;
     private final ExemplaireRepository exemplaireRepository;
     private final EmpruntService empruntService;
+    private final ReservationService reservationService;
+
 
 
     public ReservationService(ReservationJob reservationJob, OuvrageRepository ouvrageRepository, UserRepository userRepository, ReservationRepository reservationRepository,
-                              UtilitiesComponent utilitiesComponent, ExemplaireService exemplaireService, ExemplaireRepository exemplaireRepository, EmpruntService empruntService)
+                              UtilitiesComponent utilitiesComponent, ExemplaireService exemplaireService, ExemplaireRepository exemplaireRepository, EmpruntService empruntService, ReservationService reservationService)
     {
         this.reservationJob = reservationJob;
         this.ouvrageRepository = ouvrageRepository;
@@ -39,6 +42,7 @@ public class ReservationService {
         this.exemplaireService = exemplaireService;
         this.exemplaireRepository = exemplaireRepository;
         this.empruntService = empruntService;
+        this.reservationService = reservationService;
     }
 
     public Reservation createReservation(Long userId, Long ouvrageId){
@@ -79,7 +83,6 @@ public class ReservationService {
                 .findByUserId(reservation.getUser().getId());
         if (byUserIdAndOuvrageId.isPresent()){
             throw new FunctionalException("Utilisateur a deja réservé cet ouvrage");
-
         }
     }
 
@@ -91,7 +94,6 @@ public class ReservationService {
        if(count >= ouvrage.getNbreExemplaireDispo()*2){
        //if (count >= reservation.getOuvrage().getNbreExemplaireDispo()*2){
            throw new FunctionalException("Le nombre maximal de reservation est atteint");
-
        }
     }
 
@@ -105,8 +107,6 @@ public class ReservationService {
         }
 
     }
-
-
 
     public void cancel(Long reservationId) {
         Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
@@ -132,21 +132,31 @@ public class ReservationService {
     }
 
     public UserReservationsCredentialsDto findUserReservationsCredentials(Long reservationId) {
+        //Create object to return
         UserReservationsCredentialsDto userReservationsCredentialsDto = new UserReservationsCredentialsDto();
         Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
-
+            //Retrieve values
             userReservationsCredentialsDto.setBookEarliestReturnDate( this.empruntService.findEmpruntEarliestReturnDate(reservation.get().getOuvrage().getId()));
             userReservationsCredentialsDto.setTitle(reservation.get().getOuvrage().getTitre());
             userReservationsCredentialsDto.setPositionInWaitingList(this.positionInWaitingList(reservation.get()));
             return userReservationsCredentialsDto;
-
     }
 
     private Integer positionInWaitingList(Reservation reservation) {
         List<Reservation> reservations =this.reservationRepository.findAllByOuvrageIdOrderByDateReservationDesc(reservation.getOuvrage().getId());
         return reservations.indexOf(reservation)+1;
-
     }
+
+    public WaitingListCredentialsDto waitingListCredentials(Long ouvrageId) {
+        //Create object to return
+        WaitingListCredentialsDto waitingListCredentialsDto = new WaitingListCredentialsDto();
+        //Retrieve values
+        waitingListCredentialsDto.setEarliestBookReturnDate(this.empruntService.findEmpruntEarliestReturnDate(ouvrageId));
+        waitingListCredentialsDto.setNumberOfReservation(this.reservationService.numberOfReservationForTheBook(ouvrageId).get());
+        waitingListCredentialsDto.setCanBeBooked(this.empruntService.canBeBooked(ouvrageId));
+        return waitingListCredentialsDto;
+    }
+
 }
 
 

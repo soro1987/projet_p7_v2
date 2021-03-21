@@ -82,18 +82,12 @@ public class ReservationController {
 
     @GetMapping(value = "/v1/reservations/waitingList/{ouvrageId}")
     public ResponseEntity<WaitingListCredentialsDto> checkOuvrageWaitingList(@PathVariable Long ouvrageId) {
-        Date empruntEarliestReturnDate = empruntService.findEmpruntEarliestReturnDate(ouvrageId);
-        Optional<Long> numberOfReservationForTheBook = reservationService.numberOfReservationForTheBook(ouvrageId);
-        boolean canBeBooked = empruntService.canBeBooked(ouvrageId);
-        WaitingListCredentialsDto waitingListCredentialsDto = new WaitingListCredentialsDto(empruntEarliestReturnDate,
-                numberOfReservationForTheBook.get(),canBeBooked);
-        return ResponseEntity.ok(waitingListCredentialsDto);
+        return ResponseEntity.ok(this.reservationService.waitingListCredentials(ouvrageId));
     }
 
     @GetMapping(value = "/v1/reservation/userCredentials/{userId}")
     public ResponseEntity<UserReservationsCredentialsDto> userReservationsCredentials(@PathVariable Long reservationId){
-        UserReservationsCredentialsDto userReservationsCredentialsDto = this.reservationService.findUserReservationsCredentials(reservationId);
-          return ResponseEntity.ok(userReservationsCredentialsDto);
+         return ResponseEntity.ok(this.reservationService.findUserReservationsCredentials(reservationId));
     }
 
 
