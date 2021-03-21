@@ -76,7 +76,6 @@ public class OuvrageClient {
 		ResponseEntity<OuvrageDto> response =securedRestTemplate.getForEntity(appUrl+"/ouvrages-titre/"+ouvrageTitre, OuvrageDto.class);
 		OuvrageDto ouvrageByTitre = response.getBody();	
 		return ouvrageByTitre;
-		
 	}
 	
 

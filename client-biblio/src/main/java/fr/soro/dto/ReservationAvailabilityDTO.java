@@ -42,4 +42,3 @@ public class ReservationAvailabilityDTO {
         this.maximunSlotReach = maximunSlotReach;
     }
 }
-

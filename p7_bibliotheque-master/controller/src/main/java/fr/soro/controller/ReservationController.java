@@ -7,7 +7,7 @@ import fr.soro.repositories.EmpruntRepository;
 import fr.soro.repositories.ReservationRepository;
 import fr.soro.service.EmpruntService;
 import fr.soro.service.ReservationService;
-import fr.soro.service.UserReservationsCredentialsDto;
+import fr.soro.dto.UserReservationsCredentialsDto;
 import fr.soro.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,13 +28,13 @@ public class ReservationController {
     private final MailForExpiredReservationDto mailForExpiredReservationDto;
     private final UserService userService;
     private final EmpruntService empruntService;
-    private final WaitingListCredentialsDto waitingListCredentialsDto;
+    private final OuvrageWaitingListCredentialsDto waitingListCredentialsDto;
     private final EmpruntRepository empruntRepository;
     private UserReservationsCredentialsDto userReservationsCredentialsDto;
 
     public ReservationController(ReservationService reservationService, ReservationMapper reservationMapper, ReservationRepository reservationRepository,
                                  MailForExpiredReservationDto mailForExpiredReservationDto, UserService userService, EmpruntService empruntService,
-                                 WaitingListCredentialsDto waitingListCredentialsDto, EmpruntRepository empruntRepository ,UserReservationsCredentialsDto userReservationsCredentialsDto) {
+                                 OuvrageWaitingListCredentialsDto waitingListCredentialsDto, EmpruntRepository empruntRepository , UserReservationsCredentialsDto userReservationsCredentialsDto) {
         this.reservationService = reservationService;
         this.reservationMapper = reservationMapper;
         this.reservationRepository = reservationRepository;
@@ -81,13 +79,18 @@ public class ReservationController {
     }
 
     @GetMapping(value = "/v1/reservations/waitingList/{ouvrageId}")
-    public ResponseEntity<WaitingListCredentialsDto> checkOuvrageWaitingList(@PathVariable Long ouvrageId) {
+    public ResponseEntity<OuvrageWaitingListCredentialsDto> checkOuvrageWaitingList(@PathVariable Long ouvrageId) {
         return ResponseEntity.ok(this.reservationService.waitingListCredentials(ouvrageId));
     }
 
     @GetMapping(value = "/v1/reservation/userCredentials/{userId}")
+    public ResponseEntity<List<UserReservationsCredentialsDto>> userAllReservationsCredentials(@PathVariable Long userId){
+        return ResponseEntity.ok(this.reservationService.findAllUserReservationsCredentials(userId));
+    }
+
+    @GetMapping(value = "/v1/reservation/userCredentials/{reservationId}")
     public ResponseEntity<UserReservationsCredentialsDto> userReservationsCredentials(@PathVariable Long reservationId){
-         return ResponseEntity.ok(this.reservationService.findUserReservationsCredentials(reservationId));
+         return ResponseEntity.ok(this.reservationService.findUserReservationCredentials(reservationId));
     }
 
 

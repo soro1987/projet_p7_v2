@@ -1,4 +1,4 @@
-package fr.soro.service;
+package fr.soro.dto;
 
 import java.util.Date;
 

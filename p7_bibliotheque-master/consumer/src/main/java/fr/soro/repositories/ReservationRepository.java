@@ -37,5 +37,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findAllByOuvrageIdOrderByDateReservationDesc(Long ouvrageId);
 
+    List<Reservation> findAllByUserIdOrderByDateReservation(Long userId);
+
+
 
 }

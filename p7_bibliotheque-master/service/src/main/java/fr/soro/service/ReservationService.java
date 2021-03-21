@@ -1,6 +1,7 @@
 package fr.soro.service;
 
-import fr.soro.dto.WaitingListCredentialsDto;
+import fr.soro.dto.UserReservationsCredentialsDto;
+import fr.soro.dto.OuvrageWaitingListCredentialsDto;
 import fr.soro.entities.*;
 import fr.soro.exeption.FunctionalException;
 import fr.soro.repositories.*;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationService {
@@ -131,25 +133,33 @@ public class ReservationService {
         return reservationRepository.countByOuvrageId(ouvrageId);
     }
 
-    public UserReservationsCredentialsDto findUserReservationsCredentials(Long reservationId) {
+    public UserReservationsCredentialsDto findUserReservationCredentials(Long reservationId) {
         //Create object to return
-        UserReservationsCredentialsDto userReservationsCredentialsDto = new UserReservationsCredentialsDto();
+        UserReservationsCredentialsDto userReservationsCredentials = new UserReservationsCredentialsDto();
         Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
             //Retrieve values
-            userReservationsCredentialsDto.setBookEarliestReturnDate( this.empruntService.findEmpruntEarliestReturnDate(reservation.get().getOuvrage().getId()));
-            userReservationsCredentialsDto.setTitle(reservation.get().getOuvrage().getTitre());
-            userReservationsCredentialsDto.setPositionInWaitingList(this.positionInWaitingList(reservation.get()));
-            return userReservationsCredentialsDto;
+            userReservationsCredentials.setBookEarliestReturnDate( this.empruntService.findEmpruntEarliestReturnDate(reservation.get().getOuvrage().getId()));
+            userReservationsCredentials.setTitle(reservation.get().getOuvrage().getTitre());
+            userReservationsCredentials.setPositionInWaitingList(this.positionInWaitingList(reservation.get()));
+            return userReservationsCredentials;
     }
+
+    public List<UserReservationsCredentialsDto> findAllUserReservationsCredentials(Long userId){
+        List<Reservation> userReservations = this.reservationRepository.findAllByUserIdOrderByDateReservation(userId);
+        return userReservations.stream()
+                        .map(reservation -> this.findUserReservationCredentials(reservation.getId()))
+                        .collect(Collectors.toList());
+    }
+
 
     private Integer positionInWaitingList(Reservation reservation) {
         List<Reservation> reservations =this.reservationRepository.findAllByOuvrageIdOrderByDateReservationDesc(reservation.getOuvrage().getId());
         return reservations.indexOf(reservation)+1;
     }
 
-    public WaitingListCredentialsDto waitingListCredentials(Long ouvrageId) {
+    public OuvrageWaitingListCredentialsDto waitingListCredentials(Long ouvrageId) {
         //Create object to return
-        WaitingListCredentialsDto waitingListCredentialsDto = new WaitingListCredentialsDto();
+        OuvrageWaitingListCredentialsDto waitingListCredentialsDto = new OuvrageWaitingListCredentialsDto();
         //Retrieve values
         waitingListCredentialsDto.setEarliestBookReturnDate(this.empruntService.findEmpruntEarliestReturnDate(ouvrageId));
         waitingListCredentialsDto.setNumberOfReservation(this.reservationService.numberOfReservationForTheBook(ouvrageId).get());

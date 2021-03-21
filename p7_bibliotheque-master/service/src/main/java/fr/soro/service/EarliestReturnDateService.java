@@ -1,6 +1,5 @@
 package fr.soro.service;
 
-import fr.soro.dto.ReservationAvailabilityDTO;
 import fr.soro.entities.EarliestReturnDate;
 import fr.soro.entities.Emprunt;
 import fr.soro.entities.Exemplaire;
