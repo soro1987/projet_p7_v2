@@ -72,17 +72,5 @@ public class ExemplaireService {
 		
 	}
 
-	public boolean doesUserCurrentlyPossessThisBook(User user, Ouvrage ouvrage){
-		/// find exemplaire where ouvrageid is ?
-		List<Exemplaire> exemplaires = exemplaireRepository.findAllByOuvrageAndDisponible(ouvrage, false);
-		// for every exemplaire found check if its emprunt has a user like ?
-		boolean found = false;
-		for (Exemplaire exemplaire : exemplaires) {
-			if(exemplaire.getEmprunt().getUser().getId() == user.getId()){
-				found = true;
-				break;
-			}
-		}
-		return found;
-	}
+
 }

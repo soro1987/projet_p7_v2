@@ -1,23 +1,12 @@
 package fr.soro.entities;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -32,33 +21,37 @@ public class Emprunt implements Serializable, Comparable<Emprunt> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private Date dateDebut;//LocaleDate
+
 	private Date dateEcheance;
+
 	private boolean prolongation;
+
 	private int depassement;
-	@JsonBackReference(value = "em-user")
+
+//	@JsonBackReference(value = "em-user")
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-	@JsonManagedReference(value = "ex-emp")	
-	@OneToMany(mappedBy = "emprunt")
-	List<Exemplaire> exemplaires = new ArrayList<Exemplaire>();
+//	@JsonManagedReference(value = "ex-emp")
+	@OneToOne
+	@JoinColumn(name = "emprunt_id")
+	private Exemplaire exemplaire;
 	
 	public Emprunt() {
 		super();
 	}
 
-	public Emprunt(Long id, Date dateDebut, Date dateEcheance, boolean prolongation, int depassement, User user,
-			List<Exemplaire> exemplaires) {
-		super();
+	public Emprunt(Long id, Date dateDebut, Date dateEcheance, boolean prolongation, int depassement, User user, Exemplaire exemplaire) {
 		this.id = id;
 		this.dateDebut = dateDebut;
 		this.dateEcheance = dateEcheance;
 		this.prolongation = prolongation;
 		this.depassement = depassement;
 		this.user = user;
-		this.exemplaires = exemplaires;
+		this.exemplaire = exemplaire;
 	}
 
 	public Long getId() {
@@ -109,12 +102,12 @@ public class Emprunt implements Serializable, Comparable<Emprunt> {
 		this.user = user;
 	}
 
-	public List<Exemplaire> getExemplaires() {
-		return exemplaires;
+	public Exemplaire getExemplaire() {
+		return exemplaire;
 	}
 
-	public void setExemplaires(List<Exemplaire> exemplaires) {
-		this.exemplaires = exemplaires;
+	public void setExemplaire(Exemplaire exemplaire) {
+		this.exemplaire = exemplaire;
 	}
 
 	public static long getSerialversionuid() {

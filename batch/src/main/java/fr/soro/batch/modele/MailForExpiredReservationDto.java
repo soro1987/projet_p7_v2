@@ -1,4 +1,5 @@
-package fr.soro.dto;
+package fr.soro.batch.modele;
+
 
 public class MailForExpiredReservationDto {
 

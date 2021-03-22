@@ -23,14 +23,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findAllByOuvrageId(Long ouvrageId);
 
     Page<Reservation> findByOuvrageId(Long ouvrageId, Pageable pageable);
-    // find the reservation made by the lowest ranking user
-    Optional<Reservation> findTopByOuvrageIdOrderByRankDesc(Long ouvrageId);
-    // find the reservation made by No.1 ranked user
-    Optional<Reservation> findTopByOuvrageIdOrderByRankAsc(Long ouvrageId);
 
     List<Reservation> findAllByUser(User user);
 
-    @Query("select r from #{#entityName} r where r.mailSentTime < ?1")
+    @Query("select r from #{#entityName} r where r.mailSendTime < ?1")
     List<Reservation> findListReservationMailSentTimePast(LocalDateTime before48h);
 
     Optional<Reservation> findFirstByOuvrageIdOrderByDateReservationAsc(Long ouvrageId);

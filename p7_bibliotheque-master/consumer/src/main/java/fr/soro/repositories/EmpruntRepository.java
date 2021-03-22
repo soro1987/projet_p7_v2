@@ -21,12 +21,8 @@ public interface EmpruntRepository extends JpaRepository<Emprunt, Long> {
 
 	List<Emprunt> findByDepassement(int depassement);
 
-
-   // Optional<Reservation> findByOuvrageIdAndUserId(Long ouvrageId, Long userId);
-
 	List<Emprunt> findAllByUser(User user);
 
-    Emprunt findFirstByOuvrageIdOrderByDateEcheanceDesc(Long ouvrageId);
+    Optional<Emprunt> findFirstByExemplaireOuvrageIdOrderByDateEcheanceDesc(Long ouvrageId);
 
-	Long countByOuvrageId(Long ouvrageId);
 }

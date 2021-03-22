@@ -28,7 +28,7 @@ public class Exemplaire implements Serializable{
 	
 	@JsonBackReference(value = "ouvr-ex")
 	@ManyToOne
-	@JoinColumn(name = "ouvrage")
+	@JoinColumn(name = "ouvrage_id")
 	private Ouvrage ouvrage;
 	
 	@JsonBackReference(value = "ouvr-bib")
@@ -36,27 +36,24 @@ public class Exemplaire implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "bibliotheque")
 	private Bibliotheque bibliotheque;
+
 	@JsonBackReference(value = "em-user")
 	@Column(name = "sys_user")
 	private User user;
 	
-	@JsonBackReference(value = "ex-emp")
-	@ManyToOne
-	@JoinColumn(name = "emprunt_id")
-	private Emprunt emprunt;
 	public Exemplaire() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 
-	public Exemplaire(Long id, boolean disponible, Ouvrage ouvrage, Bibliotheque bibliotheque, Emprunt emprunt) {
+	public Exemplaire(Long id, boolean disponible, Ouvrage ouvrage, Bibliotheque bibliotheque) {
 		super();
 		this.id = id;
 		this.disponible = disponible;
 		this.ouvrage = ouvrage;
 		this.bibliotheque = bibliotheque;
-		this.emprunt = emprunt;
+
 	}
 
 	public Long getId() {
@@ -87,17 +84,10 @@ public class Exemplaire implements Serializable{
 		this.bibliotheque = bibliotheque;
 	}
 
-
-	public Emprunt getEmprunt() {
-		return emprunt;
-	}
-	public void setEmprunt(Emprunt emprunt) {
-		this.emprunt = emprunt;
-	}
-	
 	public boolean isDisponible() {
 		return disponible;
 	}
+
 	public void setDisponible(boolean disponible) {
 		this.disponible = disponible;
 	}

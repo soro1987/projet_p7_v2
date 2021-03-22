@@ -19,12 +19,11 @@ public class EmpruntService {
 	private final ExemplaireRepository exemplaireRepository;
 	private final OuvrageRepository ouvrageRepository;
 	private final UtilitiesComponent utilitiesComponent;
-	private final EarliestReturnDateService earliestReturnDateService;
-	private final ReservationService reservationService;
+
 
 	public EmpruntService(ReservationJob reservationJob, EmpruntRepository empruntRepository, ReservationRepository reservationRepository,
 						  UserRepository userRepository, ExemplaireRepository exemplaireRepository, OuvrageRepository ouvrageRepository,
-						  UtilitiesComponent utilitiesComponent, EarliestReturnDateService earliestReturnDateService, ReservationService reservationService)
+						  UtilitiesComponent utilitiesComponent)
 	{
 		this.reservationJob = reservationJob;
 		this.empruntRepository = empruntRepository;
@@ -33,8 +32,7 @@ public class EmpruntService {
 		this.exemplaireRepository = exemplaireRepository;
 		this.ouvrageRepository = ouvrageRepository;
 		this.utilitiesComponent = utilitiesComponent;
-		this.earliestReturnDateService = earliestReturnDateService;
-		this.reservationService = reservationService;
+
 	}
 
 	public Emprunt get(Long id) {
@@ -92,12 +90,12 @@ public class EmpruntService {
 		User user = this.userRepository.getOne(idUser);
 		emprunt.setUser(user);
 		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
-		emprunt.getExemplaires().add(exemplaire);
+		emprunt.setExemplaire(exemplaire);
 		exemplaire.setDisponible(false);
 		exemplaire.getOuvrage().setNbreExemplaireDispo(exemplaire.getOuvrage().getNbreExemplaireDispo() -1);
 		Emprunt empruntSaved  = this.empruntRepository.save(emprunt);
 		user.getEmprunts().add(empruntSaved);
-		exemplaire.setEmprunt(empruntSaved);
+
 		
 		this.userRepository.save(user);
 		this.ouvrageRepository.saveAndFlush(exemplaire.getOuvrage());
@@ -120,48 +118,28 @@ public class EmpruntService {
 		return emprunt;
 	}
 
-	public void returnEmprunt(Long idEmprunt, Long idExmplaire) {
-		Exemplaire exemplaire = this.resetExemplaire(idExmplaire);
-		Ouvrage ouv = this.retrieveAndUpdateOuvrage(exemplaire);
-		//Persist the changes in db
-		this.exemplaireRepository.save(exemplaire);
-		this.empruntRepository.deleteById(idEmprunt);
-		//If there is a reservation for this ouvrage send mail to first reservation in line
-		this.reservationService.sendMailToPrioritaryReservationWhenOuvrageIsDisponible(ouv);
-	}
 
 
 
-	private Ouvrage retrieveAndUpdateOuvrage(Exemplaire exemplaire) {
+
+	public Ouvrage retrieveAndUpdateOuvrage(Exemplaire exemplaire) {
 		Ouvrage ouv = exemplaire.getOuvrage();
 		ouv.increase();
 		ouvrageRepository.save(ouv);
 		return ouv;
 	}
 
-	private Exemplaire resetExemplaire(Long idExmplaire) {
+	public Exemplaire resetExemplaire(Long idExmplaire) {
 		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
-		exemplaire.setEmprunt(null);
 		exemplaire.setDisponible(true);
 		return exemplaire;
 	}
 
 
 	public Date findEmpruntEarliestReturnDate(Long ouvrageId) {
-		return empruntRepository.findFirstByOuvrageIdOrderByDateEcheanceDesc(ouvrageId).getDateEcheance();
+		return empruntRepository.findFirstByExemplaireOuvrageIdOrderByDateEcheanceDesc(ouvrageId).get().getDateEcheance();
 	}
 
 
-	public boolean canBeBooked(Long ouvrageId) {
-		//Retrieve number of exemplaires and the number of reservation available
-		Optional<Ouvrage> ouvrage = ouvrageRepository.findById(ouvrageId);
-		Optional<Long> numberOfReservationForTheBook = reservationService.numberOfReservationForTheBook(ouvrageId);
-		//Check if the number of reservation is less then two time the number of exemplaires
-		if (numberOfReservationForTheBook.isPresent() ){
-			if (ouvrage.get().getNbreExemplaireDispo() *2 < numberOfReservationForTheBook.get()){
-				return true;
-			}
-		}
-		return false;
-	}
+
 }

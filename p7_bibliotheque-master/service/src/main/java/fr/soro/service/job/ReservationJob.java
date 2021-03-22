@@ -12,10 +12,11 @@ import fr.soro.entities.Reservation;
 import fr.soro.repositories.ReservationRepository;
 import fr.soro.service.OuvrageService;
 import fr.soro.utilities.UtilitiesComponent;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-
+@Component
 public class ReservationJob {
 
     private final ReservationRepository reservationRepository;

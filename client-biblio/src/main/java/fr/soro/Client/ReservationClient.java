@@ -9,7 +9,9 @@ import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class ReservationClient {
 
@@ -35,21 +37,17 @@ public class ReservationClient {
 
     public WaitingListCredentialsDto getOuvrageWaitingListCredentials(String ouvrageId){
         ResponseEntity<WaitingListCredentialsDto> response =securedRestTemplate.getForEntity(appUrl+"/v1/reservations/waitingList/"+ouvrageId, WaitingListCredentialsDto.class);
-        WaitingListCredentialsDto waitingListCredentialsDto = response.getBody();
-        return waitingListCredentialsDto;
+        return response.getBody();
     }
 
     public List<UserReservationCredentialsDto> getAllUserReservationCredentials(String userId){
         ResponseEntity<UserReservationCredentialsDto[]> response =securedRestTemplate.getForEntity(appUrl+"/v1/reservation/userCredentials/"+userId, UserReservationCredentialsDto[].class);
-        UserReservationCredentialsDto[] allUserReservationCredentialsDto = response.getBody();
-        List<UserReservationCredentialsDto> allUserReservationCredentials = Arrays.asList(allUserReservationCredentialsDto);
-        return allUserReservationCredentials;
+        return Optional.ofNullable(response.getBody()).map(Arrays::asList).orElse(Collections.emptyList());
     }
 
     public UserReservationCredentialsDto getUserReservationCredentials(String userId){
         ResponseEntity<UserReservationCredentialsDto> response =securedRestTemplate.getForEntity(appUrl+"/v1/reservation/userCredentials/"+userId, UserReservationCredentialsDto.class);
-        UserReservationCredentialsDto userReservationCredentialsDto = response.getBody();
-        return userReservationCredentialsDto;
+        return response.getBody();
     }
 
     public HttpEntity<String>  registrationEntityBuilder() throws JsonProcessingException {

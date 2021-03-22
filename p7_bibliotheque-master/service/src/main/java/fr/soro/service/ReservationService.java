@@ -19,32 +19,28 @@ import java.util.stream.Collectors;
 public class ReservationService {
 
 
-
-
-    private final ReservationJob reservationJob;
-    private final OuvrageRepository ouvrageRepository;
+     private final OuvrageRepository ouvrageRepository;
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final UtilitiesComponent utilitiesComponent;
-    private final ExemplaireService exemplaireService;
     private final ExemplaireRepository exemplaireRepository;
     private final EmpruntService empruntService;
-    private final ReservationService reservationService;
+    private final EmpruntRepository empruntRepository;
 
 
 
-    public ReservationService(ReservationJob reservationJob, OuvrageRepository ouvrageRepository, UserRepository userRepository, ReservationRepository reservationRepository,
-                              UtilitiesComponent utilitiesComponent, ExemplaireService exemplaireService, ExemplaireRepository exemplaireRepository, EmpruntService empruntService, ReservationService reservationService)
+
+    public ReservationService(ReservationJob reservationJob, OuvrageRepository ouvrageRepository, UserRepository userRepository,
+                              ReservationRepository reservationRepository, UtilitiesComponent utilitiesComponent, ExemplaireService exemplaireService,
+                              ExemplaireRepository exemplaireRepository, EmpruntService empruntService, EmpruntRepository empruntRepository)
     {
-        this.reservationJob = reservationJob;
         this.ouvrageRepository = ouvrageRepository;
         this.userRepository = userRepository;
         this.reservationRepository = reservationRepository;
         this.utilitiesComponent = utilitiesComponent;
-        this.exemplaireService = exemplaireService;
         this.exemplaireRepository = exemplaireRepository;
         this.empruntService = empruntService;
-        this.reservationService = reservationService;
+        this.empruntRepository = empruntRepository;
     }
 
     public Reservation createReservation(Long userId, Long ouvrageId){
@@ -58,7 +54,6 @@ public class ReservationService {
         failIfBookCountLimitHasReach(reservation);
         failIfUserAlreadyHasBooking(reservation);
         Reservation saved = reservationRepository.save(reservation) ;
-        utilitiesComponent.recalculateUpdateReservationRanking(saved.getOuvrage());
         this.sendMailToPrioritaryReservationWhenOuvrageIsDisponible(saved.getOuvrage());
         return saved;
     }
@@ -92,18 +87,17 @@ public class ReservationService {
        Long count = reservationRepository
                 .countByOuvrageId(reservation.getOuvrage().getId())
                 .orElse(0L);
-       Ouvrage ouvrage =ouvrageRepository.findById(reservation.getOuvrage().getId()).get();
-       if(count >= ouvrage.getNbreExemplaireDispo()*2){
+       Ouvrage ouvrage =ouvrageRepository.findById(reservation.getOuvrage().getId()).orElseThrow(IllegalArgumentException::new);
+       if(count >= ouvrage.getNbreExemplaireDispo()*2L){
        //if (count >= reservation.getOuvrage().getNbreExemplaireDispo()*2){
            throw new FunctionalException("Le nombre maximal de reservation est atteint");
        }
     }
 
     public void failIfUserAlreadyHaveExemple(Reservation reservation) {
-        //Optional<Reservation> exemplaire = empruntRepository
-        //        .findByOuvrageIdAndUserId(reservation.getOuvrage().getId(),reservation.getUser().getId());
-        boolean found = exemplaireService.doesUserCurrentlyPossessThisBook(reservation.getUser(), reservation.getOuvrage());
-        if (found){
+        Optional<Reservation> reservation1 = reservationRepository
+                .findByOuvrageIdAndUserId(reservation.getOuvrage().getId(),reservation.getUser().getId());
+        if (reservation1.isPresent()){
             throw new FunctionalException("L'utilisateur a déja l'ouvrage en cours d'emprunt");
 
         }
@@ -129,24 +123,22 @@ public class ReservationService {
         return reservations;
     }
 
-    public Optional<Long> numberOfReservationForTheBook(Long ouvrageId) {
-        return reservationRepository.countByOuvrageId(ouvrageId);
-    }
 
     public UserReservationsCredentialsDto findUserReservationCredentials(Long reservationId) {
         //Create object to return
         UserReservationsCredentialsDto userReservationsCredentials = new UserReservationsCredentialsDto();
-        Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
+        Reservation reservation = this.reservationRepository.findById(reservationId).orElseThrow(IllegalArgumentException::new);
             //Retrieve values
-            userReservationsCredentials.setBookEarliestReturnDate( this.empruntService.findEmpruntEarliestReturnDate(reservation.get().getOuvrage().getId()));
-            userReservationsCredentials.setTitle(reservation.get().getOuvrage().getTitre());
-            userReservationsCredentials.setPositionInWaitingList(this.positionInWaitingList(reservation.get()));
+            userReservationsCredentials.setBookEarliestReturnDate(
+                    this.empruntService.findEmpruntEarliestReturnDate(reservation.getOuvrage().getId()));
+            userReservationsCredentials.setTitle(reservation.getOuvrage().getTitre());
+            userReservationsCredentials.setPositionInWaitingList(this.positionInWaitingList(reservation));
             return userReservationsCredentials;
     }
 
     public List<UserReservationsCredentialsDto> findAllUserReservationsCredentials(Long userId){
-        List<Reservation> userReservations = this.reservationRepository.findAllByUserIdOrderByDateReservation(userId);
-        return userReservations.stream()
+        return this.reservationRepository.findAllByUserIdOrderByDateReservation(userId)
+                        .stream()
                         .map(reservation -> this.findUserReservationCredentials(reservation.getId()))
                         .collect(Collectors.toList());
     }
@@ -162,9 +154,30 @@ public class ReservationService {
         OuvrageWaitingListCredentialsDto waitingListCredentialsDto = new OuvrageWaitingListCredentialsDto();
         //Retrieve values
         waitingListCredentialsDto.setEarliestBookReturnDate(this.empruntService.findEmpruntEarliestReturnDate(ouvrageId));
-        waitingListCredentialsDto.setNumberOfReservation(this.reservationService.numberOfReservationForTheBook(ouvrageId).get());
-        waitingListCredentialsDto.setCanBeBooked(this.empruntService.canBeBooked(ouvrageId));
+        waitingListCredentialsDto.setNumberOfReservation(reservationRepository.countByOuvrageId(ouvrageId).orElse( 0L));
+        waitingListCredentialsDto.setCanBeBooked(this.canBeBooked(ouvrageId));
         return waitingListCredentialsDto;
+    }
+
+    public boolean canBeBooked(Long ouvrageId) {
+        //Retrieve number of exemplaires and the number of reservation available
+        Optional<Ouvrage> ouvrage = ouvrageRepository.findById(ouvrageId);
+        Optional<Long> numberOfReservationForTheBook = reservationRepository.countByOuvrageId(ouvrageId);
+        //Check if the number of reservation is less then two time the number of exemplaires
+        if (ouvrage.isPresent() && numberOfReservationForTheBook.isPresent() ){
+            return ouvrage.get().getNbreExemplaireDispo() * 2L < numberOfReservationForTheBook.get();
+        }
+        return false;
+    }
+
+    public void returnEmprunt(Long idEmprunt, Long idExmplaire) {
+        Exemplaire exemplaire = this.empruntService.resetExemplaire(idExmplaire);
+        Ouvrage ouv = this.empruntService.retrieveAndUpdateOuvrage(exemplaire);
+        //Persist the changes in db
+        this.exemplaireRepository.save(exemplaire);
+        this.empruntRepository.deleteById(idEmprunt);
+        //If there is a reservation for this ouvrage send mail to first reservation in line
+        this.sendMailToPrioritaryReservationWhenOuvrageIsDisponible(ouv);
     }
 
 }

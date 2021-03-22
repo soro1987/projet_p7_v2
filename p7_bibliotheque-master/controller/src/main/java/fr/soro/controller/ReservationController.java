@@ -1,5 +1,6 @@
 package fr.soro.controller;
 
+
 import fr.soro.dto.*;
 import fr.soro.entities.Reservation;
 import fr.soro.mapper.ReservationMapper;
@@ -7,7 +8,6 @@ import fr.soro.repositories.EmpruntRepository;
 import fr.soro.repositories.ReservationRepository;
 import fr.soro.service.EmpruntService;
 import fr.soro.service.ReservationService;
-import fr.soro.dto.UserReservationsCredentialsDto;
 import fr.soro.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,30 +21,28 @@ import java.util.stream.Collectors;
 @RestController
 public class ReservationController {
 
+    private  MailForExpiredReservationDto mailForExpiredReservationDto;
+    private  OuvrageWaitingListCredentialsDto waitingListCredentialsDto;
 
     private final ReservationService reservationService;
     private final ReservationMapper reservationMapper;
     private final ReservationRepository reservationRepository;
-    private final MailForExpiredReservationDto mailForExpiredReservationDto;
     private final UserService userService;
     private final EmpruntService empruntService;
-    private final OuvrageWaitingListCredentialsDto waitingListCredentialsDto;
+
+
     private final EmpruntRepository empruntRepository;
     private UserReservationsCredentialsDto userReservationsCredentialsDto;
 
-    public ReservationController(ReservationService reservationService, ReservationMapper reservationMapper, ReservationRepository reservationRepository,
-                                 MailForExpiredReservationDto mailForExpiredReservationDto, UserService userService, EmpruntService empruntService,
-                                 OuvrageWaitingListCredentialsDto waitingListCredentialsDto, EmpruntRepository empruntRepository , UserReservationsCredentialsDto userReservationsCredentialsDto) {
+    public ReservationController(ReservationService reservationService, ReservationMapper reservationMapper,
+                                 ReservationRepository reservationRepository,UserService userService,
+                                 EmpruntService empruntService,EmpruntRepository empruntRepository) {
         this.reservationService = reservationService;
         this.reservationMapper = reservationMapper;
         this.reservationRepository = reservationRepository;
-        this.mailForExpiredReservationDto = mailForExpiredReservationDto;
         this.userService = userService;
         this.empruntService = empruntService;
-        this.waitingListCredentialsDto = waitingListCredentialsDto;
         this.empruntRepository = empruntRepository;
-
-        this.userReservationsCredentialsDto = userReservationsCredentialsDto;
     }
 
     @GetMapping(value = "/v1/ouvrages/{id}/reservations")
@@ -69,13 +67,12 @@ public class ReservationController {
 
     //Recuperer toutes les reservation de + de 48h
     //Les supprimer de la db
-    @GetMapping (value = "/reservations/expired")
+    @PostMapping (value = "/reservations/expired")
     public ResponseEntity <List<MailForExpiredReservationDto>> expireReservations(){
            return  ResponseEntity.ok (this.reservationService.expireReservations()
                    .stream().map(reservation -> new MailForExpiredReservationDto(reservation.getUser().getFullName(),
                            reservation.getUser().getEmail(),reservation.getOuvrage().getTitre()))
                    .collect(Collectors.toList()));
-
     }
 
     @GetMapping(value = "/v1/reservations/waitingList/{ouvrageId}")

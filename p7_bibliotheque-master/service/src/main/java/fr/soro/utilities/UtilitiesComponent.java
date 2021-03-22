@@ -21,8 +21,6 @@ public class UtilitiesComponent {
     @Autowired
     ReservationRepository reservationRepository;
 
-    @Autowired
-    ReservationTimers timers;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -41,26 +39,5 @@ public class UtilitiesComponent {
         ResponseEntity<String> result = restTemplate.postForEntity(EMAIL_SENDER_SERVICE, emailTemplateDTO, String.class);
     }
 
-    @Async
-    public void startTimer(Reservation reservation){
-        Timer timer = new Timer();
-        timer.schedule(new ReservationTimerTask(reservation), 172800000 ); // delay period
-        timers.put(reservation, timer);
-    }
 
-    @Async
-    public void recalculateUpdateReservationRanking(Ouvrage ouvrage){
-
-        //Fetch every one in the waitting list, put them in a list
-        List<Reservation> waitingList =reservationRepository.findAllByOuvrageId(ouvrage.getId());
-        //Sort the list by their current rank
-        Collections.sort(waitingList);
-        //Update their rank to their  current position in the arraylist
-        for (int i = 0; i < waitingList.size(); i++) {
-           Reservation r = waitingList.get(i);
-           r.setRank(i + 1);
-           reservationRepository.save(r);
-        }
-        reservationRepository.flush();
-    }
 }

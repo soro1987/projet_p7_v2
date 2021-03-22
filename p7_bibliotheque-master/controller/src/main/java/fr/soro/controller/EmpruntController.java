@@ -4,6 +4,7 @@ import fr.soro.entities.Emprunt;
 import fr.soro.entities.User;
 import fr.soro.service.EmpruntService;
 import fr.soro.service.ExemplaireService;
+import fr.soro.service.ReservationService;
 import fr.soro.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,9 @@ public class EmpruntController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private ReservationService reservationService;
 	
 	@PostMapping(value = "/emprunts/{idUser}/{idExemplaire}")
 	public ResponseEntity<Emprunt> createEmprunt(
@@ -44,7 +48,7 @@ public class EmpruntController {
 
 	@DeleteMapping(value = "/emprunts/delete/{empruntId}/{exemplaireId}")
 	public ResponseEntity<Void> deleteEmprunt(@PathVariable(value = "exemplaireId") Long exemplaireId,@PathVariable(value = "empruntId") Long empruntId) {
-		empruntService.returnEmprunt( empruntId,exemplaireId);
+		reservationService.returnEmprunt( empruntId,exemplaireId);
 		return new ResponseEntity<Void>(HttpStatus.GONE);
  	}
 
