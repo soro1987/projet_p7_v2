@@ -61,20 +61,20 @@ public class ReservationService {
     public void sendMailToPrioritaryReservationWhenOuvrageIsDisponible(Ouvrage ouvrage) {
         //If ouvrage is available check if there is a reservation for this ouvrage
         if (ouvrage.getNbreExemplaireDispo() > 0) {
-            Optional<Reservation> firstReservation = this.reservationRepository.findFirstByOuvrageIdOrderByDateReservationAsc(ouvrage.getId());
+            Optional<Reservation> firstReservation = this.reservationRepository.findFirstByOuvrageIdOrderByDateReservationAsc(ouvrage.getId())
+                    .filter(reservation -> reservation.getMailSendTime() == null);
             //if reservation is present  send mail to warn the user
             if (firstReservation.isPresent()) {
-                this.utilitiesComponent.sendMailBuilder(
+                this.utilitiesComponent.sendOuvrageAvailabilityMail(
                         firstReservation.get().getUser().getEmail(),
-                        ouvrage.getTitre(),
-                        "is available, You have 48 hours to pick it up.");
+                        firstReservation.get().getUser().getFullName(),
+                        ouvrage.getTitre());
                 //Persist the attribut mailSendTime of reservation in db
                 firstReservation.get().setMailSendTime(LocalDateTime.now());
                 this.reservationRepository.save(firstReservation.get());
             }
         }
     }
-
     private void failIfUserAlreadyHasBooking(Reservation reservation) {
         Optional<Reservation> byUserIdAndOuvrageId = reservationRepository
                 .findByUserId(reservation.getUser().getId());
@@ -115,7 +115,7 @@ public class ReservationService {
 
     public List<Reservation> expireReservations() {
         List<Reservation> reservations = reservationRepository.findListReservationMailSentTimePast(
-                LocalDateTime.now().minus(48, ChronoUnit.HOURS));
+                LocalDateTime.now().minus(140, ChronoUnit.SECONDS));
         reservations.forEach(reservation -> {
             this.cancel(reservation.getId());
             this.sendMailToPrioritaryReservationWhenOuvrageIsDisponible(reservation.getOuvrage());

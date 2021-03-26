@@ -3,9 +3,12 @@ package fr.soro.batch.modele;
 
 public class MailForExpiredReservationDto {
 
-    private final String userFullName;
-    private final String userEmail;
-    private final String ouvrageName;
+    private  String userFullName;
+    private  String userEmail;
+    private  String ouvrageName;
+
+    public MailForExpiredReservationDto() {
+    }
 
     public MailForExpiredReservationDto(String userFullName, String userEmail, String ouvrageName) {
         this.userFullName = userFullName;

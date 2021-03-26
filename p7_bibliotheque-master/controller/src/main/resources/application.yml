@@ -39,7 +39,7 @@ spring:
 
   jpa:
     openInView: false
-    show_sql: true
+    show_sql: false
     generate-ddl: true
     hibernate:
       ddl-auto: update
@@ -48,10 +48,8 @@ spring:
       hibernate.jdbc.lob.non_contextual_creation: true
 
 
-logging:
-  level:
-    org.springframework.web: INFO
-    org.springframework.security: DEBUG
-    com.example: DEBUG
-  file: app.log
+app:
+  batch:
+    base_url: http://localhost:8083
+    email.service.url: ${app.batch.base_url}/sendEmail
   

@@ -5,6 +5,8 @@ import fr.soro.entities.Ouvrage;
 import fr.soro.entities.Reservation;
 import fr.soro.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.scheduling.annotation.Async;
@@ -18,26 +20,25 @@ import java.util.Timer;
 @Component
 public class UtilitiesComponent {
 
-    @Autowired
-    ReservationRepository reservationRepository;
+    private final RestTemplate restTemplate;
+    @Value("${app.batch.email.service.url}")
+    private String emailServiceUrl;
 
+    public UtilitiesComponent(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
-    @Autowired
-    private RestTemplate restTemplate;
-
-    private final String EMAIL_SENDER_SERVICE = "http://localhost:8083/sendEmail";
-
-
-    public void sendMailBuilder(String userEmail, String ouvrageTitle,String message) {
+    public void sendOuvrageAvailabilityMail(String userEmail, String fullName, String ouvrageTitle) {
         //Mail sender to alert the No.1 user of availability of the book
-        EmailTemplateDTO emailTemplateDTO = new EmailTemplateDTO(userEmail, ouvrageTitle + message);
+        EmailTemplateDTO emailTemplateDTO = new EmailTemplateDTO(userEmail, "Ouvrage disponible",
+                "Bonjour Monsieur/Madame " + fullName + " votre reservation concernat l'ouvrage " + ouvrageTitle +
+                " est disponoble. vous disposez de 48h pour passer le retirer.");
         this.sendEmail(emailTemplateDTO);
     }
 
     @Async
     public void sendEmail(EmailTemplateDTO emailTemplateDTO){
-        ResponseEntity<String> result = restTemplate.postForEntity(EMAIL_SENDER_SERVICE, emailTemplateDTO, String.class);
+        restTemplate.postForEntity(emailServiceUrl, new HttpEntity<>(emailTemplateDTO), String.class);
     }
-
 
 }
