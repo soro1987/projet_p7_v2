@@ -106,7 +106,7 @@ public class EmpruntService {
 	
 	public Emprunt setProlongation(Long id) {
 		Emprunt emprunt = this.get(id);
-		if(emprunt.isProlongation() == false) {
+		if(!emprunt.isProlongation()) {
 			emprunt.setProlongation(true);
 			Calendar calendrier = Calendar.getInstance();
 			Date dateCourante = emprunt.getDateEcheance();
