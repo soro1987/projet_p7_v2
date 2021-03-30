@@ -1,7 +1,6 @@
 package fr.soro.entities;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,14 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -44,7 +38,7 @@ public class Exemplaire implements Serializable{
 	@JoinColumn(name = "bibliotheque")
 	private Bibliotheque bibliotheque;
 	@JsonBackReference(value = "em-user")
-	private User user;
+	private User sysUser;
 	
 	@JsonBackReference(value = "ex-emp")
 	@ManyToOne
@@ -107,12 +101,12 @@ public class Exemplaire implements Serializable{
 		this.disponible = disponible;
 	}
 
-	public User getUser() {
-		return user;
+	public User getSysUser() {
+		return sysUser;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setSysUser(User sysUser) {
+		this.sysUser = sysUser;
 	}
 	
 	

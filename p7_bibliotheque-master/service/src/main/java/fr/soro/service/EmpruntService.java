@@ -74,8 +74,8 @@ public class EmpruntService {
 		return empruntsExpirer;
 	}
 	
-	public Emprunt save(Long idUser, Long idExmplaire, Emprunt emprunt) {
-//		Emprunt emprunt = new Emprunt();
+	public Emprunt save(Long idUser, Long idExmplaire) {
+		Emprunt emprunt = new Emprunt();
 		emprunt.setDateDebut(new Date());
 		Calendar calendrier = Calendar.getInstance();
 		Date dateCourante = emprunt.getDateDebut();

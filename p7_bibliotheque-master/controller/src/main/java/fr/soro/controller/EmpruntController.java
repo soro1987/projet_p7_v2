@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,15 +31,16 @@ public class EmpruntController {
 	@PostMapping(value = "/emprunts/{idUser}/{idExemplaire}")
 	public ResponseEntity<Emprunt> createEmprunt(
 			@PathVariable(value = "idUser") Long idUser, 
-			@PathVariable(value = "idExemplaire") Long idExemplaire, 
-			@RequestBody Emprunt emprunt
+			@PathVariable(value = "idExemplaire") Long idExemplaire
+
 		)
 	{
 		if (!exemplaireService.isDisponible(idExemplaire)){
-			return new ResponseEntity( HttpStatus.NOT_ACCEPTABLE);
+			return ResponseEntity.badRequest().build();
 		}
-		Emprunt empruntsSaved = empruntService.save(idUser, idExemplaire, emprunt);
- 		return new ResponseEntity<Emprunt>(empruntsSaved, HttpStatus.CREATED);
+		Emprunt empruntsSaved = empruntService.save(idUser, idExemplaire);
+ 		return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentContextPath()
+		.path("/emprunts/").path(empruntsSaved.getId().toString()).build().toUri()).build();
  	}
 
 

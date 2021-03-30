@@ -30,7 +30,7 @@ import java.io.Serializable;
 
 
 @Entity
-@Table(name="user")
+@Table(name="sys_user")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
