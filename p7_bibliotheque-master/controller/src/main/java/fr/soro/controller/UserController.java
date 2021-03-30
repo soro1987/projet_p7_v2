@@ -1,4 +1,4 @@
-package controller;
+package fr.soro.controller;
 
 
 import java.util.List;

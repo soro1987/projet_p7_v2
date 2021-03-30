@@ -1,4 +1,4 @@
-package controller;
+package fr.soro.controller;
 
 import fr.soro.entities.Emprunt;
 import fr.soro.entities.User;
@@ -108,7 +108,7 @@ public class EmpruntController {
 //	}
 	
 	@PutMapping(value = "/emprunts/prolongation/{idEmprunt}")
-	public ResponseEntity<Emprunt> getProlongation(@PathVariable(value = "idEmprunt") Long idEmprunt) {
+	public ResponseEntity<Emprunt> setProlongation(@PathVariable(value = "idEmprunt") Long idEmprunt) {
 		Emprunt empruntsFound = empruntService.setProlongation(idEmprunt);
 		return new ResponseEntity<Emprunt>(empruntsFound, HttpStatus.FOUND);
 	}

@@ -1,4 +1,4 @@
-package controller;
+package fr.soro.controller;
 
 import fr.soro.entities.Bibliotheque;
 import fr.soro.entities.Exemplaire;
