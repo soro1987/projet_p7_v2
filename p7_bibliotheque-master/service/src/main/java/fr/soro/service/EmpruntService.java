@@ -137,7 +137,8 @@ public class EmpruntService {
 
 
 	public Date findEmpruntEarliestReturnDate(Long ouvrageId) {
-		return empruntRepository.findFirstByExemplaireOuvrageIdOrderByDateEcheanceDesc(ouvrageId).get().getDateEcheance();
+		Optional<Emprunt> emprunt = empruntRepository.findFirstByExemplaireOuvrageIdOrderByDateEcheanceDesc(ouvrageId);
+		return emprunt.map(Emprunt::getDateEcheance).orElse(null);
 	}
 
 

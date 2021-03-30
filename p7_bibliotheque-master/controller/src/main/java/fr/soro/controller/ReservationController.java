@@ -80,7 +80,7 @@ public class ReservationController {
         return ResponseEntity.ok(this.reservationService.waitingListCredentials(ouvrageId));
     }
 
-    @GetMapping(value = "/v1/reservation/userCredentials/{userId}")
+    @GetMapping(value = "/v1/reservation/userAllCredentials/{userId}")
     public ResponseEntity<List<UserReservationsCredentialsDto>> userAllReservationsCredentials(@PathVariable Long userId){
         return ResponseEntity.ok(this.reservationService.findAllUserReservationsCredentials(userId));
     }
