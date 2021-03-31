@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Modern Business - Start Bootstrap Template</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/modern-business.css" rel="stylesheet">
+
+  <!-- Custom styles  -->
+  <link href="css/selfStyle.css" rel="stylesheet">
+
+  <style>
+    body {
+    background: radial-gradient(circle at bottom, #7efff5 0%, #ffcccc 100%);
+
+}
+  </style>
+</head>
+
+<body class="radial-gradient">
+
+  <!-- Navigation -->
+  <th:block th:insert="fragments/navbar::navbar"></th:block>
+   <br> <br>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+      <div class="col-lg-6 portfolio-item">
+        <a th:href ="@{/category/Bande-dessine}">
+            <div class="contenant comica">
+               <img class="card-img-top border-black" src="../images/comics.jpg" alt="">
+              <div class="texte_centrer ">Bande Dessinée</div>
+            </div>
+          </a>
+      </div>
+      <div class="col-lg-6  portfolio-item" >
+        <a th:href ="@{/category/roman}">
+          <div class="contenant love">
+            <img class="card-img-top border-black" src="../images/romans.jpg" alt="">
+            <div class="texte_centrer ">Romans</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-6  portfolio-item">
+        <a th:href ="@{/category/scolaire}">
+          <div class="contenant college">
+            <img class="card-img-top border-black" src="../images/school.jpg" alt="">
+            <div class="texte_centrer ">Scolaire</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-6  portfolio-item">
+          <div class="contenant ">
+            <img class="card-img-top border-black" src="../images/history.jpg" alt="">
+            <div class="texte_centrer"></div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-6  portfolio-item">
+        <a th:href ="@{/category/Psychologie}">
+          <div class="contenant psycho">
+            <img class="card-img-top border-black" src="../images/psychology.jpg" alt="">
+            <div class="texte_centrer">Psychologie</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-6   portfolio-item">
+        <a th:href ="@{/category/Science}">
+          <div class="contenant science ">
+            <img class="card-img-top border-black" src="../images/science.jpg" alt="">
+            <div class="texte_centrer">Science"</div>
+          </div>
+        </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.container -->
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Bibliothèque-municipale 2020</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

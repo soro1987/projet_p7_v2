@@ -23,6 +23,8 @@ public class EmpruntDto implements Serializable{
 	private int depassement;
 	
 	private UserDto user;
+
+	private boolean extendable;
 	
 	List<ExemplaireDto> exemplaires = new ArrayList<ExemplaireDto>();
 
@@ -41,6 +43,10 @@ public class EmpruntDto implements Serializable{
 		this.depassement = depassement;
 		this.user = user;
 		this.exemplaires = exemplaires;
+	}
+
+	public boolean isExtendable() {
+		return extendable;
 	}
 
 	public Long getId() {
