@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Connexion</title>
+
+	<!-- Font Icon -->
+	<link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
+
+	<!-- Main css -->
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="main">
+
+	<div class="container">
+		<form class="appointment-form" id="appointment-form" th:action="@{/login}" th:object="${userForm}" method="POST">
+			<h2>Connexion</h2>
+			<div class="form-group-1">
+				<input th:field="*{username}" type="text" name="title" id="title" placeholder="Nom d'utilisateur" required />
+
+				<input th:field="*{password}" type="password" name="password" id="password" placeholder=" Mot de passe" required />
+			</div>
+
+			<div class="form-submit">
+				<input type="submit" name="submit" id="submit" class="submit" value="Valider" />
+			</div>
+			<br>
+			<label class="label-agree-term"><span><span></span></span>Pas encore inscrit ? <a th:href="@{/register}" class="term-service">Inscrivez vous par ici</a></label>
+			<br>
+			<a th:href="@{/accueil}" class="term-service">Retour Acceuil</a>
+		</form>
+	</div>
+
+</div>
+
+<!-- JS -->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="js/main.js"></script>
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>
