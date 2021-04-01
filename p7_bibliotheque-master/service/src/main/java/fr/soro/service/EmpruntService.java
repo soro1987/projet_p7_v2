@@ -74,8 +74,8 @@ public class EmpruntService {
 		return empruntsExpirer;
 	}
 	
-	public Emprunt save(Long idUser, Long idExmplaire, Emprunt emprunt) {
-//		Emprunt emprunt = new Emprunt();
+	public Emprunt save(Long idUser, Long idExmplaire) {
+		Emprunt emprunt = new Emprunt();
 		emprunt.setDateDebut(new Date());
 		Calendar calendrier = Calendar.getInstance();
 		Date dateCourante = emprunt.getDateDebut();
@@ -98,11 +98,11 @@ public class EmpruntService {
 	
 	public Emprunt setProlongation(Long id) {
 		Emprunt emprunt = this.get(id);
-		if(emprunt.isProlongation() == false) {
+		Date dateEcheanceActuelle = emprunt.getDateEcheance();
+		if(!emprunt.isProlongation() && new Date().before(dateEcheanceActuelle)){
 			emprunt.setProlongation(true);
 			Calendar calendrier = Calendar.getInstance();
-			Date dateCourante = emprunt.getDateEcheance();
-			calendrier.setTime(dateCourante);
+			calendrier.setTime(dateEcheanceActuelle);
 			calendrier.add(Calendar.HOUR, 24*28);
 			emprunt.setDateEcheance(calendrier.getTime());
 			this.empruntRepository.save(emprunt);

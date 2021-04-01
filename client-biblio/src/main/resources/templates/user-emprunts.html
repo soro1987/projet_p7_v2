@@ -17,12 +17,7 @@
     <link href="../css/modern-business.css" rel="stylesheet">
 
 </head>
-<style>
-    body {
-    background: radial-gradient(circle at bottom, #7efff5 0%, #ffcccc 100%);
 
-}
-  </style>
 <body>
 <!-- Navigation -->
 <th:block th:insert="fragments/navbar::navbar"></th:block>
@@ -50,11 +45,11 @@
                     <div class="card-body" style="background-color:#ffdd59">
                         <div class="border-text">Date limite : <span th:class="border-text"
                                                                      th:text="${emprunt.dateEcheance}"></span></div>
-                        <th:block th:if="${emprunt.prolongation == false}">
+                        <th:block th:if="${!emprunt.prolongation && emprunt.extendable}">
                             <a th:href="@{/user/prolonger/emprunts/{id}(id=${emprunt.id})}" th:object="${userLogin}"
                                class="btn btn-primary">Prolonger!</a>
                         </th:block>
-                        <th:block th:if="${emprunt.prolongation ==  true}">
+                        <th:block th:if="${emprunt.prolongation}">
                             <span class="badge badge-danger">Prolongation utiliser</span>
                         </th:block>
                     </div>
@@ -75,13 +70,14 @@
 
 </div>
 <!-- /.container -->
-<br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <!-- Footer -->
 <footer class="py-5 bg-dark">
     <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
     </div>
     <!-- /.container -->
+
 </footer>
 
 <!-- Bootstrap core JavaScript -->

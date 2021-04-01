@@ -1,4 +1,4 @@
-package controller;
+package fr.soro.controller;
 
 import fr.soro.entities.Ouvrage;
 import fr.soro.repositories.OuvrageRepository;

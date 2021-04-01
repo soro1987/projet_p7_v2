@@ -36,6 +36,7 @@ public class Emprunt implements Serializable {
 	private Date dateEcheance;
 	private boolean prolongation;
 	private int depassement;
+
 	@JsonBackReference(value = "em-user")
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -59,6 +60,10 @@ public class Emprunt implements Serializable {
 		this.depassement = depassement;
 		this.user = user;
 		this.exemplaires = exemplaires;
+	}
+
+	public boolean isExtendable() {
+		return new Date().before(this.getDateEcheance());
 	}
 
 	public Long getId() {
