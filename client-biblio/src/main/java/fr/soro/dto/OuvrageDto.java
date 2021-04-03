@@ -32,7 +32,7 @@ public class OuvrageDto implements Serializable{
 
 	private byte[] image;
 	
-	private  int nbreExemplaireDispo=0;
+	private  int nbreExemplaireDispo;
 	
 	private List<ExemplaireDto> exemplaires;
 

@@ -40,7 +40,7 @@ public class ReservationClient {
         return response.getBody();
     }
 
-    public List<UserReservationCredentialsDto> getAllUserReservationCredentials(String userId){
+    public List<UserReservationCredentialsDto> getAllUserReservationCredentials(Long userId){
         ResponseEntity<UserReservationCredentialsDto[]> response =securedRestTemplate.getForEntity(appUrl+"/v1/reservation/userCredentials/"+userId, UserReservationCredentialsDto[].class);
         return Optional.ofNullable(response.getBody()).map(Arrays::asList).orElse(Collections.emptyList());
     }

@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/category/**").permitAll()
                 .antMatchers("/emprunts/expired/**").permitAll()
                 .antMatchers("/emprunts/user/expired/**").permitAll()
-                .antMatchers("/emprunts/").hasRole("ADMIN")
+                .antMatchers("/emprunts/**").permitAll()
                 .antMatchers("/emprunts/delete/**").permitAll()
                 .antMatchers("/emprunts-prolongation/**").permitAll()    //.hasAnyRole("ADMIN","USER")
                 .antMatchers("/emprunts-user/**").permitAll()       //.hasAnyRole("ADMIN","USER")

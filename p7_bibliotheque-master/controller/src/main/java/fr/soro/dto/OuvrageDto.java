@@ -23,11 +23,12 @@ public class OuvrageDto {
 
     private String imageUrl;
 
+    private byte[] image;
+
     public OuvrageDto() {
     }
 
-    public OuvrageDto(Long id, String titre, String auteur, Date dateParution, String description, String categorie,
-                      int nbreExemplaireDispo, String imageUrl) {
+    public OuvrageDto(Long id, String titre, String auteur, Date dateParution, String description, String categorie, int nbreExemplaireDispo, String imageUrl, byte[] image) {
         this.id = id;
         this.titre = titre;
         this.auteur = auteur;
@@ -36,6 +37,15 @@ public class OuvrageDto {
         this.categorie = categorie;
         this.nbreExemplaireDispo = nbreExemplaireDispo;
         this.imageUrl = imageUrl;
+        this.image = image;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public Long getId() {

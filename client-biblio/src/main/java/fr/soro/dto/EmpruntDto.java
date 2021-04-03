@@ -8,22 +8,24 @@ import java.util.List;
 public class EmpruntDto implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -109387246054374540L;
 
 	private Long id;
-	
+
 	private Date dateDebut;
-	
+
 	private Date dateEcheance;
-	
+
 	private boolean prolongation;
-	
+
 	private int depassement;
-	
+
 	private UserDto user;
-	
+
+	private boolean extendable;
+
 	List<ExemplaireDto> exemplaires = new ArrayList<ExemplaireDto>();
 
 	public EmpruntDto() {
@@ -32,7 +34,7 @@ public class EmpruntDto implements Serializable{
 	}
 
 	public EmpruntDto(Long id, Date dateDebut, Date dateEcheance, boolean prolongation, int depassement, UserDto user,
-			List<ExemplaireDto> exemplaires) {
+					  List<ExemplaireDto> exemplaires) {
 		super();
 		this.id = id;
 		this.dateDebut = dateDebut;
@@ -41,6 +43,10 @@ public class EmpruntDto implements Serializable{
 		this.depassement = depassement;
 		this.user = user;
 		this.exemplaires = exemplaires;
+	}
+
+	public boolean isExtendable() {
+		return extendable;
 	}
 
 	public Long getId() {
@@ -98,6 +104,6 @@ public class EmpruntDto implements Serializable{
 	public void setExemplaires(List<ExemplaireDto> exemplaires) {
 		this.exemplaires = exemplaires;
 	}
-	
-	
+
+
 }

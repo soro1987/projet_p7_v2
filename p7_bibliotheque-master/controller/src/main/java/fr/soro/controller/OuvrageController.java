@@ -1,6 +1,8 @@
 package fr.soro.controller;
 
+import fr.soro.dto.OuvrageDto;
 import fr.soro.entities.Ouvrage;
+import fr.soro.mapper.OuvrageMapper;
 import fr.soro.repositories.OuvrageRepository;
 import fr.soro.service.OuvrageService;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
@@ -23,6 +26,8 @@ public class OuvrageController {
 
 	private OuvrageService ouvrageService;
 	private OuvrageRepository ouvrageRepository;
+	private OuvrageMapper ouvrageMapper;
+
 
 
 	@PostMapping(value = "/ouvrages/{id}/image")
@@ -46,12 +51,27 @@ public class OuvrageController {
 				.orElseThrow(() -> new IllegalArgumentException("Ouvrage "+id+" not found"));
 	}
 
+//	@GetMapping(value = "/ouvrages")
+//	public ResponseEntity<List<OuvrageDto>> getAllOuvrages() {
+//		List<Ouvrage> ouvrages = ouvrageService.getAll();
+//		return ResponseEntity.ok(ouvrages.stream().peek(Ouvrage::setNbreExemplaireDispo)
+//				.map(ouvrage -> ouvrageMapper.from(ouvrage))
+//				.collect(Collectors.toList()));
+//	}
 
-	
 	@RequestMapping(value="/category/{categorie}", method = {RequestMethod.GET})
-	public List<Ouvrage> getCategory(@PathVariable(value = "categorie")String categorie){
-		return ouvrageService.getByCategorie(categorie);
+	public ResponseEntity<List<OuvrageDto>> getCategory(@PathVariable(value = "categorie")String categorie){
+		List<Ouvrage> ouvrages = ouvrageService.getByCategorie(categorie);
+		List<OuvrageDto> ouvrageDtos = ouvrages.stream()
+				.map(ouvrage -> ouvrageMapper.from(ouvrage))
+				.collect(Collectors.toList());
+		return new ResponseEntity<List<OuvrageDto>>(ouvrageDtos, HttpStatus.FOUND);
 	}
+
+//	@RequestMapping(value="/category/{categorie}", method = {RequestMethod.GET})
+//	public List<Ouvrage> getCategory(@PathVariable(value = "categorie")String categorie){
+//		return ouvrageService.getByCategorie(categorie);
+//	}
 
 	@RequestMapping(value="/search/{motcle}", method = {RequestMethod.GET})
 	public List<Ouvrage> search(@PathVariable(value = "motcle")String motcle){
@@ -83,18 +103,26 @@ public class OuvrageController {
 		
 
 		@GetMapping(value = "/ouvrages")
-		public ResponseEntity<List<Ouvrage>> getAllOuvrages() {
+		public ResponseEntity<List<OuvrageDto>> getAllOuvrages() {
 			List<Ouvrage> ouvrages = ouvrageService.getAll();
-			ouvrages.forEach(Ouvrage::setNbreExemplaireDispo);
-			return new ResponseEntity<List<Ouvrage>>(ouvrages, HttpStatus.FOUND);
+			return ResponseEntity.ok(ouvrages.stream().peek(Ouvrage::setNbreExemplaireDispo)
+					.map(ouvrage -> ouvrageMapper.from(ouvrage))
+					.collect(Collectors.toList()));
 		}
-		
-		
-		@GetMapping(value = "/ouvrages-id/{id}")
-		public ResponseEntity<Ouvrage> getOne(@PathVariable(value = "id") Long id) {
-			Ouvrage ouvrageFound = ouvrageService.getOne(id);
-			return new ResponseEntity<Ouvrage>(ouvrageFound, HttpStatus.FOUND);
-		}
+
+
+	@GetMapping(value = "/ouvrages-id/{id}")
+	public ResponseEntity<OuvrageDto> getOne(@PathVariable(value = "id") Long id) {
+		Ouvrage ouvrageFound = ouvrageService.getOne(id);
+		OuvrageDto ouvrageDto = this.ouvrageMapper.from(ouvrageFound);
+		return ResponseEntity.ok(ouvrageDto);
+	}
+
+//		@GetMapping(value = "/ouvrages-id/{id}")
+//		public ResponseEntity<Ouvrage> getOne(@PathVariable(value = "id") Long id) {
+//			Ouvrage ouvrageFound = ouvrageService.getOne(id);
+//			return new ResponseEntity<Ouvrage>(ouvrageFound, HttpStatus.FOUND);
+//		}
 		
 		@GetMapping(value = "/ouvrages-titre/{titre}")
 		public ResponseEntity<List<Ouvrage>> getBytitre(@PathVariable(value = "titre") String titre) {

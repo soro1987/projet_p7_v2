@@ -36,22 +36,24 @@
         </li>
     </ol>
     <div class="row">
-        <th:block th:each="emprunt : ${emprunts}">
+        <th:block th:each="reservation : ${reservations}">
             <!-- Content Row -->
 
             <div class="col-lg-4 mb-4">
                 <div class="card h-100">
-                    <h3 class="card-header" style="background-color: #ff9ff3">Numéro d'emprunts : <span th:text="${emprunt.id}"></span></h3>
+                    <h3 class="card-header" style="background-color: #ff9ff3"><span th:text="${reservation.title}"></span></h3>
                     <div class="card-body" style="background-color:#ffdd59">
-                        <div class="border-text">Date limite : <span th:class="border-text"
-                                                                     th:text="${emprunt.dateEcheance}"></span></div>
-                        <th:block th:if="${!emprunt.prolongation && emprunt.extendable}">
-                            <a th:href="@{/user/prolonger/emprunts/{id}(id=${emprunt.id})}" th:object="${userLogin}"
-                               class="btn btn-primary">Prolonger!</a>
-                        </th:block>
-                        <th:block th:if="${emprunt.prolongation}">
-                            <span class="badge badge-danger">Prolongation utiliser</span>
-                        </th:block>
+                        <div class="border-text">Date de retout la plus proche : <span th:class="border-text"
+                                                                     th:text="${reservation.bookEarliestReturnDate}"></span></div>
+                        <div class="border-text">Position dans la liste d'attente : <span th:class="border-text"
+                                                                                       th:text="${reservation.positionInWaitingList}"></span></div>
+<!--                        <th:block th:if="${emprunt.prolongation == false}">-->
+<!--                            <a th:href="@{/user/prolonger/emprunts/{id}(id=${emprunt.id})}" th:object="${userLogin}"-->
+<!--                               class="btn btn-primary">Annuler</a>-->
+<!--                        </th:block>-->
+<!--                        <th:block th:if="${emprunt.prolongation ==  true}">-->
+<!--                            <span class="badge badge-danger">Prolongation utiliser</span>-->
+<!--                        </th:block>-->
                     </div>
                 </div>
                 <!--           <th:block th:each="exemplaire : ${emprunt.exemplaires}"> -->
@@ -70,14 +72,13 @@
 
 </div>
 <!-- /.container -->
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br>
 <!-- Footer -->
 <footer class="py-5 bg-dark">
     <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
     </div>
     <!-- /.container -->
-
 </footer>
 
 <!-- Bootstrap core JavaScript -->

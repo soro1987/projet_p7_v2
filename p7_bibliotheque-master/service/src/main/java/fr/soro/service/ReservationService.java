@@ -77,7 +77,7 @@ public class ReservationService {
     }
     private void failIfUserAlreadyHasBooking(Reservation reservation) {
         Optional<Reservation> byUserIdAndOuvrageId = reservationRepository
-                .findByUserId(reservation.getUser().getId());
+                .findByOuvrageIdAndUserId(reservation.getOuvrage().getId(),reservation.getUser().getId());
         if (byUserIdAndOuvrageId.isPresent()){
             throw new FunctionalException("Utilisateur a deja réservé cet ouvrage");
         }

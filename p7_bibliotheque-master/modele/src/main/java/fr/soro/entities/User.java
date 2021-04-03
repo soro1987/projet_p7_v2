@@ -49,7 +49,7 @@ public class User implements UserDetails, Serializable {
 
 	@JsonIgnore
 	//@JsonManagedReference(value = "em-user")
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private List<Emprunt> emprunts = new ArrayList<Emprunt>();
 
     @NotEmpty
@@ -58,8 +58,7 @@ public class User implements UserDetails, Serializable {
     @NotEmpty
     private String password;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles = new HashSet<>();
 
     @Override

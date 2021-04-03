@@ -77,40 +77,72 @@ public class EmpruntService {
 		}		
 		return empruntsExpirer;
 	}
-	
-	public Emprunt save(Long idUser, Long idExmplaire, Emprunt emprunt) {
 
+	public Emprunt save(Long idUser, Long idExmplaire) {
+		Emprunt emprunt = new Emprunt();
 		emprunt.setDateDebut(new Date());
 		Calendar calendrier = Calendar.getInstance();
 		Date dateCourante = emprunt.getDateDebut();
 		calendrier.setTime(dateCourante);
 		calendrier.add(Calendar.HOUR, 24*28);
 		emprunt.setDateEcheance(calendrier.getTime());
-
-		User user = this.userRepository.getOne(idUser);
-		emprunt.setUser(user);
+		Optional<User> user = this.userRepository.findById(idUser);
+		emprunt.setUser(user.get());
 		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
-		emprunt.setExemplaire(exemplaire);
+		emprunt.getExemplaires().add(exemplaire);
 		exemplaire.setDisponible(false);
-		exemplaire.getOuvrage().setNbreExemplaireDispo(exemplaire.getOuvrage().getNbreExemplaireDispo() -1);
 		Emprunt empruntSaved  = this.empruntRepository.save(emprunt);
-		user.getEmprunts().add(empruntSaved);
+		user.get().getEmprunts().add(empruntSaved);
+		exemplaire.setEmprunt(empruntSaved);
 
-		
-		this.userRepository.save(user);
-		this.ouvrageRepository.saveAndFlush(exemplaire.getOuvrage());
+		this.userRepository.save(user.get());
 		this.exemplaireRepository.save(exemplaire);
-
 		return empruntSaved;
 	}
-	
+	public List<Emprunt> getUserEmprunt(Long idUser){
+		List<Emprunt> userEmprunts =new ArrayList<Emprunt>();
+		List<Emprunt> allEmprunts = this.getAllEmprunt();
+		for (Emprunt emprunt : allEmprunts) {
+			if (emprunt.getUser().getId()==idUser) {
+				userEmprunts.add(emprunt);
+			}
+	}return userEmprunts;
+
+	}
+
+//	public Emprunt save(Long idUser, Long idExmplaire) {
+//		Emprunt emprunt = new Emprunt();
+//		emprunt.setDateDebut(new Date());
+//		Calendar calendrier = Calendar.getInstance();
+//		Date dateCourante = emprunt.getDateDebut();
+//		calendrier.setTime(dateCourante);
+//		calendrier.add(Calendar.HOUR, 24*28);
+//		emprunt.setDateEcheance(calendrier.getTime());
+//
+//		User user = this.userRepository.getOne(idUser);
+//		emprunt.setUser(user);
+//		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
+//		emprunt.setExemplaire(exemplaire);
+//		exemplaire.setDisponible(false);
+//		exemplaire.getOuvrage().setNbreExemplaireDispo(exemplaire.getOuvrage().getNbreExemplaireDispo() -1);
+//		Emprunt empruntSaved  = this.empruntRepository.save(emprunt);
+//		user.getEmprunts().add(empruntSaved);
+//
+//
+//		this.userRepository.save(user);
+//		this.ouvrageRepository.saveAndFlush(exemplaire.getOuvrage());
+//		this.exemplaireRepository.save(exemplaire);
+//
+//		return empruntSaved;
+//	}
+
 	public Emprunt setProlongation(Long id) {
 		Emprunt emprunt = this.get(id);
-		if(!emprunt.isProlongation()) {
+		Date dateEcheanceActuelle = emprunt.getDateEcheance();
+		if(!emprunt.isProlongation() && new Date().before(dateEcheanceActuelle)){
 			emprunt.setProlongation(true);
 			Calendar calendrier = Calendar.getInstance();
-			Date dateCourante = emprunt.getDateEcheance();
-			calendrier.setTime(dateCourante);
+			calendrier.setTime(dateEcheanceActuelle);
 			calendrier.add(Calendar.HOUR, 24*28);
 			emprunt.setDateEcheance(calendrier.getTime());
 			this.empruntRepository.save(emprunt);
@@ -137,8 +169,9 @@ public class EmpruntService {
 
 
 	public Date findEmpruntEarliestReturnDate(Long ouvrageId) {
-		Optional<Emprunt> emprunt = empruntRepository.findFirstByExemplaireOuvrageIdOrderByDateEcheanceDesc(ouvrageId);
-		return emprunt.map(Emprunt::getDateEcheance).orElse(null);
+//		Optional<Emprunt> emprunt = empruntRepository.findFirstByExemplaireOuvrageIdOrderByDateEcheanceDesc(ouvrageId);
+//		return emprunt.map(Emprunt::getDateEcheance).orElse(null);
+		return new Date();
 	}
 
 

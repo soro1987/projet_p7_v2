@@ -50,7 +50,7 @@ public class OuvrageController {
 		List<OuvrageDto> ouvragesSameCategoryWithoutOuvrage =ouvrageService.removeOuvrageFromList(ouvragesSameCategory,ouvrage);
 		modelAndView.addObject("ouvragesSameCategory", ouvragesSameCategoryWithoutOuvrage);
 		modelAndView.addObject("ouvrage", ouvrage);
-		modelAndView.setViewName("ouvrage-id");
+		modelAndView.setViewName("ouvrage_id");
 		return modelAndView;
 		
 	}

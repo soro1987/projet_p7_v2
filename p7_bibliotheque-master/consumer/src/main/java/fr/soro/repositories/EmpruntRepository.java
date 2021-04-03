@@ -23,6 +23,6 @@ public interface EmpruntRepository extends JpaRepository<Emprunt, Long> {
 
 	List<Emprunt> findAllByUser(User user);
 
-    Optional<Emprunt> findFirstByExemplaireOuvrageIdOrderByDateEcheanceDesc(Long ouvrageId);
+//    Optional<Emprunt> findFirstByExemplaireOuvrageIdOrderByDateEcheanceDesc(Long ouvrageId);
 
 }

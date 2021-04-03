@@ -33,7 +33,7 @@ public class OuvrageService {
 	}
 		
 		public Ouvrage getOne(Long id) {
-			return ouvrageRepository.getOne(id);
+			return ouvrageRepository.findById(id).get();
 		}
 		
 		public List<Ouvrage> getAll(){
