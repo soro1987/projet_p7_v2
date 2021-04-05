@@ -42,7 +42,8 @@ public class UserController {
     @GetMapping(value = "/user/{username}")
 	public ResponseEntity<UserDto> getBytitre(@PathVariable(value = "username") String username) {
 		User user = userService.getUserByUsername(username);
-		return ResponseEntity.ok(userMapper.from(user));
+		UserDto userDto = userMapper.from(user);
+		return ResponseEntity.ok(userDto);
 	}
 
     @PostMapping(value ="/signup",consumes = "application/json", produces = "application/json")

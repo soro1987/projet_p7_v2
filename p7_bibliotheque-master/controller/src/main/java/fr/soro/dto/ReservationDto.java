@@ -1,4 +1,4 @@
-package fr.soro.dto;
+package fr.soro.dto; 
 
 import lombok.Data;
 import lombok.Getter;

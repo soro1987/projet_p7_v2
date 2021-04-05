@@ -15,6 +15,7 @@ public interface EmpruntMapper {
     @Mapping(source = "dateEcheance",target = "dateEcheance")
     @Mapping(source = "prolongation",target = "prolongation")
     @Mapping(source = "depassement",target = "depassement")
+    @Mapping(source = "extendable",target = "extendable")
     EmpruntDto from(Emprunt emprunt);
 
     Emprunt from(EmpruntDto empruntDto);

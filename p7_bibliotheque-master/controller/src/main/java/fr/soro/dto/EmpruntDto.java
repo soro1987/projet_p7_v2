@@ -17,16 +17,27 @@ public class EmpruntDto {
 
     private int depassement;
 
+    private boolean extendable;
+
 
     public EmpruntDto() {
     }
 
-    public EmpruntDto(Long id, Date dateDebut, Date dateEcheance, boolean prolongation, int depassement) {
+    public EmpruntDto(Long id, Date dateDebut, Date dateEcheance, boolean prolongation, int depassement, boolean isExtendable) {
         this.id = id;
         this.dateDebut = dateDebut;
         this.dateEcheance = dateEcheance;
         this.prolongation = prolongation;
         this.depassement = depassement;
+        this.extendable = isExtendable;
+    }
+
+    public boolean isExtendable() {
+        return extendable;
+    }
+
+    public void setExtendable(boolean extendable) {
+        this.extendable = extendable;
     }
 
     public Long getId() {

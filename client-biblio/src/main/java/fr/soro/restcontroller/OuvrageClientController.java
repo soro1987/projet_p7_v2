@@ -20,13 +20,13 @@ import fr.soro.dto.OuvrageDto;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-public class OuvrageController {
+public class OuvrageClientController {
 
 	private OuvrageClient ouvrageClient;
 	private OuvrageService ouvrageService;
 	
 	
-	public OuvrageController(OuvrageClient ouvrageClient,OuvrageService ouvrageService) {
+	public OuvrageClientController(OuvrageClient ouvrageClient, OuvrageService ouvrageService) {
 		this.ouvrageClient = ouvrageClient;
 		this.ouvrageService = ouvrageService;
 	}

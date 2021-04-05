@@ -51,14 +51,6 @@ public class OuvrageController {
 				.orElseThrow(() -> new IllegalArgumentException("Ouvrage "+id+" not found"));
 	}
 
-//	@GetMapping(value = "/ouvrages")
-//	public ResponseEntity<List<OuvrageDto>> getAllOuvrages() {
-//		List<Ouvrage> ouvrages = ouvrageService.getAll();
-//		return ResponseEntity.ok(ouvrages.stream().peek(Ouvrage::setNbreExemplaireDispo)
-//				.map(ouvrage -> ouvrageMapper.from(ouvrage))
-//				.collect(Collectors.toList()));
-//	}
-
 	@RequestMapping(value="/category/{categorie}", method = {RequestMethod.GET})
 	public ResponseEntity<List<OuvrageDto>> getCategory(@PathVariable(value = "categorie")String categorie){
 		List<Ouvrage> ouvrages = ouvrageService.getByCategorie(categorie);
@@ -68,17 +60,11 @@ public class OuvrageController {
 		return new ResponseEntity<List<OuvrageDto>>(ouvrageDtos, HttpStatus.FOUND);
 	}
 
-//	@RequestMapping(value="/category/{categorie}", method = {RequestMethod.GET})
-//	public List<Ouvrage> getCategory(@PathVariable(value = "categorie")String categorie){
-//		return ouvrageService.getByCategorie(categorie);
-//	}
-
 	@RequestMapping(value="/search/{motcle}", method = {RequestMethod.GET})
 	public List<Ouvrage> search(@PathVariable(value = "motcle")String motcle){
 		return ouvrageService.getByTitreAuteur(motcle);
 	}
-	
-	
+
 		@PostMapping(value = "/ouvrages")
 		@Transactional
 		public ResponseEntity<Ouvrage> createOuvrage(@RequestBody Ouvrage ouvrage)

@@ -3,6 +3,7 @@ package fr.soro.dto;
 import java.util.Date;
 
 public class UserReservationsCredentialsDto {
+    private Long id;
     private String title;
     private Date bookEarliestReturnDate;
     private Integer positionInWaitingList;
@@ -10,10 +11,19 @@ public class UserReservationsCredentialsDto {
     public UserReservationsCredentialsDto() {
     }
 
-    public UserReservationsCredentialsDto(String title, Date bookEarliestReturnDate, Integer positionInWaitingList) {
+    public UserReservationsCredentialsDto(Long id, String title, Date bookEarliestReturnDate, Integer positionInWaitingList) {
+        this.id = id;
         this.title = title;
         this.bookEarliestReturnDate = bookEarliestReturnDate;
         this.positionInWaitingList = positionInWaitingList;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {

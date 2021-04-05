@@ -14,12 +14,12 @@ import fr.soro.dto.EmpruntDto;
 import fr.soro.dto.UserDto;
 
 @RestController
-public class EmpruntController {
+public class EmpruntClientController {
 	
 	private EmpruntClient empruntClient;
 	
 	
-	public EmpruntController(EmpruntClient empruntService) {
+	public EmpruntClientController(EmpruntClient empruntService) {
 		this.empruntClient = empruntService;
 	}
 
@@ -32,12 +32,10 @@ public class EmpruntController {
 		
 	}
 	
-	@GetMapping("/user/prolonger/emprunts/{id}")
+	@GetMapping("/emprunts-prolongation/{id}")
 	public ModelAndView getProlongation(@PathVariable(value = "id") Long id,HttpSession session){		
 		this.empruntClient.getProlongation(id);
 		UserDto user =(UserDto) session.getAttribute("userSession");
-//		List<EmpruntDto> emprunts = empruntService.getUserEmprunts(user.getId());	
-//		modelAndView.addObject("emprunts", emprunts);
 		ModelAndView modelAndView = new ModelAndView("redirect:/user-emprunts/"+user.getId());
 		return modelAndView;
 		

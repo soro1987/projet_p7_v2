@@ -133,6 +133,7 @@ public class ReservationService {
                     this.empruntService.findEmpruntEarliestReturnDate(reservation.getOuvrage().getId()));
             userReservationsCredentials.setTitle(reservation.getOuvrage().getTitre());
             userReservationsCredentials.setPositionInWaitingList(this.positionInWaitingList(reservation));
+            userReservationsCredentials.setId(reservation.getId());
             return userReservationsCredentials;
     }
 

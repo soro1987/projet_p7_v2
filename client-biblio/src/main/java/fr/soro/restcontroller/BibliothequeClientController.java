@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 import fr.soro.dto.OuvrageDto;
 
 @RestController
-public class BibliothequeController {
+public class BibliothequeClientController {
 
 	@GetMapping("/contact")
 	public ModelAndView ouvrages (ModelAndView modelAndView){		

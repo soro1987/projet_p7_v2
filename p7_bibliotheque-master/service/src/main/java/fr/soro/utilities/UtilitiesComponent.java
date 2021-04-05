@@ -32,7 +32,7 @@ public class UtilitiesComponent {
         //Mail sender to alert the No.1 user of availability of the book
         EmailTemplateDTO emailTemplateDTO = new EmailTemplateDTO(userEmail, "Ouvrage disponible",
                 "Bonjour Monsieur/Madame " + fullName + " votre reservation concernat l'ouvrage " + ouvrageTitle +
-                " est disponoble. vous disposez de 48h pour passer le retirer.");
+                " est disponible. vous disposez de 48h pour passer le retirer.");
         this.sendEmail(emailTemplateDTO);
     }
 

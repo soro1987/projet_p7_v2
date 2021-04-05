@@ -41,12 +41,13 @@
 
             <div class="col-lg-4 mb-4">
                 <div class="card h-100">
-                    <h3 class="card-header" style="background-color: #ff9ff3">Numéro d'emprunts : <span th:text="${emprunt.id}"></span></h3>
-                    <div class="card-body" style="background-color:#ffdd59">
+                    <h3 class="card-header" >Numéro d'emprunts : <span th:text="${emprunt.id}"></span></h3>
+                    <div class="card-body" >
                         <div class="border-text">Date limite : <span th:class="border-text"
                                                                      th:text="${emprunt.dateEcheance}"></span></div>
                         <th:block th:if="${!emprunt.prolongation && emprunt.extendable}">
-                            <a th:href="@{/user/prolonger/emprunts/{id}(id=${emprunt.id})}" th:object="${userLogin}"
+<!--                        <th:block th:if="${!emprunt.prolongation }">-->
+                            <a th:href="@{/emprunts-prolongation/{id}(id=${emprunt.id})}" th:object="${userLogin}"
                                class="btn btn-primary">Prolonger!</a>
                         </th:block>
                         <th:block th:if="${emprunt.prolongation}">
@@ -54,14 +55,6 @@
                         </th:block>
                     </div>
                 </div>
-                <!--           <th:block th:each="exemplaire : ${emprunt.exemplaires}"> -->
-
-                <!--           <ul class="list-group list-group-flush"> -->
-                <!--             <li th:each="ouvrage : ${exemplaire.ouvrage}" class="list-group-item">Ouvrage :  <span th:text="${ouvrage.titre}"></span></li> -->
-                <!--           </ul> -->
-                <!--           <a href="#" class="btn btn-primary">Prolonger!</a> -->
-
-                <!--           </th:block> -->
             </div>
     </div>
     </th:block>

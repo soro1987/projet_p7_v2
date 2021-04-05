@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Mes emprunts</title>
+    <title>Mes Reservations</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -26,13 +26,13 @@
 <div class="container">
 
     <!-- Page Heading/Breadcrumbs -->
-    <h1 class="mt-4 mb-3">Mes emprunts
+    <h1 class="mt-4 mb-3">Mes Reservations
         <small></small>
     </h1>
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a th:href="@{/accueil}">Acceuil</a>
+            <a th:href="@{/accueil}">Accueil</a>
         </li>
     </ol>
     <div class="row">
@@ -41,16 +41,15 @@
 
             <div class="col-lg-4 mb-4">
                 <div class="card h-100">
-                    <h3 class="card-header" style="background-color: #ff9ff3"><span th:text="${reservation.title}"></span></h3>
-                    <div class="card-body" style="background-color:#ffdd59">
-                        <div class="border-text">Date de retout la plus proche : <span th:class="border-text"
+                    <h3 class="card-header" ><span th:text="${reservation.title}"></span></h3>
+                    <div class="card-body" >
+                        <div class="border-text">Est disponible en date du : <span th:class="border-text"
                                                                      th:text="${reservation.bookEarliestReturnDate}"></span></div>
                         <div class="border-text">Position dans la liste d'attente : <span th:class="border-text"
                                                                                        th:text="${reservation.positionInWaitingList}"></span></div>
-<!--                        <th:block th:if="${emprunt.prolongation == false}">-->
-<!--                            <a th:href="@{/user/prolonger/emprunts/{id}(id=${emprunt.id})}" th:object="${userLogin}"-->
-<!--                               class="btn btn-primary">Annuler</a>-->
-<!--                        </th:block>-->
+                        <a th:href="@{/delete/reservations/{id}(id=${reservation.id})}" th:object="${userLogin}"
+                               class="btn btn-primary">Annuler</a>
+
 <!--                        <th:block th:if="${emprunt.prolongation ==  true}">-->
 <!--                            <span class="badge badge-danger">Prolongation utiliser</span>-->
 <!--                        </th:block>-->
@@ -72,7 +71,7 @@
 
 </div>
 <!-- /.container -->
-<br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <!-- Footer -->
 <footer class="py-5 bg-dark">
     <div class="container">

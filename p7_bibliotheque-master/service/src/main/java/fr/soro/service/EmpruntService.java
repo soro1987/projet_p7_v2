@@ -36,7 +36,7 @@ public class EmpruntService {
 	}
 
 	public Emprunt get(Long id) {
-		return this.empruntRepository.getOne(id);
+		return this.empruntRepository.findById(id).get();
 	}
 
 	public List<Emprunt> getDateDebut(Date datedebut) {
@@ -109,32 +109,6 @@ public class EmpruntService {
 	}return userEmprunts;
 
 	}
-
-//	public Emprunt save(Long idUser, Long idExmplaire) {
-//		Emprunt emprunt = new Emprunt();
-//		emprunt.setDateDebut(new Date());
-//		Calendar calendrier = Calendar.getInstance();
-//		Date dateCourante = emprunt.getDateDebut();
-//		calendrier.setTime(dateCourante);
-//		calendrier.add(Calendar.HOUR, 24*28);
-//		emprunt.setDateEcheance(calendrier.getTime());
-//
-//		User user = this.userRepository.getOne(idUser);
-//		emprunt.setUser(user);
-//		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
-//		emprunt.setExemplaire(exemplaire);
-//		exemplaire.setDisponible(false);
-//		exemplaire.getOuvrage().setNbreExemplaireDispo(exemplaire.getOuvrage().getNbreExemplaireDispo() -1);
-//		Emprunt empruntSaved  = this.empruntRepository.save(emprunt);
-//		user.getEmprunts().add(empruntSaved);
-//
-//
-//		this.userRepository.save(user);
-//		this.ouvrageRepository.saveAndFlush(exemplaire.getOuvrage());
-//		this.exemplaireRepository.save(exemplaire);
-//
-//		return empruntSaved;
-//	}
 
 	public Emprunt setProlongation(Long id) {
 		Emprunt emprunt = this.get(id);

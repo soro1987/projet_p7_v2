@@ -5,6 +5,8 @@ import lombok.Data;
 
 public class UserDto {
 
+    private Long id;
+
     private String nom;
 
     private String prenom;
@@ -22,25 +24,32 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(String nom, String prenom, String email, String telephone, int user_active, String password, String username) {
+    public UserDto(Long id, String nom, String prenom, String email, String telephone, int user_active, String username, String password) {
+        this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.telephone = telephone;
         this.user_active = user_active;
         this.username = username;
+        this.password = password;
     }
 
+    public Long getId() {
+        return id;
+    }
 
-//    public UserDto(String nom, String prenom, String email, String telephone, int user_active, String username, String password) {
-//        this.nom = nom;
-//        this.prenom = prenom;
-//        this.email = email;
-//        this.telephone = telephone;
-//        this.user_active = user_active;
-//        this.username = username;
-////        this.password = password;
-//    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getNom() {
         return nom;

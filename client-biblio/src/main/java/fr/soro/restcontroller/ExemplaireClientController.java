@@ -16,12 +16,12 @@ import fr.soro.dto.ExemplaireDto;
 import fr.soro.dto.OuvrageDto;
 
 @RestController
-public class ExemplaireController {
+public class ExemplaireClientController {
 	Long id=(long) 1;
 	private ExemplaireClient exemplaireClient;
 	private OuvrageClient ouvrageClient;
 	
-	public ExemplaireController(ExemplaireClient exemplaireService,OuvrageClient ouvrageClient) {
+	public ExemplaireClientController(ExemplaireClient exemplaireService, OuvrageClient ouvrageClient) {
 		this.exemplaireClient=exemplaireService;
 		this.ouvrageClient=ouvrageClient;
 	}

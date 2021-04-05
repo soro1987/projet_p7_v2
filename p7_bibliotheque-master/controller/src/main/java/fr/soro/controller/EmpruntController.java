@@ -60,17 +60,6 @@ public class EmpruntController {
  	}
 
 
-//	@GetMapping(value = "/emprunts-user/{idUser}")
-//	public ResponseEntity<List<Emprunt>> getUserEmprunt(@PathVariable(value = "idUser") Long idUser) {
-//		List<Emprunt> userEmprunts =new ArrayList<Emprunt>();
-//		List<Emprunt> allEmprunts = empruntService.getAllEmprunt();
-//		for (Emprunt emprunt : allEmprunts) {
-//		    if (emprunt.getUser().getId()==idUser) {
-//		    	userEmprunts.add(emprunt);
-//			}
-//		}
-//		return new ResponseEntity<List<Emprunt>>(userEmprunts, HttpStatus.FOUND);
-//	}
 
 	@GetMapping(value = "/emprunts-user/{idUser}")
 	public ResponseEntity<List<EmpruntDto>> getUserEmprunt(@PathVariable(value = "idUser") Long idUser) {
@@ -106,19 +95,19 @@ public class EmpruntController {
 
 
 	@GetMapping(value = "/emprunts/{id}")
-	public ResponseEntity<Emprunt> getOneEmprunt(@PathVariable(value = "id") Long id) {
+	public ResponseEntity<Emprunt> getOneEmprunt(@PathVariable Long id) {
 		Emprunt empruntsUpdated = empruntService.get(id);
 		return new ResponseEntity<Emprunt>(empruntsUpdated, HttpStatus.FOUND);
 	}
 
 	@GetMapping(value = "/emprunts/{datedebut}")
-	public ResponseEntity<List<Emprunt>> getDateDebut(@PathVariable(value = "datedebut") Date datedebut) {
+	public ResponseEntity<List<Emprunt>> getDateDebut(@PathVariable Date datedebut) {
 		List<Emprunt> empruntsFound = empruntService.getDateDebut(datedebut);
 		return new ResponseEntity<List<Emprunt>>(empruntsFound, HttpStatus.FOUND);
 	}
 
 	@GetMapping(value = "/emprunts/{dateEcheance}")
-	public ResponseEntity<List<Emprunt>> getDateEcheance(@PathVariable(value = "dateEcheance") Date dateEcheance) {
+	public ResponseEntity<List<Emprunt>> getDateEcheance(@PathVariable Date dateEcheance) {
 		List<Emprunt> empruntsFound = empruntService.getDateEcheance(dateEcheance);
 		return new ResponseEntity<List<Emprunt>>(empruntsFound, HttpStatus.FOUND);
 	}
@@ -132,13 +121,13 @@ public class EmpruntController {
 //	}
 
 	@PutMapping(value = "/emprunts/prolongation/{idEmprunt}")
-	public ResponseEntity<Emprunt> getProlongation(@PathVariable(value = "idEmprunt") Long idEmprunt) {
-		Emprunt empruntsFound = empruntService.setProlongation(idEmprunt);
-		return new ResponseEntity<Emprunt>(empruntsFound, HttpStatus.FOUND);
+	public ResponseEntity<Void> setProlongation(@PathVariable Long idEmprunt) {
+		empruntService.setProlongation(idEmprunt);
+		return  ResponseEntity.ok().build();
 	}
 
 	@GetMapping(value = "/emprunts/{depassement}")
-	public ResponseEntity<List<Emprunt>> getDepassement(@PathVariable(value = "depassement") int depassement) {
+	public ResponseEntity<List<Emprunt>> getDepassement(@PathVariable int depassement) {
 		List<Emprunt> empruntsFound = empruntService.getDepassement(depassement);
 		return new ResponseEntity<List<Emprunt>>(empruntsFound, HttpStatus.FOUND);
 	}

@@ -35,7 +35,7 @@ import fr.soro.dto.UserDto;
 
 
 @RestController
-public class ConnexionController {
+public class ConnexionClientController {
 	@Autowired
 	private OuvrageClient ouvrageClient;
 
@@ -45,7 +45,7 @@ public class ConnexionController {
 	private RestTemplate restTemplate;	
 	private SecurityClient securityClient;
 	private UserClient userClient;
-	public ConnexionController(SecurityClient securityClient,RestTemplate restTemplate,UserClient userClient) {
+	public ConnexionClientController(SecurityClient securityClient, RestTemplate restTemplate, UserClient userClient) {
 		this.securityClient=securityClient;
 		this.restTemplate=restTemplate;
 		this.userClient=userClient;

@@ -19,14 +19,14 @@ import fr.soro.Client.OuvrageClient;
 import fr.soro.dto.OuvrageDto;
 
 @RestController
-public class RechercheController {
+public class RechercheClientController {
 
 	
 	private ExemplaireClient exemplaireClient;
 	private OuvrageClient ouvrageClient;
 	private Category categoryDto;
 	
-	public RechercheController(ExemplaireClient exemplaireService,OuvrageClient ouvrageClient) {
+	public RechercheClientController(ExemplaireClient exemplaireService, OuvrageClient ouvrageClient) {
 		this.exemplaireClient=exemplaireService;
 		this.ouvrageClient=ouvrageClient;
 	}

@@ -34,25 +34,27 @@ public class EmailService {
 		List<UserDto> usersMailsExpired = empruntClient.getUserExpireEmprunts();
 		List<EmpruntDto> empruntExpired = empruntClient.getExpireEmprunts();
 
-		for(UserDto user : usersMailsExpired) 		
-		{
-			for(EmpruntDto emprunt : empruntExpired) 
+		if (empruntExpired.size() > 0){
+			for(UserDto user : usersMailsExpired)
 			{
-				LOG.info("=================================Email-Send-Console-Log===================================");
-				mailExp.setSubject("Expiration de l'emprunt");
-				StringBuilder builder = new StringBuilder();
-				builder.append("Bonjour ").append(user.getNom())
-						.append("vous deviez rendre votre emprunt numeroter : ")
-						.append(emprunt.getId())
-						.append("en date du ")
-						.append(emprunt.getDateEcheance())
-						.append(emprunt.isProlongation()?
-								". Merci de les ramenés dans les plus bref delai. Sous peine de poursuite !"
-								: ". Vous avez encore la possibiliter de le prolonger en vous connectant dans votre espace personnel sur http://localhost:8080/login. Cordialement!");
-				mailExp.setBody(builder.toString());
-				mailExp.setSendTo(user.getEmail());
-				this.sendTextEmail(mailExp);
-		    }
+				for(EmpruntDto emprunt : empruntExpired)
+				{
+					LOG.info("=================================Email-Send-Console-Log===================================");
+					mailExp.setSubject("Expiration de l'emprunt");
+					StringBuilder builder = new StringBuilder();
+					builder.append("Bonjour ").append(user.getNom())
+							.append("vous deviez rendre votre emprunt numeroter : ")
+							.append(emprunt.getId())
+							.append("en date du ")
+							.append(emprunt.getDateEcheance())
+							.append(emprunt.isProlongation()?
+									". Merci de les ramenés dans les plus bref delai. Sous peine de poursuite !"
+									: ". Vous avez encore la possibiliter de le prolonger en vous connectant dans votre espace personnel sur http://localhost:8080/login. Cordialement!");
+					mailExp.setBody(builder.toString());
+					mailExp.setSendTo(user.getEmail());
+					this.sendTextEmail(mailExp);
+				}
+			}
 		}
 	}	
 

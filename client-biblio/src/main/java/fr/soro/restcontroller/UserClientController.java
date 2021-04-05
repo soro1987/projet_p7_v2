@@ -1,5 +1,5 @@
 package fr.soro.restcontroller;
 
-public class UserController {
+public class UserClientController {
 
 }

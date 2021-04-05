@@ -6,13 +6,14 @@ import fr.soro.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
+@Service
 public class ReservationClient {
 
     @Value("${app.serveur.url}")
@@ -31,7 +32,7 @@ public class ReservationClient {
         return registrationResponse.getBody();
     }
 
-    public void deleteReservation(String reservationId) {
+    public void deleteReservation(Long reservationId) {
         securedRestTemplate.delete(appUrl+ "/reservations/" + reservationId);
     }
 
@@ -41,9 +42,16 @@ public class ReservationClient {
     }
 
     public List<UserReservationCredentialsDto> getAllUserReservationCredentials(Long userId){
-        ResponseEntity<UserReservationCredentialsDto[]> response =securedRestTemplate.getForEntity(appUrl+"/v1/reservation/userCredentials/"+userId, UserReservationCredentialsDto[].class);
+        ResponseEntity<UserReservationCredentialsDto[]> response =securedRestTemplate.getForEntity(appUrl+"/v1/reservation/userAllCredentials/"+userId, UserReservationCredentialsDto[].class);
         return Optional.ofNullable(response.getBody()).map(Arrays::asList).orElse(Collections.emptyList());
     }
+
+
+//    public List<UserReservationCredentialsDto> getAllUserReservationCredentials(Long userId){
+//        ResponseEntity<UserReservationCredentialsDto[]> response =securedRestTemplate.getForEntity(appUrl+"/v1/reservation/userAllCredentials/"+userId, UserReservationCredentialsDto[].class);
+//        UserReservationCredentialsDto[] userReservationCredentialsDtos = response.getBody();
+//        return Arrays.asList(userReservationCredentialsDtos);
+//    }
 
     public UserReservationCredentialsDto getUserReservationCredentials(String userId){
         ResponseEntity<UserReservationCredentialsDto> response =securedRestTemplate.getForEntity(appUrl+"/v1/reservation/userCredentials/"+userId, UserReservationCredentialsDto.class);
