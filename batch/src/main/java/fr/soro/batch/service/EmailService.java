@@ -28,7 +28,7 @@ public class EmailService {
 	/*
 	 * Methode pour generer les mails
 	 */
-//	@Scheduled(cron="*/10 * * * * *")//	Pour test toutes les 10 secondes
+	@Scheduled(cron="*/10 * * * * *")//	Pour test toutes les 10 secondes
 	public void emailInitializer() {
 		EmailTemplate mailExp = new EmailTemplate();	
 		List<UserDto> usersMailsExpired = empruntClient.getUserExpireEmprunts();

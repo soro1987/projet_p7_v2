@@ -46,7 +46,7 @@
 	          <h3 class="card-header" ><span th:text="Information"></span></h3>
 	          <div class="card-body">
 	            <h3 class="card-header" >Nombre de personnes en liste d'attente : <span th:text="${infos.numberOfReservation}"></span></h3>
-	            <h3 class="card-header" >Date de réservation la plus proche : <span th:text="${infos.earliestBookReturnDate}"></span></h3>
+	            <h3 class="card-header" >Date de retour la plus proche : <span th:text="${infos.earliestBookReturnDate}"></span></h3>
                   <th:block th:if="${infos.canBeBooked}">
                   <form class="form-inline form-group  mx-auto mt-1" th:action="@{/create-reservation/{ouvrageId}(ouvrageId=${infos.ouvrageId})}" method="get" >
                       <button class="btn btn-secondary btn-lg" type="submit">Reserver</button>

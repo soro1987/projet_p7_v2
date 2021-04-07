@@ -12,7 +12,6 @@ import fr.soro.batch.modele.UserDto;
 
 
 @Service
-
 public class EmpruntClient {
     private static final String EXPIRE_USER_EMPRUNT_URL = "http://localhost:8080/emprunts/user/expired";
     private static final String EXPIRE_EMPRUNT_URL = "http://localhost:8080/emprunts/expired";

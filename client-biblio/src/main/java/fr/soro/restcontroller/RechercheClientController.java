@@ -57,7 +57,7 @@ public class RechercheClientController {
 	public ModelAndView search(@RequestParam(value = "motcle", defaultValue = "defaultmotcle")String motcle,ModelAndView modelAndView){				
 		List<OuvrageDto> ouvragesRechercher = ouvrageClient.getOuvrageBytitredAuteur(motcle);
 		modelAndView.addObject("ouvragesRechercher", ouvragesRechercher);
-		modelAndView.setViewName("/recherche");
+		modelAndView.setViewName("/resultat-recherche");
 		return modelAndView;
 	}
 	

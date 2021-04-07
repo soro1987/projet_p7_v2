@@ -24,7 +24,7 @@ public class OuvrageService {
 		}
 		
 		public List<Ouvrage> getByTitreAuteur(String motcle) {
-			return ouvrageRepository.findByTitreAuteur("%"+motcle+"%","%"+motcle+"%");
+			return ouvrageRepository.findByTitreAuteur("%"+motcle.toLowerCase()+"%","%"+motcle.toLowerCase()+"%");
 		}
 
 	public List<Ouvrage> getByCategorie(String categorie) {
