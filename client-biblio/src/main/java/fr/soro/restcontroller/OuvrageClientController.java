@@ -25,7 +25,6 @@ public class OuvrageClientController {
 	private OuvrageClient ouvrageClient;
 	private OuvrageService ouvrageService;
 	
-	
 	public OuvrageClientController(OuvrageClient ouvrageClient, OuvrageService ouvrageService) {
 		this.ouvrageClient = ouvrageClient;
 		this.ouvrageService = ouvrageService;
@@ -35,22 +34,20 @@ public class OuvrageClientController {
 	public ModelAndView ouvrages (ModelAndView modelAndView){
 	/*	List<OuvrageDto> ouvrages;
 		ouvrages = ouvrageService.ouvragesWithImage();*/
-
 		List<OuvrageDto> ouvrages = ouvrageClient.getOuvrage();
-
 		modelAndView.addObject("ouvrages", ouvrages);
 		modelAndView.setViewName("tous");
 		return modelAndView;	
 	}
 	
 	@GetMapping("/ouvrages/{id}")
-	public ModelAndView ouvrage (@PathVariable(value = "id") Long id,ModelAndView modelAndView){
+	public ModelAndView ouvrage (@PathVariable Long id,ModelAndView modelAndView){
 		OuvrageDto ouvrage = ouvrageClient.getOuvrageById(id);
 		List<OuvrageDto> ouvragesSameCategory = ouvrageClient.getOuvrageByCategory(ouvrage.getCategorie());
 		List<OuvrageDto> ouvragesSameCategoryWithoutOuvrage =ouvrageService.removeOuvrageFromList(ouvragesSameCategory,ouvrage);
 		modelAndView.addObject("ouvragesSameCategory", ouvragesSameCategoryWithoutOuvrage);
 		modelAndView.addObject("ouvrage", ouvrage);
-		modelAndView.setViewName("ouvrage_id");
+		modelAndView.setViewName("ouvrage-details");
 		return modelAndView;
 		
 	}
@@ -59,13 +56,10 @@ public class OuvrageClientController {
 	public void showProductImage(@PathVariable Long id,
                                HttpServletResponse response) throws IOException {
 		response.setContentType("image/jpeg"); // Or whatever format you wanna use
-
 		OuvrageDto ouvrage = ouvrageClient.getOuvrageById(id);
-
 		InputStream is = new ByteArrayInputStream(ouvrage.getImage());
 		IOUtils.copy(is, response.getOutputStream());
 	}
-
 
 	@GetMapping(value = "/ouvrages/{id}/image")
 	public ResponseEntity<byte[]> downloadImage(@PathVariable Long id)

@@ -5,18 +5,28 @@ import java.util.Date;
 
 public class OuvrageWaitingListCredentialsDto {
 
+    private Long ouvrageId;
     private Date earliestBookReturnDate;
     private Long numberOfReservation;
     private boolean canBeBooked;
 
-    public OuvrageWaitingListCredentialsDto(Date earliestBookReturnDate, Long numberOfReservation, boolean canBeBooked) {
+
+    public OuvrageWaitingListCredentialsDto() {
+    }
+
+    public OuvrageWaitingListCredentialsDto(Long ouvrageId, Date earliestBookReturnDate, Long numberOfReservation, boolean canBeBooked) {
+        this.ouvrageId = ouvrageId;
         this.earliestBookReturnDate = earliestBookReturnDate;
         this.numberOfReservation = numberOfReservation;
         this.canBeBooked = canBeBooked;
     }
 
-    public OuvrageWaitingListCredentialsDto() {
+    public Long getOuvrageId() {
+        return ouvrageId;
+    }
 
+    public void setOuvrageId(Long ouvrageId) {
+        this.ouvrageId = ouvrageId;
     }
 
     public Date getEarliestBookReturnDate() {

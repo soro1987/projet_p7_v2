@@ -1,24 +1,17 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.thymeleaf.org ">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-
-  <title>Modern Business - Start Bootstrap Template</title>
-
+  <title>Ouvrage détails</title>
   <!-- Bootstrap core CSS -->
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
   <!-- Custom styles for this template -->
   <link href="../css/modern-business.css" rel="stylesheet">
-
 </head>
-
 <body>
 <!-- Navigation -->
 <th:block th:insert="fragments/navbar::navbar"></th:block>
@@ -62,32 +55,32 @@
   <h3 class="my-4">Ouvrage similaire</h3>
   <!--<div th:text="${products[1].id}"></div>-->
   <div class="row">
-    <!--<th:block th:each="ouvrageSameCategory : ${ouvragesSameCategory}">-->
+    <th:block th:each="ouvrageSameCategory : ${ouvragesSameCategory}">
     <div class="col-md-3 col-sm-6 mb-4">
       <a href="#">
         <div th:if="${ouvragesSameCategory.size() > 0}">
-          <img class="img-fluid" th:src="@{/ouvrages/{id}/image(id=${ouvragesSameCategory[0].id})}" alt="">
+          <img class="img-fluid" th:src="${ouvrageSameCategory.imageUrl}" alt="">
         </div>
       </a>
     </div>
     <div class="col-md-3 col-sm-6 mb-4">
       <a href="#">
         <div th:if="${ouvragesSameCategory.size() > 1}">
-          <img class="img-fluid" th:src="@{/ouvrages/{id}/image(id=${ouvragesSameCategory[1].id})}" alt="">
+          <img class="img-fluid" th:src="${ouvrageSameCategory.imageUrl}" alt="">
         </div>
       </a>
     </div>
     <div class="col-md-3 col-sm-6 mb-4">
       <a href="#">
         <div th:if="${ouvragesSameCategory.size() > 2}">
-          <img class="img-fluid" th:src="@{/ouvrages/{id}/image(id=${ouvragesSameCategory[2].id})}" alt="">
+          <img class="img-fluid" th:src="${ouvrageSameCategory.imageUrl}" alt="">
         </div>
       </a>
     </div>
     <div class="col-md-3 col-sm-6 mb-4">
       <a href="#">
         <div th:if="${ouvragesSameCategory.size() > 3}">
-          <img class="img-fluid" th:src="@{/ouvrages/{id}/image(id=${ouvragesSameCategory[3].id})}" alt="">
+          <img class="img-fluid" th:src="${ouvrageSameCategory.imageUrl}" alt="">
         </div>
       </a>
     </div>

@@ -1,9 +1,8 @@
 package fr.soro.restcontroller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.soro.Client.ReservationClient;
-import fr.soro.dto.EmpruntDto;
-import fr.soro.dto.UserDto;
-import fr.soro.dto.UserReservationCredentialsDto;
+import fr.soro.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +18,21 @@ public class ReservationClientController {
 
     @Autowired
     private ReservationClient reservationClient;
+
+
+
+
+    @GetMapping("/create-reservation/{ouvrageId}")
+    public ModelAndView createReservations(@PathVariable Long ouvrageId, HttpSession session, ModelAndView modelAndView) throws JsonProcessingException {
+        UserDto user =(UserDto) session.getAttribute("userSession");
+        CreateReservationDto createReservationDto = reservationClient.createReservation(user.getId(), ouvrageId);
+//        ModelAndView modelAndView = new ModelAndView("redirect:/infos-reservation/"+ouvrageId);
+        WaitingListCredentialsDto infos = reservationClient.getOuvrageWaitingListCredentials(ouvrageId);
+        modelAndView.addObject("infos", infos);
+        modelAndView.addObject("reservation", createReservationDto);
+        modelAndView.setViewName("reservation-confirmer-alerte");
+        return modelAndView;
+    }
 
     @GetMapping("/user-reservations/{id}")
     public ModelAndView getUserReservations(@PathVariable(value = "id") Long userId, ModelAndView modelAndView){

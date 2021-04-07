@@ -65,6 +65,9 @@
                         <form class="form-inline form-group  mx-auto mt-1" th:action="@{/dispo/{ouvrageId}(ouvrageId=${ouvrage.id})}" method="get" >
                             <button class="btn btn-secondary" type="submit">Voir disponibilité</button>
                         </form>
+                        <form class="form-inline form-group  mx-auto mt-1" th:action="@{/infos-reservation/{ouvrageId}(ouvrageId=${ouvrage.id})}" method="get" >
+                            <button class="btn btn-secondary" type="submit">Infos réservation</button>
+                        </form>
 
                     </div>
                     <div class="card-footer text-muted">

@@ -41,6 +41,8 @@ public class OuvrageDto implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
+
+
 	public OuvrageDto(Long id, String titre, String auteur, Date dateParution, String description, String categorie, String imageUrl, byte[] image, int nbreExemplaireDispo, List<ExemplaireDto> exemplaires) {
 		this.id = id;
 		this.titre = titre;

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class ReservationService {
 
 
-     private final OuvrageRepository ouvrageRepository;
+    private final OuvrageRepository ouvrageRepository;
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final UtilitiesComponent utilitiesComponent;
@@ -28,12 +28,9 @@ public class ReservationService {
     private final EmpruntRepository empruntRepository;
 
 
-
-
     public ReservationService(ReservationJob reservationJob, OuvrageRepository ouvrageRepository, UserRepository userRepository,
                               ReservationRepository reservationRepository, UtilitiesComponent utilitiesComponent, ExemplaireService exemplaireService,
-                              ExemplaireRepository exemplaireRepository, EmpruntService empruntService, EmpruntRepository empruntRepository)
-    {
+                              ExemplaireRepository exemplaireRepository, EmpruntService empruntService, EmpruntRepository empruntRepository) {
         this.ouvrageRepository = ouvrageRepository;
         this.userRepository = userRepository;
         this.reservationRepository = reservationRepository;
@@ -43,17 +40,17 @@ public class ReservationService {
         this.empruntRepository = empruntRepository;
     }
 
-    public Reservation createReservation(Long userId, Long ouvrageId){
+    public Reservation createReservation(Long userId, Long ouvrageId) {
         User user = this.userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
         Ouvrage ouvrage = this.ouvrageRepository.findById(ouvrageId).orElseThrow(IllegalArgumentException::new);
-        return new Reservation(user,ouvrage);
+        return new Reservation(user, ouvrage);
     }
 
     public Reservation addNew(Reservation reservation) {
         failIfUserAlreadyHaveExemple(reservation);
         failIfBookCountLimitHasReach(reservation);
         failIfUserAlreadyHasBooking(reservation);
-        Reservation saved = reservationRepository.save(reservation) ;
+        Reservation saved = reservationRepository.save(reservation);
         this.sendMailToPrioritaryReservationWhenOuvrageIsDisponible(saved.getOuvrage());
         return saved;
     }
@@ -75,29 +72,30 @@ public class ReservationService {
             }
         }
     }
+
     private void failIfUserAlreadyHasBooking(Reservation reservation) {
         Optional<Reservation> byUserIdAndOuvrageId = reservationRepository
-                .findByOuvrageIdAndUserId(reservation.getOuvrage().getId(),reservation.getUser().getId());
-        if (byUserIdAndOuvrageId.isPresent()){
+                .findByOuvrageIdAndUserId(reservation.getOuvrage().getId(), reservation.getUser().getId());
+        if (byUserIdAndOuvrageId.isPresent()) {
             throw new FunctionalException("Utilisateur a deja réservé cet ouvrage");
         }
     }
 
     private void failIfBookCountLimitHasReach(Reservation reservation) {
-       Long count = reservationRepository
+        Long count = reservationRepository
                 .countByOuvrageId(reservation.getOuvrage().getId())
                 .orElse(0L);
-       Ouvrage ouvrage =ouvrageRepository.findById(reservation.getOuvrage().getId()).orElseThrow(IllegalArgumentException::new);
-       if(count >= ouvrage.getNbreExemplaireDispo()*2L){
-       //if (count >= reservation.getOuvrage().getNbreExemplaireDispo()*2){
-           throw new FunctionalException("Le nombre maximal de reservation est atteint");
-       }
+        Ouvrage ouvrage = ouvrageRepository.findById(reservation.getOuvrage().getId()).orElseThrow(IllegalArgumentException::new);
+        if (count >= ouvrage.getNbreExemplaireDispo() * 2L) {
+            //if (count >= reservation.getOuvrage().getNbreExemplaireDispo()*2){
+            throw new FunctionalException("Le nombre maximal de reservation est atteint");
+        }
     }
 
     public void failIfUserAlreadyHaveExemple(Reservation reservation) {
         Optional<Reservation> reservation1 = reservationRepository
-                .findByOuvrageIdAndUserId(reservation.getOuvrage().getId(),reservation.getUser().getId());
-        if (reservation1.isPresent()){
+                .findByOuvrageIdAndUserId(reservation.getOuvrage().getId(), reservation.getUser().getId());
+        if (reservation1.isPresent()) {
             throw new FunctionalException("L'utilisateur a déja l'ouvrage en cours d'emprunt");
 
         }
@@ -106,9 +104,9 @@ public class ReservationService {
 
     public void cancel(Long reservationId) {
         Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
-        if (reservation.isPresent()){
+        if (reservation.isPresent()) {
             this.reservationRepository.deleteById(reservation.get().getId());
-        }else {
+        } else {
             throw new FunctionalException("Error reservation not exist");
         }
     }
@@ -128,26 +126,26 @@ public class ReservationService {
         //Create object to return
         UserReservationsCredentialsDto userReservationsCredentials = new UserReservationsCredentialsDto();
         Reservation reservation = this.reservationRepository.findById(reservationId).orElseThrow(IllegalArgumentException::new);
-            //Retrieve values
-            userReservationsCredentials.setBookEarliestReturnDate(
-                    this.empruntService.findEmpruntEarliestReturnDate(reservation.getOuvrage().getId()));
-            userReservationsCredentials.setTitle(reservation.getOuvrage().getTitre());
-            userReservationsCredentials.setPositionInWaitingList(this.positionInWaitingList(reservation));
-            userReservationsCredentials.setId(reservation.getId());
-            return userReservationsCredentials;
+        //Retrieve values
+        userReservationsCredentials.setBookEarliestReturnDate(
+                this.empruntService.findEmpruntEarliestReturnDate(reservation.getOuvrage().getId()));
+        userReservationsCredentials.setTitle(reservation.getOuvrage().getTitre());
+        userReservationsCredentials.setPositionInWaitingList(this.positionInWaitingList(reservation));
+        userReservationsCredentials.setId(reservation.getId());
+        return userReservationsCredentials;
     }
 
-    public List<UserReservationsCredentialsDto> findAllUserReservationsCredentials(Long userId){
+    public List<UserReservationsCredentialsDto> findAllUserReservationsCredentials(Long userId) {
         return this.reservationRepository.findAllByUserIdOrderByDateReservation(userId)
-                        .stream()
-                        .map(reservation -> this.findUserReservationCredentials(reservation.getId()))
-                        .collect(Collectors.toList());
+                .stream()
+                .map(reservation -> this.findUserReservationCredentials(reservation.getId()))
+                .collect(Collectors.toList());
     }
 
 
     private Integer positionInWaitingList(Reservation reservation) {
-        List<Reservation> reservations =this.reservationRepository.findAllByOuvrageIdOrderByDateReservationDesc(reservation.getOuvrage().getId());
-        return reservations.indexOf(reservation)+1;
+        List<Reservation> reservations = this.reservationRepository.findAllByOuvrageIdOrderByDateReservationDesc(reservation.getOuvrage().getId());
+        return reservations.indexOf(reservation) + 1;
     }
 
     public OuvrageWaitingListCredentialsDto waitingListCredentials(Long ouvrageId) {
@@ -155,8 +153,9 @@ public class ReservationService {
         OuvrageWaitingListCredentialsDto waitingListCredentialsDto = new OuvrageWaitingListCredentialsDto();
         //Retrieve values
         waitingListCredentialsDto.setEarliestBookReturnDate(this.empruntService.findEmpruntEarliestReturnDate(ouvrageId));
-        waitingListCredentialsDto.setNumberOfReservation(reservationRepository.countByOuvrageId(ouvrageId).orElse( 0L));
+        waitingListCredentialsDto.setNumberOfReservation(reservationRepository.countByOuvrageId(ouvrageId).orElse(0L));
         waitingListCredentialsDto.setCanBeBooked(this.canBeBooked(ouvrageId));
+        waitingListCredentialsDto.setOuvrageId(ouvrageId);
         return waitingListCredentialsDto;
     }
 
@@ -165,8 +164,8 @@ public class ReservationService {
         Optional<Ouvrage> ouvrage = ouvrageRepository.findById(ouvrageId);
         Optional<Long> numberOfReservationForTheBook = reservationRepository.countByOuvrageId(ouvrageId);
         //Check if the number of reservation is less then two time the number of exemplaires
-        if (ouvrage.isPresent() && numberOfReservationForTheBook.isPresent() ){
-            return ouvrage.get().getNbreExemplaireDispo() * 2L < numberOfReservationForTheBook.get();
+        if (ouvrage.isPresent() && numberOfReservationForTheBook.isPresent()) {
+            return ouvrage.get().getNbreExemplaireDispo() * 2L > numberOfReservationForTheBook.get();
         }
         return false;
     }

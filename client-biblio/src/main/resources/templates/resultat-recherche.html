@@ -31,12 +31,8 @@
     </ol>
 <br>
     <div class="row">
-
       <!-- Blog Entries Column -->
       <div class="col-md-8">
-
-        <!-- Blog Post -->
-
       <th:block th:each="ouvrage : ${ouvragesRechercher}">
         <div th:if="${ouvragesRechercher.isEmpty()}">
           <div>Aucun résultat ne correspond à votre recherche</div>
@@ -61,41 +57,11 @@
             </div>
           </div>
         </div>
-       <!-- <img class="" th:src="${ouvrage.imageUrl}" alt="Card image cap">
-        <div class="card mb-4">
-          <div class="card-body">
-            <h2 class="card-title" th:text="${ouvrage.titre}"></h2>
-            <small th:text="${ouvrage.auteur}"></small>
-            <p class="card-text" th:text="${ouvrage.description}"></p>
-&lt;!&ndash;             Verifier dispo ds differente biblio &ndash;&gt;
-            <form class="form-inline form-group  mx-auto mt-1" th:action="@{/dispo/{ouvrageId}(ouvrageId=${ouvrage.id})}" method="get" >
-            <button class="btn btn-secondary" type="submit">Voir disponibilité</button>
-            </form>
-
-          </div>
-          <div class="card-footer text-muted">
-            Date de parution :  <span th:text="${ouvrage.dateParution}"></span>
-          </div>
-        </div>-->
       </th:block>
-
-        <!-- Pagination -->
-<!--         <ul class="pagination justify-content-center mb-4"> -->
-<!--           <li class="page-item"> -->
-<!--             <a class="page-link" href="#">&larr; Older</a> -->
-<!--           </li> -->
-<!--           <li class="page-item disabled"> -->
-<!--             <a class="page-link" href="#">Newer &rarr;</a> -->
-<!--           </li> -->
-<!--         </ul> -->
-
       </div>
-
       <!-- Sidebar Widgets Column -->
       <div class="col-md-4">
-
         <!-- Search Widget -->
-
           <div class="card-body">
             <form class="form-inline form-group  mx-auto mt-1" th:action="@{/search}" method="get" >          
             <div class="input-group">
@@ -106,12 +72,8 @@
             </div>
             </form>
           </div>
-
-
         <!-- Categories Widget -->
-
-
-          <div class="card-body">
+       <div class="card-body">
             <h5 class="align-center">Categories</h5>
             <div class="row">
               <div class="col-lg-6">
@@ -142,15 +104,9 @@
               </div>
             </div>
           </div>
-
-
-        
-
       </div>
-
     </div>
     <!-- /.row -->
-
   </div>
   <!-- /.container -->
         <br><br><br><br><br><br><br><br><br><br>

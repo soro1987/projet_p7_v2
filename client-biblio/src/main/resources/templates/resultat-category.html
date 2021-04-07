@@ -2,20 +2,15 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-
   <title>Recherche par categorie</title>
-
   <!-- Bootstrap core CSS -->
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
   <!-- Custom styles for this template -->
   <link href="../css/modern-business.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -55,6 +50,9 @@
                 <span class="card-text"><small class="text-muted" th:text="${ouvrage.dateParution}"></small></span><br><br>
                 <form class="form-inline form-group  mx-auto mt-1" th:action="@{/dispo/{ouvrageId}(ouvrageId=${ouvrage.id})}" method="get" >
                   <br> <button class="btn btn-outline-dark" type="submit">Voir disponibilité</button>
+                </form>
+                <form class="form-inline form-group  mx-auto mt-1" th:action="@{/infos-reservation/{ouvrageId}(ouvrageId=${ouvrage.id})}" method="get" >
+                  <button class="btn btn-secondary" type="submit">Infos réservation</button>
                 </form>
               </div>
             </div>

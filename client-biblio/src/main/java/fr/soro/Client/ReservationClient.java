@@ -26,17 +26,25 @@ public class ReservationClient {
     public ReservationClient() throws JsonProcessingException {
     }
 
-    public CreateReservationDto createReservation(String ouvrageId) throws JsonProcessingException {
+    public CreateReservationDto createReservation(Long userId, Long ouvrageId) throws JsonProcessingException {
         ResponseEntity<CreateReservationDto> registrationResponse = securedRestTemplate.exchange(appUrl + "/reservations",
-                HttpMethod.POST, this.registrationEntityBuilder(), CreateReservationDto.class);
-        return registrationResponse.getBody();
+                HttpMethod.POST, this.registrationEntityBuilder(new CreateReservationDto(userId, ouvrageId)), CreateReservationDto.class);
+        CreateReservationDto createReservationDto = registrationResponse.getBody();
+        if (registrationResponse.getStatusCode()==HttpStatus.OK){
+            assert createReservationDto != null;
+            createReservationDto.setCreated(true);
+        }else{
+            assert createReservationDto != null;
+            createReservationDto.setCreated(false);
+        }
+        return createReservationDto;
     }
 
     public void deleteReservation(Long reservationId) {
         securedRestTemplate.delete(appUrl+ "/reservations/" + reservationId);
     }
 
-    public WaitingListCredentialsDto getOuvrageWaitingListCredentials(String ouvrageId){
+    public WaitingListCredentialsDto getOuvrageWaitingListCredentials(Long ouvrageId){
         ResponseEntity<WaitingListCredentialsDto> response =securedRestTemplate.getForEntity(appUrl+"/v1/reservations/waitingList/"+ouvrageId, WaitingListCredentialsDto.class);
         return response.getBody();
     }
@@ -58,9 +66,9 @@ public class ReservationClient {
         return response.getBody();
     }
 
-    public HttpEntity<String>  registrationEntityBuilder() throws JsonProcessingException {
+    public HttpEntity<String>  registrationEntityBuilder(CreateReservationDto createReservationDto) throws JsonProcessingException {
         HttpHeaders reservationHeaders = getHeaders();
-        String reservationBody = this.getBody(new CreateReservationDto());
+        String reservationBody = this.getBody(createReservationDto);
         return new HttpEntity<String>(reservationBody,reservationHeaders);
     }
 
