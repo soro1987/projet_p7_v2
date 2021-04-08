@@ -21,7 +21,6 @@ public class EmpruntClient {
 
 	public void getProlongation(Long empruntId){
 		securedRestTemplate.put(appUrl+"/emprunts/prolongation/"+empruntId, EmpruntDto.class);
-		
 	}
 
 	public List<EmpruntDto> getUserEmprunts(Long userId){		
@@ -30,18 +29,6 @@ public class EmpruntClient {
 		List<EmpruntDto> userEmprunts = Arrays.asList(emprunt);
 		return userEmprunts;		
 	}
-	
-	public List<EmpruntDto> getEmprunts(){		
-		ResponseEntity<EmpruntDto[]> response =securedRestTemplate.getForEntity(appUrl+"/emprunts", EmpruntDto[].class);
-		EmpruntDto[] emprunt = response.getBody();
-		List<EmpruntDto> empruntDto = Arrays.asList(emprunt);
-		return empruntDto;		
-	}
-	
-	public EmpruntDto getEmpruntDtoById(Long empruntId){		
-		ResponseEntity<EmpruntDto> response =securedRestTemplate.getForEntity(appUrl+"/emprunts/"+empruntId, EmpruntDto.class);
-		EmpruntDto emprunt = response.getBody();	
-		return emprunt;		
-	}
+
 
 }

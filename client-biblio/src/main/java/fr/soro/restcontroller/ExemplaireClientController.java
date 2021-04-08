@@ -41,9 +41,7 @@ public class ExemplaireClientController {
 		modelAndView.setViewName("accueil");
 		for (ExemplaireDto exemplaire : exemplaires) {
 		    BiblioDto biblio = exemplaire.getBibliotheque();
-		    	System.out.println("================================="+biblio.getNom());
 			}
-
 		return modelAndView;
 		
 	}

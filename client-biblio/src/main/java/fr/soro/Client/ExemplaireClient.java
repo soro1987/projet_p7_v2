@@ -39,33 +39,6 @@ public class ExemplaireClient {
 		return exemplairesByBiblio;
 		
 	}
-	
-	
-	public Map<Long, Object> getOuvrageCountBybibliotheque(Long ouvrageId){
-	return restTemplate.getForObject(appUrl+"/ouvrages/exemplairecount"+ouvrageId, Map.class);
-	    
-}
 
-	
-//	public List<ExemplaireDto> getExemplairesByBiblio(Long biblioId){		
-//		List<ExemplaireDto> allExemplaires = exemplaireService.getExemplaires();
-//		List<ExemplaireDto> exemplaireByBiblio = new ArrayList<ExemplaireDto>();
-//		for (ExemplaireDto exemplaire : allExemplaires) {
-//		    if (exemplaire.getBibliotheque().getId()==biblioId) {
-//		    	exemplaireByBiblio.add(exemplaire);
-//		    	System.out.println(exemplaire.getId());
-//			}
-//		}
-//		return exemplaireByBiblio;
-		
-//	}
-	
-	
-	public ExemplaireDto getExemplaireById(Long exemplaireId){		
-		ResponseEntity<ExemplaireDto> response =restTemplate.getForEntity(appUrl+"/exemplaires/"+exemplaireId, ExemplaireDto.class);
-		ExemplaireDto exemplaire = response.getBody();	
-		return exemplaire;
-		
-	}
 
 }

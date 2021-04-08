@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class EmpruntController {
 
 	@Autowired
-	EmpruntMapper empruntMapper;
+	private EmpruntMapper empruntMapper;
 
 	@Autowired
 	private EmpruntService empruntService;
@@ -39,11 +39,7 @@ public class EmpruntController {
 	private ReservationService reservationService;
 
 	@PostMapping(value = "/emprunts/{idUser}/{idExemplaire}")
-	public ResponseEntity<Emprunt> createEmprunt(
-			@PathVariable(value = "idUser") Long idUser,
-			@PathVariable(value = "idExemplaire") Long idExemplaire
-		)
-	{
+	public ResponseEntity<Emprunt> createEmprunt(@PathVariable Long idUser,@PathVariable Long idExemplaire){
 		if (!exemplaireService.isDisponible(idExemplaire)){
 			return ResponseEntity.badRequest().build();
 		}
@@ -52,32 +48,21 @@ public class EmpruntController {
 				.path("/emprunts/").path(empruntsSaved.getId().toString()).build().toUri()).build();
  	}
 
-
 	@DeleteMapping(value = "/emprunts/delete/{empruntId}/{exemplaireId}")
 	public ResponseEntity<Void> deleteEmprunt(@PathVariable(value = "exemplaireId") Long exemplaireId,@PathVariable(value = "empruntId") Long empruntId) {
 		reservationService.returnEmprunt( empruntId,exemplaireId);
 		return new ResponseEntity<Void>(HttpStatus.GONE);
  	}
 
-
-
 	@GetMapping(value = "/emprunts-user/{idUser}")
 	public ResponseEntity<List<EmpruntDto>> getUserEmprunt(@PathVariable(value = "idUser") Long idUser) {
 		List<Emprunt> userEmprunts =empruntService.getUserEmprunt(idUser);
-
 		List<EmpruntDto> userEmpruntsDto= userEmprunts
 				.stream()
 				.map(emprunt -> empruntMapper.from(emprunt))
 				.collect(Collectors.toList());
 		System.out.println(userEmpruntsDto);
-
 		return new ResponseEntity<List<EmpruntDto>>(userEmpruntsDto, HttpStatus.FOUND);
-	}
-
-	@GetMapping(value = "/emprunts-user")
-	public ResponseEntity<List<Emprunt>> getAllEmprunt() {
-		List<Emprunt> empruntsUpdated = empruntService.getAllEmprunt();
-		return new ResponseEntity<List<Emprunt>>(empruntsUpdated, HttpStatus.FOUND);
 	}
 
 	@GetMapping(value = "/emprunts/expired")
@@ -93,43 +78,11 @@ public class EmpruntController {
 		return new ResponseEntity<List<User>>(empruntsExpireUsers, HttpStatus.FOUND);
 	}
 
-
-	@GetMapping(value = "/emprunts/{id}")
-	public ResponseEntity<Emprunt> getOneEmprunt(@PathVariable Long id) {
-		Emprunt empruntsUpdated = empruntService.get(id);
-		return new ResponseEntity<Emprunt>(empruntsUpdated, HttpStatus.FOUND);
-	}
-
-	@GetMapping(value = "/emprunts/{datedebut}")
-	public ResponseEntity<List<Emprunt>> getDateDebut(@PathVariable Date datedebut) {
-		List<Emprunt> empruntsFound = empruntService.getDateDebut(datedebut);
-		return new ResponseEntity<List<Emprunt>>(empruntsFound, HttpStatus.FOUND);
-	}
-
-	@GetMapping(value = "/emprunts/{dateEcheance}")
-	public ResponseEntity<List<Emprunt>> getDateEcheance(@PathVariable Date dateEcheance) {
-		List<Emprunt> empruntsFound = empruntService.getDateEcheance(dateEcheance);
-		return new ResponseEntity<List<Emprunt>>(empruntsFound, HttpStatus.FOUND);
-	}
-
-//	@PutMapping(value = "/employees/{id}")
-//	public ResponseEntity<EmployeeVO> updateEmployee(@PathVariable("id") int id
-//	                ,EmployeeVO employee) 
-//	{
-//	    //TODO: Save employee details
-//	    return new ResponseEntity<EmployeeVO>(employee, HttpStatus.OK);
-//	}
-
 	@PutMapping(value = "/emprunts/prolongation/{idEmprunt}")
 	public ResponseEntity<Void> setProlongation(@PathVariable Long idEmprunt) {
 		empruntService.setProlongation(idEmprunt);
 		return  ResponseEntity.ok().build();
 	}
 
-	@GetMapping(value = "/emprunts/{depassement}")
-	public ResponseEntity<List<Emprunt>> getDepassement(@PathVariable int depassement) {
-		List<Emprunt> empruntsFound = empruntService.getDepassement(depassement);
-		return new ResponseEntity<List<Emprunt>>(empruntsFound, HttpStatus.FOUND);
-	}
 
 }

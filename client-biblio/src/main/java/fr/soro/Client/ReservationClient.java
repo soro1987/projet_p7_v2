@@ -54,18 +54,6 @@ public class ReservationClient {
         return Optional.ofNullable(response.getBody()).map(Arrays::asList).orElse(Collections.emptyList());
     }
 
-
-//    public List<UserReservationCredentialsDto> getAllUserReservationCredentials(Long userId){
-//        ResponseEntity<UserReservationCredentialsDto[]> response =securedRestTemplate.getForEntity(appUrl+"/v1/reservation/userAllCredentials/"+userId, UserReservationCredentialsDto[].class);
-//        UserReservationCredentialsDto[] userReservationCredentialsDtos = response.getBody();
-//        return Arrays.asList(userReservationCredentialsDtos);
-//    }
-
-    public UserReservationCredentialsDto getUserReservationCredentials(String userId){
-        ResponseEntity<UserReservationCredentialsDto> response =securedRestTemplate.getForEntity(appUrl+"/v1/reservation/userCredentials/"+userId, UserReservationCredentialsDto.class);
-        return response.getBody();
-    }
-
     public HttpEntity<String>  registrationEntityBuilder(CreateReservationDto createReservationDto) throws JsonProcessingException {
         HttpHeaders reservationHeaders = getHeaders();
         String reservationBody = this.getBody(createReservationDto);

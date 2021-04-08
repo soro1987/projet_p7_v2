@@ -38,8 +38,7 @@ public class OuvrageClient {
 
 	}
 
-
-	public List<OuvrageDto> getOuvrageBytitredAuteur(String motcle){		
+	public List<OuvrageDto> getOuvrageBytitredAuteur(String motcle){
 		ResponseEntity<OuvrageDto[]> response =restTemplate.getForEntity(appUrl+"/search/"+motcle, OuvrageDto[].class);
 		OuvrageDto[] ouvrage = response.getBody();
 		List<OuvrageDto> ouvrageDto = Arrays.asList(ouvrage);
@@ -58,9 +57,7 @@ public class OuvrageClient {
 	public List<OuvrageDto> getOuvrage(){		
 		ResponseEntity<OuvrageDto[]> response =securedRestTemplate.getForEntity(appUrl+"/ouvrages", OuvrageDto[].class);
 		OuvrageDto[] ouvrage = response.getBody();
-
 		List<OuvrageDto> ouvrageDto = Arrays.asList(ouvrage);
-		System.out.println("======================================================="+ouvrageDto.get(1).getImageUrl()+"======================================================="+ouvrageDto.get(1).getTitre());
 		return ouvrageDto;
 		
 	}
@@ -71,13 +68,6 @@ public class OuvrageClient {
 		return ouvrage;
 		
 	}
-	
-	public OuvrageDto getOuvrageByTitre(String ouvrageTitre){		
-		ResponseEntity<OuvrageDto> response =securedRestTemplate.getForEntity(appUrl+"/ouvrages-titre/"+ouvrageTitre, OuvrageDto.class);
-		OuvrageDto ouvrageByTitre = response.getBody();	
-		return ouvrageByTitre;
-	}
-	
 
 	public Map<String, Object> getOuvrageCountBybibliotheque(Long ouvrageId){
 	return restTemplate.getForObject(appUrl+"/ouvrages/exemplairecount/"+ouvrageId, Map.class);
