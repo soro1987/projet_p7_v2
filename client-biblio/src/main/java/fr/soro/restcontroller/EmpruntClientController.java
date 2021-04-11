@@ -15,17 +15,17 @@ import fr.soro.dto.UserDto;
 
 @RestController
 public class EmpruntClientController {
-	
-	private EmpruntClient empruntClient;
+		private EmpruntClient empruntClient;
 	
 	
 	public EmpruntClientController(EmpruntClient empruntService) {
 		this.empruntClient = empruntService;
 	}
 
-	@GetMapping("/user-emprunts/{id}")
-	public ModelAndView getUserEmprunts(@PathVariable(value = "id") Long id,ModelAndView modelAndView){		
-		List<EmpruntDto> emprunts = empruntClient.getUserEmprunts(id);
+	@GetMapping("/user-emprunts")
+	public ModelAndView getUserEmprunts(ModelAndView modelAndView,HttpSession session){
+		UserDto user =(UserDto) session.getAttribute("userSession");
+		List<EmpruntDto> emprunts = empruntClient.getUserEmprunts(user.getId());
 		modelAndView.addObject("emprunts", emprunts);
 		modelAndView.setViewName("user-emprunts");
 		return modelAndView;

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class ReservationController {
 
     private  MailForExpiredReservationDto mailForExpiredReservationDto;
-    private  OuvrageWaitingListCredentialsDto waitingListCredentialsDto;
+    private OuvrageWaitingListInfosDto waitingListCredentialsDto;
 
     private final ReservationService reservationService;
     private final ReservationMapper reservationMapper;
@@ -32,7 +32,7 @@ public class ReservationController {
 
 
     private final EmpruntRepository empruntRepository;
-    private UserReservationsCredentialsDto userReservationsCredentialsDto;
+    private UserReservationsInfosDto userReservationsCredentialsDto;
 
     public ReservationController(ReservationService reservationService, ReservationMapper reservationMapper,
                                  ReservationRepository reservationRepository,UserService userService,
@@ -76,17 +76,17 @@ public class ReservationController {
     }
 
     @GetMapping(value = "/v1/reservations/waitingList/{ouvrageId}")
-    public ResponseEntity<OuvrageWaitingListCredentialsDto> checkOuvrageWaitingList(@PathVariable Long ouvrageId) {
+    public ResponseEntity<OuvrageWaitingListInfosDto> checkOuvrageWaitingList(@PathVariable Long ouvrageId) {
         return ResponseEntity.ok(this.reservationService.waitingListCredentials(ouvrageId));
     }
 
     @GetMapping(value = "/v1/reservation/userAllCredentials/{userId}")
-    public ResponseEntity<List<UserReservationsCredentialsDto>> userAllReservationsCredentials(@PathVariable Long userId){
+    public ResponseEntity<List<UserReservationsInfosDto>> userAllReservationsCredentials(@PathVariable Long userId){
         return ResponseEntity.ok(this.reservationService.findAllUserReservationsCredentials(userId));
     }
 
     @GetMapping(value = "/v1/reservation/userCredentials/{reservationId}")
-    public ResponseEntity<UserReservationsCredentialsDto> userReservationsCredentials(@PathVariable Long reservationId){
+    public ResponseEntity<UserReservationsInfosDto> userReservationsCredentials(@PathVariable Long reservationId){
          return ResponseEntity.ok(this.reservationService.findUserReservationCredentials(reservationId));
     }
 

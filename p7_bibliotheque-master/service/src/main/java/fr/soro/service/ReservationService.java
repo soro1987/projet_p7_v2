@@ -1,11 +1,10 @@
 package fr.soro.service;
 
-import fr.soro.dto.UserReservationsCredentialsDto;
-import fr.soro.dto.OuvrageWaitingListCredentialsDto;
+import fr.soro.dto.UserReservationsInfosDto;
+import fr.soro.dto.OuvrageWaitingListInfosDto;
 import fr.soro.entities.*;
 import fr.soro.exeption.FunctionalException;
 import fr.soro.repositories.*;
-import fr.soro.service.job.ReservationJob;
 import fr.soro.utilities.UtilitiesComponent;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +27,7 @@ public class ReservationService {
     private final EmpruntRepository empruntRepository;
 
 
-    public ReservationService(ReservationJob reservationJob, OuvrageRepository ouvrageRepository, UserRepository userRepository,
+    public ReservationService( OuvrageRepository ouvrageRepository, UserRepository userRepository,
                               ReservationRepository reservationRepository, UtilitiesComponent utilitiesComponent, ExemplaireService exemplaireService,
                               ExemplaireRepository exemplaireRepository, EmpruntService empruntService, EmpruntRepository empruntRepository) {
         this.ouvrageRepository = ouvrageRepository;
@@ -92,7 +91,7 @@ public class ReservationService {
         }
     }
 
-    public void failIfUserAlreadyHaveExemple(Reservation reservation) {
+    private void failIfUserAlreadyHaveExemple(Reservation reservation) {
         Optional<Reservation> reservation1 = reservationRepository
                 .findByOuvrageIdAndUserId(reservation.getOuvrage().getId(), reservation.getUser().getId());
         if (reservation1.isPresent()) {
@@ -101,7 +100,7 @@ public class ReservationService {
         }
 
     }
-
+//Todo voir si sa renvoie exeption
     public void cancel(Long reservationId) {
         Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
         if (reservation.isPresent()) {
@@ -121,42 +120,47 @@ public class ReservationService {
         return reservations;
     }
 
-
-    public UserReservationsCredentialsDto findUserReservationCredentials(Long reservationId) {
+//Todo
+    public UserReservationsInfosDto findUserReservationCredentials(Long reservationId) {
         //Create object to return
-        UserReservationsCredentialsDto userReservationsCredentials = new UserReservationsCredentialsDto();
+        UserReservationsInfosDto userReservationsInfos = new UserReservationsInfosDto();
         Reservation reservation = this.reservationRepository.findById(reservationId).orElseThrow(IllegalArgumentException::new);
         //Retrieve values
-        userReservationsCredentials.setBookEarliestReturnDate(
+        userReservationsInfos.setBookEarliestReturnDate(
                 this.empruntService.findEmpruntEarliestReturnDate(reservation.getOuvrage().getId()));
-        userReservationsCredentials.setTitle(reservation.getOuvrage().getTitre());
-        userReservationsCredentials.setPositionInWaitingList(this.positionInWaitingList(reservation));
-        userReservationsCredentials.setId(reservation.getId());
-        return userReservationsCredentials;
+        userReservationsInfos.setTitle(reservation.getOuvrage().getTitre());
+        userReservationsInfos.setPositionInWaitingList(this.positionInWaitingList(reservation));
+        userReservationsInfos.setId(reservation.getId());
+        return userReservationsInfos;
     }
-
-    public List<UserReservationsCredentialsDto> findAllUserReservationsCredentials(Long userId) {
+//Todo
+    public List<UserReservationsInfosDto> findAllUserReservationsCredentials(Long userId) {
         return this.reservationRepository.findAllByUserIdOrderByDateReservation(userId)
                 .stream()
                 .map(reservation -> this.findUserReservationCredentials(reservation.getId()))
                 .collect(Collectors.toList());
     }
 
+    //Mocker reservationRepro et le faire retourner une reservation avec l'id correspondant un
+    // -ouvrage contenant un id
+    //-un ouvrage contenant un titre
+    //
+
 
     private Integer positionInWaitingList(Reservation reservation) {
         List<Reservation> reservations = this.reservationRepository.findAllByOuvrageIdOrderByDateReservationDesc(reservation.getOuvrage().getId());
         return reservations.indexOf(reservation) + 1;
     }
-
-    public OuvrageWaitingListCredentialsDto waitingListCredentials(Long ouvrageId) {
+//Todo
+    public OuvrageWaitingListInfosDto waitingListCredentials(Long ouvrageId) {
         //Create object to return
-        OuvrageWaitingListCredentialsDto waitingListCredentialsDto = new OuvrageWaitingListCredentialsDto();
+        OuvrageWaitingListInfosDto waitingListInfosDto = new OuvrageWaitingListInfosDto();
         //Retrieve values
-        waitingListCredentialsDto.setEarliestBookReturnDate(this.empruntService.findEmpruntEarliestReturnDate(ouvrageId));
-        waitingListCredentialsDto.setNumberOfReservation(reservationRepository.countByOuvrageId(ouvrageId).orElse(0L));
-        waitingListCredentialsDto.setCanBeBooked(this.canBeBooked(ouvrageId));
-        waitingListCredentialsDto.setOuvrageId(ouvrageId);
-        return waitingListCredentialsDto;
+        waitingListInfosDto.setEarliestBookReturnDate(this.empruntService.findEmpruntEarliestReturnDate(ouvrageId));
+        waitingListInfosDto.setNumberOfReservation(reservationRepository.countByOuvrageId(ouvrageId).orElse(0L));
+        waitingListInfosDto.setCanBeBooked(this.canBeBooked(ouvrageId));
+        waitingListInfosDto.setOuvrageId(ouvrageId);
+        return waitingListInfosDto;
     }
 
     public boolean canBeBooked(Long ouvrageId) {

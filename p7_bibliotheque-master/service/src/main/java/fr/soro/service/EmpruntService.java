@@ -63,7 +63,7 @@ public class EmpruntService {
 		return empruntSaved;
 	}
 
-	public void setDateEcheance(Emprunt emprunt) {
+	 void setDateEcheance(Emprunt emprunt) {
 		emprunt.setDateDebut(new Date());
 		Calendar calendrier = Calendar.getInstance();
 		Date dateCourante = emprunt.getDateDebut();
@@ -96,6 +96,7 @@ public class EmpruntService {
 		return emprunt;
 	}
 
+
 	public Ouvrage retrieveAndUpdateOuvrage(Exemplaire exemplaire) {
 		Ouvrage ouv = exemplaire.getOuvrage();
 		ouv.increase();
@@ -111,9 +112,8 @@ public class EmpruntService {
 
 
 	public Date findEmpruntEarliestReturnDate(Long ouvrageId) {
-//		Optional<Emprunt> emprunt = empruntRepository.findFirstByExemplaireOuvrageIdOrderByDateEcheanceDesc(ouvrageId);
-//		return emprunt.map(Emprunt::getDateEcheance).orElse(null);
-		return new Date();
+	Optional<Exemplaire> exemplaire = exemplaireRepository.findFirstByOuvrageIdOrderByEmpruntDateEcheanceDesc(ouvrageId);
+	return exemplaire.map(e -> e.getEmprunt().getDateEcheance()).orElse(null);
 	}
 
 

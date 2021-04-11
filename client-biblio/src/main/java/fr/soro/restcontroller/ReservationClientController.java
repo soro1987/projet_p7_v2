@@ -34,9 +34,10 @@ public class ReservationClientController {
         return modelAndView;
     }
 
-    @GetMapping("/user-reservations/{id}")
-    public ModelAndView getUserReservations(@PathVariable(value = "id") Long userId, ModelAndView modelAndView){
-        List<UserReservationCredentialsDto> reservations = reservationClient.getAllUserReservationCredentials(userId);
+    @GetMapping("/user-reservations")
+    public ModelAndView getUserReservations( ModelAndView modelAndView, HttpSession session){
+        UserDto user =(UserDto) session.getAttribute("userSession");
+        List<UserReservationCredentialsDto> reservations = reservationClient.getAllUserReservationCredentials(user.getId());
         modelAndView.addObject("reservations", reservations);
         modelAndView.setViewName("user-reservations");
         return modelAndView;

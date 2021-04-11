@@ -11,4 +11,9 @@ public class FunctionalException extends RuntimeException {
     public FunctionalException(String message) {
         this.message = message;
     }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }

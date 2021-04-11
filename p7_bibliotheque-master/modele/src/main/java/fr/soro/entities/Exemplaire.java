@@ -44,6 +44,7 @@ public class Exemplaire implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "emprunt_id")
 	private Emprunt emprunt;
+
 	public Exemplaire() {
 		super();
 		// TODO Auto-generated constructor stub

@@ -28,6 +28,7 @@ public class UtilitiesComponent {
         this.restTemplate = restTemplate;
     }
 
+
     public void sendOuvrageAvailabilityMail(String userEmail, String fullName, String ouvrageTitle) {
         //Mail sender to alert the No.1 user of availability of the book
         EmailTemplateDTO emailTemplateDTO = new EmailTemplateDTO(userEmail, "Ouvrage disponible",

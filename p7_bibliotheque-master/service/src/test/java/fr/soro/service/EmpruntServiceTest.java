@@ -1,6 +1,7 @@
 package fr.soro.service;
 
 import fr.soro.entities.Emprunt;
+import fr.soro.entities.Exemplaire;
 import fr.soro.entities.User;
 import fr.soro.repositories.EmpruntRepository;
 import fr.soro.repositories.ExemplaireRepository;
@@ -20,15 +21,20 @@ import java.util.*;
 class EmpruntServiceTest {
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    EmpruntRepository empruntRepository = Mockito.mock(EmpruntRepository.class);
-    UserRepository userRepository = Mockito.mock(UserRepository.class);
-    ExemplaireRepository exemplaireRepository = Mockito.mock(ExemplaireRepository.class);
-    OuvrageRepository ouvrageRepository = Mockito.mock(OuvrageRepository.class);
+    private EmpruntRepository empruntRepository;
+    private UserRepository userRepository ;
+    private ExemplaireRepository exemplaireRepository ;
+    private OuvrageRepository ouvrageRepository ;
 
-    EmpruntService empruntService = new EmpruntService(empruntRepository,userRepository,exemplaireRepository,ouvrageRepository);
+    EmpruntService empruntService;
 
     @BeforeEach
     void init() {
+        empruntRepository = Mockito.mock(EmpruntRepository.class);
+        userRepository = Mockito.mock(UserRepository.class);
+        exemplaireRepository = Mockito.mock(ExemplaireRepository.class);
+        ouvrageRepository = Mockito.mock(OuvrageRepository.class);
+        empruntService = new EmpruntService(empruntRepository,userRepository,exemplaireRepository,ouvrageRepository);
 
     }
 
@@ -70,11 +76,24 @@ class EmpruntServiceTest {
         Assertions.assertThat(empruntsExpirer.get(0).getDateDebut()).isAfter(empruntsExpirer.get(0).getDateEcheance());
     }
 
-    @Ignore
-    @Test
-    public void shouldSaveEmprunt(){
-
-    }
+//    @Ignore
+//    @Test
+//    public void shouldSaveEmprunt(){
+//        User userId1 = new User();
+//        userId1.setId(1L);
+//        Exemplaire exemplaire = new Exemplaire();
+//        exemplaire.setId(1L);
+//        Mockito.doReturn(Optional.of(userId1)).when(userRepository).findById(1L);
+//        Mockito.doReturn(exemplaire).when(exemplaireRepository).getExemplaireById(1L);
+//        Emprunt emprunt = new Emprunt();
+//        emprunt.setId(1L);
+//        Mockito.doReturn(emprunt).when(empruntRepository).save(Mockito.isA(Emprunt.class));
+//
+//        Emprunt empruntResponse = empruntService.save(1L,1L);
+//
+//        Assertions.assertThat(
+//
+//    }
 
     @Test
     public void shouldSetEmpruntDateEcheance(){
@@ -117,7 +136,17 @@ class EmpruntServiceTest {
         Assertions.assertThat(empruntsUser1.get(0).getUser().getId()).isEqualTo(1L);
     }
 
-
+    @Test
+    public void shouldIncreaseDateEcheanceBy24Day(){
+        Emprunt emprunt1 = new Emprunt();
+        emprunt1.setDateEcheance((new Date(2021, Calendar.MARCH,1)));
+        Mockito.doReturn(Optional.of(emprunt1)).when(empruntRepository).findById(1L);
+        //When
+        Emprunt empruntResponse = empruntService.setProlongation(1L);
+        //Then
+        Assertions.assertThat(empruntResponse.getDateEcheance())
+                .isEqualToIgnoringHours((new Date(2021, Calendar.MARCH,29)));
+    }
 
 
 

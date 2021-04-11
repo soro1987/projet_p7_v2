@@ -1,11 +1,13 @@
 package fr.soro.repositories;
 
+import fr.soro.entities.Emprunt;
 import fr.soro.entities.Ouvrage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import fr.soro.entities.Exemplaire;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ExemplaireRepository extends JpaRepository<Exemplaire, Long> {
 	public Exemplaire getExemplaireById( Long id );
@@ -24,6 +26,9 @@ public interface ExemplaireRepository extends JpaRepository<Exemplaire, Long> {
 	public List<Exemplaire> findAllByOuvrageAndDisponible(Ouvrage ouvrage, boolean disponsible);
 
 	Exemplaire findFirstByOuvrageIdAndDisponibleTrue(Long ouvrageId);
+
+	Optional<Exemplaire> findFirstByOuvrageIdOrderByEmpruntDateEcheanceDesc(Long ouvrageId);
+
 }
 
 

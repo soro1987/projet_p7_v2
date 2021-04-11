@@ -2,16 +2,16 @@ package fr.soro.dto;
 
 import java.util.Date;
 
-public class UserReservationsCredentialsDto {
+public class UserReservationsInfosDto {
     private Long id;
     private String title;
     private Date bookEarliestReturnDate;
     private Integer positionInWaitingList;
 
-    public UserReservationsCredentialsDto() {
+    public UserReservationsInfosDto() {
     }
 
-    public UserReservationsCredentialsDto(Long id, String title, Date bookEarliestReturnDate, Integer positionInWaitingList) {
+    public UserReservationsInfosDto(Long id, String title, Date bookEarliestReturnDate, Integer positionInWaitingList) {
         this.id = id;
         this.title = title;
         this.bookEarliestReturnDate = bookEarliestReturnDate;
