@@ -10,6 +10,11 @@ public class CreateReservationDto {
     public CreateReservationDto() {
     }
 
+    public CreateReservationDto(Long userId, Long ouvrageId) {
+        this.userId = userId;
+        this.ouvrageId = ouvrageId;
+    }
+
     public Long getUserId() {
         return userId;
     }

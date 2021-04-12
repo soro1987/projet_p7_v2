@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
+  jpa:
+    generate-ddl: true
+    database: H2
+app:
+  batch:
+    base_url: http://localhost:8083
+    email.service.url: ${app.batch.base_url}/sendEmail
