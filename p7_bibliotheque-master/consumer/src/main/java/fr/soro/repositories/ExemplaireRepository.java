@@ -27,7 +27,7 @@ public interface ExemplaireRepository extends JpaRepository<Exemplaire, Long> {
 
 	Exemplaire findFirstByOuvrageIdAndDisponibleTrue(Long ouvrageId);
 
-	Optional<Exemplaire> findFirstByOuvrageIdOrderByEmpruntDateEcheanceDesc(Long ouvrageId);
+	Optional<Exemplaire> findFirstByOuvrageIdOrderByEmpruntDateEcheanceAsc(Long ouvrageId);
 
 }
 

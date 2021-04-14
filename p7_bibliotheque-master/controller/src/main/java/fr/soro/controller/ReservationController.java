@@ -45,13 +45,6 @@ public class ReservationController {
         this.empruntRepository = empruntRepository;
     }
 
-    @GetMapping(value = "/v1/ouvrages/{id}/reservations")
-    public ResponseEntity<Page<ReservationDto>> getReservation(@PathVariable Long id, Pageable pageable) {
-        Page<Reservation> reservationPage = reservationRepository.findByOuvrageId(id,pageable);
-        return ResponseEntity.ok(reservationPage.map(reservationMapper::from));
-    }
-
-
     @PostMapping(value = "/reservations")
     public ResponseEntity<ReservationDto> createReservation(@RequestBody CreateReservationDto createReservationDto) {
         Reservation createReservation = reservationService.createReservation(createReservationDto.getUserId(), createReservationDto.getOuvrageId());
@@ -89,19 +82,5 @@ public class ReservationController {
     public ResponseEntity<UserReservationsInfosDto> userReservationsCredentials(@PathVariable Long reservationId){
          return ResponseEntity.ok(this.reservationService.findUserReservationCredentials(reservationId));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

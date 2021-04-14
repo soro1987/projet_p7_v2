@@ -21,18 +21,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @AutoConfigureMockMvc
 @SpringBootTest
 @Transactional
-class ReservationControllerItTest {
+public class EmpruntControllerItTest {
 
     @Autowired
     private MockMvcBuilder mockMvcBuilder;
@@ -56,51 +53,99 @@ class ReservationControllerItTest {
 
     }
 
+
     @Test
-    public void shouldCreateReservation() throws Exception {
-        Mockito.doReturn(ResponseEntity.ok().build()).when(restTemplate)
-                .postForEntity(Mockito.anyString(),Mockito.isA(HttpEntity.class),Mockito.eq(String.class));
+    public void shouldCreateEmprunt() throws Exception {
         User user = userRepository.save(buildUser());
-        Ouvrage ouvrage = ouvrageRepository.save(buildOuvrage().get(0));
-        CreateReservationDto createReservationDto = new CreateReservationDto(user.getId(), ouvrage.getId());
-        mockMvc.perform(MockMvcRequestBuilders.post("/reservations")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(TestUtils.convertObjectToJsonBytes(createReservationDto)))
+        Exemplaire exemplaire1 = new Exemplaire();
+        exemplaireRepository.save(exemplaire1);
+        mockMvc.perform(MockMvcRequestBuilders.post("/emprunts/1/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.ouvrageName").value("Titre1"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dateDebut").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dateEcheance").value("Titre1"));
     }
 
     @Test
-    public void shouldDeleteReservation() throws Exception {
-        Reservation reservation = reservationRepository.save(buildReservation());
-        mockMvc.perform(MockMvcRequestBuilders.delete("/reservations/{reservationId}",reservation.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    public void shouldRerturnWaitingListInfos() throws Exception {
-        this.setupH2DB();
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/reservations/waitingList/1")
+    public void shouldSetEmpruntProlongation() throws Exception {
+        Emprunt emprunt = new Emprunt();
+        emprunt.setDateDebut(new Date(2021, Calendar.FEBRUARY,1));
+        emprunt.setDateEcheance(new Date(2021, Calendar.MARCH,1));
+        empruntRepository.save(emprunt);
+        mockMvc.perform(MockMvcRequestBuilders.delete("emprunts/prolongation/1")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.canBeBooked").value("true"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.earliestBookReturnDate").value("3921-02-28T23:00:00.000+00:00"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.numberOfReservation").value(4));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dateEcheance").value(""));
     }
 
     @Test
-    public void shoulReturnUserReservationInfos() throws Exception {
+    public void shouldGetUserEmprunt(){
         this.setupH2DB();
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/reservation/userCredentials/1")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Titre1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.bookEarliestReturnDate").value("3921-02-28T23:00:00.000+00:00"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.positionInWaitingList").value(3));
     }
-    @Transactional
+
+    public void setupUserEmpruntInH2DB(){
+        //Create ou user to build our reservation
+        User user = new User(); //Our user
+        user.setEmail("test@gmail.com");
+        user.setUsername("testUser");
+        user.setPassword("0000");
+        userRepository.save(user);
+
+        //Create and persist needed ouvrage
+        Ouvrage ouvrage1 = new Ouvrage();
+        ouvrage1.setAuteur("Auteur1");
+        ouvrage1.setTitre("Titre1");
+        ouvrage1.setCategorie("Roman");
+        ouvrage1.setNbreExemplaireDispo(3);   //Create and persist needed ouvrage
+        Ouvrage ouvrage2 = new Ouvrage();
+        ouvrage1.setAuteur("Auteur2");
+        ouvrage1.setTitre("Titre2");
+        ouvrage1.setCategorie("Roman");
+        ouvrage1.setNbreExemplaireDispo(3);   //Create and persist needed ouvrage
+        Ouvrage ouvrage3 = new Ouvrage();
+        ouvrage1.setAuteur("Auteur3");
+        ouvrage1.setTitre("Titre3");
+        ouvrage1.setCategorie("Roman");
+        ouvrage1.setNbreExemplaireDispo(3);
+
+        //Create Exemplaires of the particular ouvrage to build needed emprunt
+        List<Exemplaire> exemplairesList1 = new ArrayList<Exemplaire>();
+        Exemplaire exemplaire1 = new Exemplaire();
+        exemplaire1.setOuvrage(ouvrage1);
+        exemplairesList1.add(exemplaire1);
+        List<Exemplaire> exemplairesList2 = new ArrayList<Exemplaire>();
+        Exemplaire exemplaire2 = new Exemplaire();
+        exemplaire2.setOuvrage(ouvrage2);
+        exemplairesList2.add(exemplaire2);
+        List<Exemplaire> exemplairesList3 = new ArrayList<Exemplaire>();
+        Exemplaire exemplaire3 = new Exemplaire();
+        exemplaire3.setOuvrage(ouvrage3);
+        exemplairesList3.add(exemplaire3);
+
+        //Create and persist emprunts containing exemplaire of the particular ouvrage
+        //To calcule earliest return date
+        Emprunt emprunt1 = new Emprunt();
+        emprunt1.setDateEcheance(new Date(2021, Calendar.MARCH,1));
+        emprunt1.setExemplaires(exemplairesList1);
+        emprunt1.setUser(user);
+        Emprunt emprunt2 = new Emprunt();
+        emprunt2.setDateEcheance(new Date(2021, Calendar.MARCH,2));
+        emprunt2.setExemplaires(exemplairesList2);
+        emprunt2.setUser(user);
+        Emprunt emprunt3 = new Emprunt();
+        emprunt3.setDateEcheance(new Date(2021, Calendar.MARCH,3));
+        emprunt3.setExemplaires(exemplairesList3);
+        emprunt3.setUser(user);
+        empruntRepository.save(emprunt1);
+        empruntRepository.save(emprunt2);
+        empruntRepository.save(emprunt3);
+
+    }
+
+
+
+
+
     public void setupH2DB(){
         //Create ou user to build our reservation
         User user = new User(); //Our user
@@ -149,34 +194,37 @@ class ReservationControllerItTest {
         ouvrage1.setCategorie("Roman");
         ouvrage1.setNbreExemplaireDispo(3);
 
+        //Create Exemplaires of the particular ouvrage to build needed emprunt
+        List<Exemplaire> exemplairesList1 = new ArrayList<Exemplaire>();
+        Exemplaire exemplaire1 = new Exemplaire();
+        exemplaire1.setOuvrage(ouvrage1);
+        exemplairesList1.add(exemplaire1);
+        List<Exemplaire> exemplairesList2 = new ArrayList<Exemplaire>();
+        Exemplaire exemplaire2 = new Exemplaire();
+        exemplaire2.setOuvrage(ouvrage1);
+        exemplairesList2.add(exemplaire2);
+        List<Exemplaire> exemplairesList3 = new ArrayList<Exemplaire>();
+        Exemplaire exemplaire3 = new Exemplaire();
+        exemplaire3.setOuvrage(ouvrage1);
+        exemplairesList3.add(exemplaire3);
+
         //Create and persist emprunts containing exemplaire of the particular ouvrage
         //To calcule earliest return date
         Emprunt emprunt1 = new Emprunt();
         emprunt1.setDateEcheance(new Date(2021, Calendar.MARCH,1));
+        emprunt1.setExemplaires(exemplairesList1);
         emprunt1.setUser(user1);
         Emprunt emprunt2 = new Emprunt();
         emprunt2.setDateEcheance(new Date(2021, Calendar.MARCH,2));
+        emprunt2.setExemplaires(exemplairesList2);
         emprunt2.setUser(user2);
         Emprunt emprunt3 = new Emprunt();
         emprunt3.setDateEcheance(new Date(2021, Calendar.MARCH,3));
+        emprunt3.setExemplaires(exemplairesList3);
         emprunt3.setUser(user3);
         empruntRepository.save(emprunt1);
         empruntRepository.save(emprunt2);
         empruntRepository.save(emprunt3);
-
-        //Create Exemplaires of the particular ouvrage to build needed emprunt
-        Exemplaire exemplaire1 = new Exemplaire();
-        exemplaire1.setOuvrage(ouvrage1);
-        exemplaire1.setEmprunt(emprunt1);
-        Exemplaire exemplaire2 = new Exemplaire();
-        exemplaire2.setOuvrage(ouvrage1);
-        exemplaire2.setEmprunt(emprunt2);
-        Exemplaire exemplaire3 = new Exemplaire();
-        exemplaire3.setOuvrage(ouvrage1);
-        exemplaire3.setEmprunt(emprunt3);
-        exemplaireRepository.save(exemplaire1);
-        exemplaireRepository.save(exemplaire2);
-        exemplaireRepository.save(exemplaire3);
 
         //Create and persist Reservation of the particular ouvrage with their users
         //To calcule position on waiting list
@@ -197,7 +245,21 @@ class ReservationControllerItTest {
         reservationRepository.save(reservation3);
         reservationRepository.save(reservation);
 
+        //Create and persist Exemplaires of the needed ouvrage for reservation List
+        List<Exemplaire> exemplairesList4 = new ArrayList<Exemplaire>();
+        Exemplaire exemplaire4 = new Exemplaire();
+        exemplaire4.setOuvrage(ouvrage1);
+        exemplairesList4.add(exemplaire4);
+        List<Exemplaire> exemplairesList5 = new ArrayList<Exemplaire>();
+        Exemplaire exemplaire5 = new Exemplaire();
+        exemplaire5.setOuvrage(ouvrage1);
+        exemplairesList5.add(exemplaire5);
+        List<Exemplaire> exemplairesList6 = new ArrayList<Exemplaire>();
+        Exemplaire exemplaire6 = new Exemplaire();
+        exemplaire6.setOuvrage(ouvrage1);
+        exemplairesList6.add(exemplaire6);
     }
+
 
     public static User buildUser(){
         User user = new User();
@@ -206,7 +268,6 @@ class ReservationControllerItTest {
         user.setPassword("0000");
         return user;
     }
-
     public static List<Ouvrage> buildOuvrage(){
         List<Ouvrage> ouvrages = new ArrayList<Ouvrage>();
         Ouvrage ouvrage1 = new Ouvrage();
@@ -249,8 +310,7 @@ class ReservationControllerItTest {
         Exemplaire exemplaire = new Exemplaire();
         exemplaire.setOuvrage(buildOuvrage().get(0));
         exemplaires.add(exemplaire);
-           return exemplaires;
+        return exemplaires;
     }
-
 
 }

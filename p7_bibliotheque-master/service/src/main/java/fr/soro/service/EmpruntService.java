@@ -2,8 +2,6 @@ package fr.soro.service;
 
 import fr.soro.entities.*;
 import fr.soro.repositories.*;
-import fr.soro.service.job.ReservationJob;
-import fr.soro.utilities.UtilitiesComponent;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -112,7 +110,7 @@ public class EmpruntService {
 
 
 	public Date findEmpruntEarliestReturnDate(Long ouvrageId) {
-	Optional<Exemplaire> exemplaire = exemplaireRepository.findFirstByOuvrageIdOrderByEmpruntDateEcheanceDesc(ouvrageId);
+	Optional<Exemplaire> exemplaire = exemplaireRepository.findFirstByOuvrageIdOrderByEmpruntDateEcheanceAsc(ouvrageId);
 	return exemplaire.map(e -> e.getEmprunt().getDateEcheance()).orElse(null);
 	}
 

@@ -120,7 +120,7 @@ public class ReservationService {
         return reservations;
     }
 
-//Todo
+
     public UserReservationsInfosDto findUserReservationCredentials(Long reservationId) {
         //Create object to return
         UserReservationsInfosDto userReservationsInfos = new UserReservationsInfosDto();
@@ -133,7 +133,7 @@ public class ReservationService {
         userReservationsInfos.setId(reservation.getId());
         return userReservationsInfos;
     }
-//Todo
+
     public List<UserReservationsInfosDto> findAllUserReservationsCredentials(Long userId) {
         return this.reservationRepository.findAllByUserIdOrderByDateReservation(userId)
                 .stream()
@@ -141,17 +141,11 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    //Mocker reservationRepro et le faire retourner une reservation avec l'id correspondant un
-    // -ouvrage contenant un id
-    //-un ouvrage contenant un titre
-    //
-
-
     private Integer positionInWaitingList(Reservation reservation) {
         List<Reservation> reservations = this.reservationRepository.findAllByOuvrageIdOrderByDateReservationDesc(reservation.getOuvrage().getId());
         return reservations.indexOf(reservation) + 1;
     }
-//Todo
+
     public OuvrageWaitingListInfosDto waitingListCredentials(Long ouvrageId) {
         //Create object to return
         OuvrageWaitingListInfosDto waitingListInfosDto = new OuvrageWaitingListInfosDto();

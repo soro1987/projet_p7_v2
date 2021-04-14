@@ -20,11 +20,11 @@ public class Reservation  {
     @Column(name = "mail_send_time")
     public LocalDateTime mailSendTime;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="ouvrage_id")
     private Ouvrage ouvrage;
 
