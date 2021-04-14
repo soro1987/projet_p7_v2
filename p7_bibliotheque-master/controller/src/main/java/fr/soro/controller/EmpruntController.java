@@ -1,6 +1,5 @@
 package fr.soro.controller;
 
-import com.mysql.cj.conf.RuntimeProperty;
 import fr.soro.dto.EmpruntDto;
 import fr.soro.dto.UserDto;
 import fr.soro.entities.Emprunt;
@@ -17,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +28,7 @@ public class EmpruntController {
 	private UserMapper userMapper;
 
 	@Autowired
-	EmpruntMapper empruntMapper;
+	private EmpruntMapper empruntMapper;
 
 	@Autowired
 	private EmpruntService empruntService;

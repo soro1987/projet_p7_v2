@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @RestController
 public class OuvrageController {
-	
+
 
 	private OuvrageService ouvrageService;
 	private OuvrageRepository ouvrageRepository;
@@ -69,35 +69,35 @@ public class OuvrageController {
 		return new ResponseEntity<List<OuvrageDto>>(ouvrageDtos, HttpStatus.FOUND);
 	}
 
-		@PostMapping(value = "/ouvrages")
-		@Transactional
-		public ResponseEntity<OuvrageDto> createOuvrage(@RequestBody Ouvrage ouvrage)
-		{
-			Ouvrage ouvrageSaved = ouvrageService.save(ouvrage);		
-	 		return new ResponseEntity<OuvrageDto>( ouvrageMapper.from(ouvrageSaved), HttpStatus.CREATED);
-	 	}
-		
-		@DeleteMapping(value = "/ouvrages")
-		public ResponseEntity<Void> deleteOuvrage(@RequestParam(value = "id", required = true) Long id) {
-			ouvrageService.delete(id);
-			return new ResponseEntity<Void>(HttpStatus.GONE);
-	 	}
+	@PostMapping(value = "/ouvrages")
+	@Transactional
+	public ResponseEntity<OuvrageDto> createOuvrage(@RequestBody Ouvrage ouvrage)
+	{
+		Ouvrage ouvrageSaved = ouvrageService.save(ouvrage);
+		return new ResponseEntity<OuvrageDto>( ouvrageMapper.from(ouvrageSaved), HttpStatus.CREATED);
+	}
 
-		
-		@PutMapping(value = "/ouvrages")
-		public ResponseEntity<OuvrageDto> updateOuvrage(@RequestBody Ouvrage ouvrage , @RequestParam(value = "id", required = true) Long id) {
-			Ouvrage ouvrageFound = ouvrageService.updated(id, ouvrage);
-			return new ResponseEntity<OuvrageDto>(ouvrageMapper.from(ouvrageFound), HttpStatus.OK);
-		}
-		
+	@DeleteMapping(value = "/ouvrages")
+	public ResponseEntity<Void> deleteOuvrage(@RequestParam(value = "id", required = true) Long id) {
+		ouvrageService.delete(id);
+		return new ResponseEntity<Void>(HttpStatus.GONE);
+	}
 
-		@GetMapping(value = "/ouvrages")
-		public ResponseEntity<List<OuvrageDto>> getAllOuvrages() {
-			List<Ouvrage> ouvrages = ouvrageService.getAll();
-			return ResponseEntity.ok(ouvrages.stream().peek(Ouvrage::setNbreExemplaireDispo)
-					.map(ouvrage -> ouvrageMapper.from(ouvrage))
-					.collect(Collectors.toList()));
-		}
+
+	@PutMapping(value = "/ouvrages")
+	public ResponseEntity<OuvrageDto> updateOuvrage(@RequestBody Ouvrage ouvrage , @RequestParam(value = "id", required = true) Long id) {
+		Ouvrage ouvrageFound = ouvrageService.updated(id, ouvrage);
+		return new ResponseEntity<OuvrageDto>(ouvrageMapper.from(ouvrageFound), HttpStatus.OK);
+	}
+
+
+	@GetMapping(value = "/ouvrages")
+	public ResponseEntity<List<OuvrageDto>> getAllOuvrages() {
+		List<Ouvrage> ouvrages = ouvrageService.getAll();
+		return ResponseEntity.ok(ouvrages.stream().peek(Ouvrage::setNbreExemplaireDispo)
+				.map(ouvrage -> ouvrageMapper.from(ouvrage))
+				.collect(Collectors.toList()));
+	}
 
 
 	@GetMapping(value = "/ouvrages-id/{id}")
@@ -113,33 +113,33 @@ public class OuvrageController {
 //			return new ResponseEntity<Ouvrage>(ouvrageFound, HttpStatus.FOUND);
 //		}
 
-		@GetMapping(value = "/ouvrages-titre/{titre}")
-		public ResponseEntity<List<OuvrageDto>> getBytitre(@PathVariable(value = "titre") String titre) {
-			List<Ouvrage> ouvrageFound = ouvrageService.getByTitre(titre);
-			List<OuvrageDto> ouvrageDtos = ouvrageFound.stream()
-					.map(ouvrage -> ouvrageMapper.from(ouvrage))
-					.collect(Collectors.toList());
-			return new ResponseEntity<List<OuvrageDto>>(ouvrageDtos, HttpStatus.FOUND);
-		}
+	@GetMapping(value = "/ouvrages-titre/{titre}")
+	public ResponseEntity<List<OuvrageDto>> getBytitre(@PathVariable(value = "titre") String titre) {
+		List<Ouvrage> ouvrageFound = ouvrageService.getByTitre(titre);
+		List<OuvrageDto> ouvrageDtos = ouvrageFound.stream()
+				.map(ouvrage -> ouvrageMapper.from(ouvrage))
+				.collect(Collectors.toList());
+		return new ResponseEntity<List<OuvrageDto>>(ouvrageDtos, HttpStatus.FOUND);
+	}
 
-		
-		@GetMapping(value = "/ouvrages-auteur/{auteur}")
-		public ResponseEntity<List<OuvrageDto>> getByAuteur(@PathVariable(value = "auteur") String auteur) {
-			List<Ouvrage> ouvrageFound = ouvrageService.getByAuteur(auteur);
-			List<OuvrageDto> ouvrageDtos = ouvrageFound.stream()
-					.map(ouvrage -> ouvrageMapper.from(ouvrage))
-					.collect(Collectors.toList());
-			return new ResponseEntity<List<OuvrageDto>>(ouvrageDtos, HttpStatus.FOUND);
-		}
 
-		
-		@GetMapping(value = "/ouvrages/{parution}")
-		public ResponseEntity<List<OuvrageDto>> getByParution(@PathVariable(value = "parution") Date parution) {
-			List<Ouvrage> ouvrageFound = ouvrageService.getByParution(parution);
-			List<OuvrageDto> ouvrageDtos = ouvrageFound.stream()
-					.map(ouvrage -> ouvrageMapper.from(ouvrage))
-					.collect(Collectors.toList());
-			return new ResponseEntity<List<OuvrageDto>>(ouvrageDtos, HttpStatus.FOUND);
-		}
+	@GetMapping(value = "/ouvrages-auteur/{auteur}")
+	public ResponseEntity<List<OuvrageDto>> getByAuteur(@PathVariable(value = "auteur") String auteur) {
+		List<Ouvrage> ouvrageFound = ouvrageService.getByAuteur(auteur);
+		List<OuvrageDto> ouvrageDtos = ouvrageFound.stream()
+				.map(ouvrage -> ouvrageMapper.from(ouvrage))
+				.collect(Collectors.toList());
+		return new ResponseEntity<List<OuvrageDto>>(ouvrageDtos, HttpStatus.FOUND);
+	}
+
+
+	@GetMapping(value = "/ouvrages/{parution}")
+	public ResponseEntity<List<OuvrageDto>> getByParution(@PathVariable(value = "parution") Date parution) {
+		List<Ouvrage> ouvrageFound = ouvrageService.getByParution(parution);
+		List<OuvrageDto> ouvrageDtos = ouvrageFound.stream()
+				.map(ouvrage -> ouvrageMapper.from(ouvrage))
+				.collect(Collectors.toList());
+		return new ResponseEntity<List<OuvrageDto>>(ouvrageDtos, HttpStatus.FOUND);
+	}
 
 }

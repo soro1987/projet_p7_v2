@@ -1,5 +1,4 @@
 *.iml
 .idea
-
 */target
-p7_bibliotheque-master/*/target
+**/target

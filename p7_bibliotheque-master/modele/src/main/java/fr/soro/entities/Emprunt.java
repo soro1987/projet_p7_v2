@@ -19,14 +19,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "emprunt")
 public class Emprunt implements Serializable {
 
-
+	
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -41,11 +40,11 @@ public class Emprunt implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
-
-	@JsonManagedReference(value = "ex-emp")
+	
+	@JsonManagedReference(value = "ex-emp")	
 	@OneToMany(mappedBy = "emprunt")
 	List<Exemplaire> exemplaires = new ArrayList<Exemplaire>();
-
+	
 	public Emprunt() {
 		super();
 	}
