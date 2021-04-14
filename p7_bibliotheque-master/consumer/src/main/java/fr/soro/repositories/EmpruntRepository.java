@@ -25,4 +25,5 @@ public interface EmpruntRepository extends JpaRepository<Emprunt, Long> {
 
 //    Optional<Emprunt> findFirstByExemplaireOuvrageIdOrderByDateEcheanceDesc(Long ouvrageId);
 
+
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 public class UserReservationCredentialsDto {
     private Long id;
     private String title;
+
     private Date bookEarliestReturnDate;
     private Integer positionInWaitingList;
 

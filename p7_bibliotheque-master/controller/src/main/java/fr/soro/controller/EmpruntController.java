@@ -1,9 +1,12 @@
 package fr.soro.controller;
 
+import com.mysql.cj.conf.RuntimeProperty;
 import fr.soro.dto.EmpruntDto;
+import fr.soro.dto.UserDto;
 import fr.soro.entities.Emprunt;
 import fr.soro.entities.User;
 import fr.soro.mapper.EmpruntMapper;
+import fr.soro.mapper.UserMapper;
 import fr.soro.service.EmpruntService;
 import fr.soro.service.ExemplaireService;
 import fr.soro.service.ReservationService;
@@ -22,6 +25,9 @@ import java.util.stream.Collectors;
 @CrossOrigin("*")
 @RestController
 public class EmpruntController {
+
+	@Autowired
+	private UserMapper userMapper;
 
 	@Autowired
 	EmpruntMapper empruntMapper;
@@ -81,18 +87,21 @@ public class EmpruntController {
 	}
 
 	@GetMapping(value = "/emprunts/expired")
-	public ResponseEntity<List<Emprunt>> getExpireEmprunt() {
+	public ResponseEntity<List<EmpruntDto>> getExpireEmprunt() {
 		List<Emprunt> empruntsExpire = empruntService.getAllExpireEmprunt();
-		return new ResponseEntity<List<Emprunt>>(empruntsExpire, HttpStatus.FOUND);
+		return ResponseEntity.ok(empruntsExpire.stream()
+				.map(empruntMapper::from)
+				.collect(Collectors.toList()));
 	}
 
 	@GetMapping(value = "/emprunts/user/expired")
-	public ResponseEntity<List<User>> getUsersEmpruntExpire() {
+	public ResponseEntity<List<UserDto>> getUsersEmpruntExpire() {
 		List<Emprunt> empruntsExpire = empruntService.getAllExpireEmprunt();
 		List<User> empruntsExpireUsers = userService.getUsersEmpruntExpire(empruntsExpire);
-		return new ResponseEntity<List<User>>(empruntsExpireUsers, HttpStatus.FOUND);
+		return ResponseEntity.ok(empruntsExpireUsers.stream()
+				.map(userMapper::from)
+				.collect(Collectors.toList()));
 	}
-
 
 	@GetMapping(value = "/emprunts/{id}")
 	public ResponseEntity<Emprunt> getOneEmprunt(@PathVariable Long id) {

@@ -38,13 +38,12 @@
     <div class="row">
         <th:block th:each="emprunt : ${emprunts}">
             <!-- Content Row -->
-
             <div class="col-lg-4 mb-4">
                 <div class="card h-100">
                     <h3 class="card-header" >Numéro d'emprunts : <span th:text="${emprunt.id}"></span></h3>
                     <div class="card-body" >
                         <div class="border-text">Date limite : <span th:class="border-text"
-                                                                     th:text="${emprunt.dateEcheance}"></span></div>
+                                                                     th:text="${#dates.format(emprunt.dateEcheance, 'dd-MM-yyyy')}"></span></div>
                         <th:block th:if="${!emprunt.prolongation && emprunt.extendable}">
 <!--                        <th:block th:if="${!emprunt.prolongation }">-->
                             <a th:href="@{/emprunts-prolongation/{id}(id=${emprunt.id})}" th:object="${userLogin}"
