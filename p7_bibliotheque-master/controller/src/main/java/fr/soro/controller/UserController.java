@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import fr.soro.dto.UserDto;
+import fr.soro.mapper.UserMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,17 +20,17 @@ import fr.soro.entities.User;
 import fr.soro.service.UserService;
 @CrossOrigin("*")
 @RestController
-public class UserController
-{
-	
-	
-	@Resource
-    private UserService userService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    public UserController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder)
+public class UserController {
+
+    private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserMapper userMapper;
+
+    public UserController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, UserMapper userMapper)
     {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userMapper = userMapper;
     }
     
     @GetMapping("/user")
@@ -38,11 +40,12 @@ public class UserController
     }
     
     @GetMapping(value = "/user/{username}")
-	public ResponseEntity<User> getBytitre(@PathVariable(value = "username") String username) {
+	public ResponseEntity<UserDto> getBytitre(@PathVariable(value = "username") String username) {
 		User user = userService.getUserByUsername(username);
-		return new ResponseEntity<User>(user, HttpStatus.FOUND);
+		UserDto userDto = userMapper.from(user);
+		return ResponseEntity.ok(userDto);
 	}
-    
+
     @PostMapping(value ="/signup",consumes = "application/json", produces = "application/json")
     public void signUp(@RequestBody User user)
     {

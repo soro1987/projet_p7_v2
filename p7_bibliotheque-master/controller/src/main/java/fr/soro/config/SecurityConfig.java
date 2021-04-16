@@ -51,12 +51,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/emprunts/user/expired/**").permitAll()
                 .antMatchers("/emprunts/**").permitAll()
                 .antMatchers("/emprunts/delete/**").permitAll()
-                .antMatchers("/emprunts-prolongation/**").permitAll()
-                .antMatchers("/emprunts-user/**").permitAll()
+                .antMatchers("/emprunts-prolongation/**").permitAll()    //.hasAnyRole("ADMIN","USER")
+                .antMatchers("/emprunts-user/**").permitAll()       //.hasAnyRole("ADMIN","USER")
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/v2/api-docs/**").permitAll()
+                .antMatchers("/reservations/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/v1/hello").permitAll()
+                .antMatchers("/v1/reservation/userCredentials/**").permitAll()
+                .antMatchers("/v1/reservation/userAllCredentials/**").permitAll()
+                .antMatchers("/v1/reservations/waitingList/**").permitAll()
 
         /*"/swagger-resources/**"
         "/v2/api-docs/**"*/

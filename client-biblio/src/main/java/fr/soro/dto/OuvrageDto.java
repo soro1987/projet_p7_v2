@@ -32,7 +32,7 @@ public class OuvrageDto implements Serializable{
 
 	private byte[] image;
 	
-	private  int nbreExemplaireDispo=0;
+	private  int nbreExemplaireDispo;
 	
 	private List<ExemplaireDto> exemplaires;
 
@@ -40,6 +40,8 @@ public class OuvrageDto implements Serializable{
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
+
 
 	public OuvrageDto(Long id, String titre, String auteur, Date dateParution, String description, String categorie, String imageUrl, byte[] image, int nbreExemplaireDispo, List<ExemplaireDto> exemplaires) {
 		this.id = id;

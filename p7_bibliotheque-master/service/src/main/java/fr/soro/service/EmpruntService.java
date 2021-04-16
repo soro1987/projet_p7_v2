@@ -1,38 +1,42 @@
 package fr.soro.service;
 
-import fr.soro.entities.Emprunt;
-import fr.soro.entities.Exemplaire;
-import fr.soro.entities.User;
-import fr.soro.repositories.EmpruntRepository;
-import fr.soro.repositories.ExemplaireRepository;
-import fr.soro.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import fr.soro.entities.*;
+import fr.soro.repositories.*;
+import fr.soro.service.job.ReservationJob;
+import fr.soro.utilities.UtilitiesComponent;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
+import java.util.*;
 
 
 @Service
 public class EmpruntService {
-	@Autowired
-	private EmpruntRepository empruntRepository;
-	
-	@Autowired
-	private UserRepository userRepository;
-	
-	@Autowired
-	private ExemplaireRepository exemplaireRepository;
 
-	public EmpruntService(EmpruntRepository empruntRepository) {
+	private final ReservationJob reservationJob;
+	private final EmpruntRepository empruntRepository;
+	private final ReservationRepository reservationRepository;
+	private final UserRepository userRepository;
+	private final ExemplaireRepository exemplaireRepository;
+	private final OuvrageRepository ouvrageRepository;
+	private final UtilitiesComponent utilitiesComponent;
+
+
+	public EmpruntService(ReservationJob reservationJob, EmpruntRepository empruntRepository, ReservationRepository reservationRepository,
+						  UserRepository userRepository, ExemplaireRepository exemplaireRepository, OuvrageRepository ouvrageRepository,
+						  UtilitiesComponent utilitiesComponent)
+	{
+		this.reservationJob = reservationJob;
 		this.empruntRepository = empruntRepository;
+		this.reservationRepository = reservationRepository;
+		this.userRepository = userRepository;
+		this.exemplaireRepository = exemplaireRepository;
+		this.ouvrageRepository = ouvrageRepository;
+		this.utilitiesComponent = utilitiesComponent;
+
 	}
 
 	public Emprunt get(Long id) {
-		return this.empruntRepository.getOne(id);
+		return this.empruntRepository.findById(id).get();
 	}
 
 	public List<Emprunt> getDateDebut(Date datedebut) {
@@ -73,7 +77,7 @@ public class EmpruntService {
 		}		
 		return empruntsExpirer;
 	}
-	
+
 	public Emprunt save(Long idUser, Long idExmplaire) {
 		Emprunt emprunt = new Emprunt();
 		emprunt.setDateDebut(new Date());
@@ -82,20 +86,30 @@ public class EmpruntService {
 		calendrier.setTime(dateCourante);
 		calendrier.add(Calendar.HOUR, 24*28);
 		emprunt.setDateEcheance(calendrier.getTime());
-		User user = this.userRepository.getOne(idUser);
-		emprunt.setUser(user);
+		Optional<User> user = this.userRepository.findById(idUser);
+		emprunt.setUser(user.get());
 		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
 		emprunt.getExemplaires().add(exemplaire);
 		exemplaire.setDisponible(false);
 		Emprunt empruntSaved  = this.empruntRepository.save(emprunt);
-		user.getEmprunts().add(empruntSaved);
+		user.get().getEmprunts().add(empruntSaved);
 		exemplaire.setEmprunt(empruntSaved);
-		
-		this.userRepository.save(user);
+
+		this.userRepository.save(user.get());
 		this.exemplaireRepository.save(exemplaire);
 		return empruntSaved;
 	}
-	
+	public List<Emprunt> getUserEmprunt(Long idUser){
+		List<Emprunt> userEmprunts =new ArrayList<Emprunt>();
+		List<Emprunt> allEmprunts = this.getAllEmprunt();
+		for (Emprunt emprunt : allEmprunts) {
+			if (emprunt.getUser().getId()==idUser) {
+				userEmprunts.add(emprunt);
+			}
+	}return userEmprunts;
+
+	}
+
 	public Emprunt setProlongation(Long id) {
 		Emprunt emprunt = this.get(id);
 		Date dateEcheanceActuelle = emprunt.getDateEcheance();
@@ -110,13 +124,29 @@ public class EmpruntService {
 		return emprunt;
 	}
 
-	public void delete(Long idEmprunt,Long idExmplaire) {
-		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
-		exemplaire.setEmprunt(null);
-		exemplaire.setDisponible(true);
-		this.exemplaireRepository.save(exemplaire);
-		this.empruntRepository.deleteById(idEmprunt);
+
+
+
+
+	public Ouvrage retrieveAndUpdateOuvrage(Exemplaire exemplaire) {
+		Ouvrage ouv = exemplaire.getOuvrage();
+		ouv.increase();
+		ouvrageRepository.save(ouv);
+		return ouv;
 	}
-		 
-	
+
+	public Exemplaire resetExemplaire(Long idExmplaire) {
+		Exemplaire exemplaire = this.exemplaireRepository.getExemplaireById(idExmplaire);
+		exemplaire.setDisponible(true);
+		return exemplaire;
+	}
+
+
+	public Date findEmpruntEarliestReturnDate(Long ouvrageId) {
+		Optional<Exemplaire> exemplaire = exemplaireRepository.findFirstByOuvrageIdOrderByEmpruntDateEcheanceAsc(ouvrageId);
+		return exemplaire.map(e -> e.getEmprunt().getDateEcheance()).orElse(null);
+	}
+
+
+
 }

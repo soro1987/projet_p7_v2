@@ -2,36 +2,21 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-
   <title>Modern Business - Start Bootstrap Template</title>
-
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
   <!-- Custom styles for this template -->
   <link href="css/modern-business.css" rel="stylesheet">
-
   <!-- Custom styles  -->
   <link href="css/selfStyle.css" rel="stylesheet">
-
-  <style>
-    body {
-    background: radial-gradient(circle at bottom, #7efff5 0%, #ffcccc 100%);
-
-}
-  </style>
 </head>
-
 <body>
-
   <!-- Navigation -->
   <th:block th:insert="fragments/navbar::navbar"></th:block>
-
   <header>
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
       <ol class="carousel-indicators">
@@ -72,7 +57,6 @@
       </a>
     </div>
   </header>
-
   <!-- Page Content -->
   <div class="container">
     <h1 class="my-4">Nouveautés</h1>
@@ -80,12 +64,10 @@
 
     <th:block th:each="ouvrage : ${ouvrages}">
       <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-        <a th:href="@{/ouvrages/{id}(id=${ouvrage.id})}"> <img class="card-img-top" th:src="@{/ouvrages/{id}/image(id=${ouvrage.id})}"></a> <!--<img class="card-img-top" th:src="${ouvrage.imageUrl}" alt="">-->
+        <a th:href="@{/ouvrages/{id}(id=${ouvrage.id})}">  <img class="card-img-top" th:src="${ouvrage.imageUrl}" alt=""><!--<img class="card-img-top" th:src="@{/ouvrages/{id}/image(id=${ouvrage.id})}"></a>-->
       </div>
     </th:block>
     <!-- Marketing Icons Section -->
-
-
   </div>
   <!-- /.container -->
   </div>
@@ -94,14 +76,10 @@
     <div class="container">
       <p class="m-0 text-center text-white">Copyright &copy; Bibliothèque-municipale 2020</p>
     </div>
-
     <!-- /.container -->
   </footer>
-
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
 </body>
-
 </html>

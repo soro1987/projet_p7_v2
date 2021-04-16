@@ -2,6 +2,7 @@ package fr.soro.batch.modele;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
 
 /*
  * @Author SORO Amet
@@ -11,6 +12,7 @@ import javax.validation.constraints.Max;
 
 public class EmailTemplate {
 	@Email
+	@NotNull
 	private String sendTo;
 	@Max(value = 100)
 	private String subject;

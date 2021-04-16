@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Disponibilité</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="../css/modern-business.css" rel="stylesheet">
+
+</head>
+
+<body>
+  <!-- Navigation -->
+  <th:block th:insert="fragments/navbar::navbar"></th:block>
+  
+  <!-- Page Content -->
+  <div class="container">
+
+    <!-- Page Heading/Breadcrumbs -->
+    <h1 class="mt-4 mb-3">Disponibilité dans notre réseau de bibliotheque
+      <small></small>
+    </h1>
+
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a th:href="@{/acceuil}">Acceuil</a>
+      </li>
+      <li class="breadcrumb-item active">
+      <a th:href="@{/contact}">Contact</a>
+      </li>
+    </ol>
+	    <!-- Content Row -->
+	    <div class="row">
+	      <div class="col-lg-4 mb-4">
+	        <div class="card h-100">
+<!--                <p th:text="${#dates.format(infos.earliestBookReturnDate, 'dd-MM-yyyy HH:mm')}"></p>-->
+
+	          <h3 class="card-header" ><span th:text="Information"></span></h3>
+	          <div class="card-body">
+	            <h3 class="card-header" >Nombre de personnes en liste d'attente : <span th:text="${infos.numberOfReservation}"></span></h3>
+	            <h3 class="card-header" >Date de retour la plus proche : <span th:text="${#dates.format(infos.earliestBookReturnDate, 'dd-MM-yyyy')}"></span></h3>
+                  <th:block th:if="${infos.canBeBooked}">
+                  <form class="form-inline form-group  mx-auto mt-1" th:action="@{/create-reservation/{ouvrageId}(ouvrageId=${infos.ouvrageId})}" method="get" >
+                      <button class="btn btn-secondary btn-lg" type="submit">Reserver</button>
+                  </th:block>
+                  <th:block th:if="${!infos.canBeBooked}">
+                          <button class="btn btn-danger btn-lg" type="submit">Indisponible</button>
+                  </th:block>
+                  </form>
+	          </div>
+	        </div>
+	      </div>
+	  </div>
+  </div>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Bibliothèque-municipale 2020</p>
+    </div>
+  </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="../vendor/jquery/jquery.min.js"></script>
+  <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</html>

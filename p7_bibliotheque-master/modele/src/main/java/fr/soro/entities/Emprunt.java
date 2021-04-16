@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "emprunt")
 public class Emprunt implements Serializable {
@@ -51,7 +50,7 @@ public class Emprunt implements Serializable {
 	}
 
 	public Emprunt(Long id, Date dateDebut, Date dateEcheance, boolean prolongation, int depassement, User user,
-			List<Exemplaire> exemplaires) {
+				   List<Exemplaire> exemplaires) {
 		super();
 		this.id = id;
 		this.dateDebut = dateDebut;
@@ -125,6 +124,6 @@ public class Emprunt implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	
+
+
 }

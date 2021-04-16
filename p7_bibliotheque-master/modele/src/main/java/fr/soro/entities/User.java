@@ -18,9 +18,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -31,9 +29,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name="sys_user")
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class User implements UserDetails, Serializable {
     /**
 	 * 
@@ -41,7 +37,7 @@ public class User implements UserDetails, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     
     private String nom;
@@ -53,7 +49,7 @@ public class User implements UserDetails, Serializable {
 
 	@JsonIgnore
 	//@JsonManagedReference(value = "em-user")
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private List<Emprunt> emprunts = new ArrayList<Emprunt>();
 
     @NotEmpty
@@ -63,13 +59,16 @@ public class User implements UserDetails, Serializable {
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    private Set<String> roles = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream().map(SimpleGrantedAuthority::new).collect(toList());
     }
+
+    public String getFullName(){
+	return nom+" "+prenom;
+	}
 
     @Override
     public String getPassword() {
@@ -101,7 +100,7 @@ public class User implements UserDetails, Serializable {
         return true;
     }
 
-	public List<String> getRoles() {
+	public Set<String> getRoles() {
 		// TODO Auto-generated method stub
 		return this.roles;
 	}
@@ -122,7 +121,7 @@ public class User implements UserDetails, Serializable {
 		this.password = password;
 	}
 
-	public void setRoles(List<String> roles) {
+	public void setRoles(Set<String> roles) {
 		this.roles = roles;
 	}
 

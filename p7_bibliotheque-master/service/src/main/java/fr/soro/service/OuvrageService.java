@@ -24,7 +24,7 @@ public class OuvrageService {
 		}
 		
 		public List<Ouvrage> getByTitreAuteur(String motcle) {
-			return ouvrageRepository.findByTitreAuteur("%"+motcle+"%","%"+motcle+"%");
+			return ouvrageRepository.findByTitreAuteur("%"+motcle.toLowerCase()+"%","%"+motcle.toLowerCase()+"%");
 		}
 
 	public List<Ouvrage> getByCategorie(String categorie) {
@@ -33,11 +33,11 @@ public class OuvrageService {
 	}
 		
 		public Ouvrage getOne(Long id) {
-			return ouvrageRepository.getOne(id);
+			return ouvrageRepository.findById(id).get();
 		}
 		
 		public List<Ouvrage> getAll(){
-			return ouvrageRepository.findAll();
+			return ouvrageRepository.findAllWithExemplaires();
 		}
 	    
 		public List<Ouvrage> getByTitre(String titre) {
@@ -70,5 +70,7 @@ public class OuvrageService {
 			return this.ouvrageRepository.save(ouvrage);
 		}
 		
+
+
 
 }

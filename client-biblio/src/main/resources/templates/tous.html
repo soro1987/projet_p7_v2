@@ -19,12 +19,7 @@
   <!-- Custom styles  -->
   <link href="css/selfStyle.css" rel="stylesheet">
 
-  <style>
-    body {
-    background: radial-gradient(circle at bottom, #7efff5 0%, #ffcccc 100%);
 
-}
-  </style>
 </head>
 
 <body>
@@ -47,7 +42,7 @@
     <div class="row">
     <th:block th:each="ouvrage : ${ouvrages}">
         <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-            <a th:href="@{/ouvrages/{id}(id=${ouvrage.id})}"> <img class="card-img-top" th:src="@{/ouvrages/{id}/image(id=${ouvrage.id})}"></a> <!--<img class="card-img-top" th:src="${ouvrage.imageUrl}" alt="">-->
+            <a th:href="@{/ouvrages/{id}(id=${ouvrage.id})}"><img class="card-img-top" th:src="${ouvrage.imageUrl}" alt=""> <!--<img class="card-img-top" th:src="@{/ouvrages/{id}/image(id=${ouvrage.id})}"></a> -->
         </div>
     </th:block>
     </div>
@@ -56,7 +51,7 @@
   </div>
 
   <!-- /.container -->
-
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
   <!-- Footer -->
   <footer class="py-5 bg-dark">
     <div class="container">

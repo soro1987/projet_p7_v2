@@ -51,6 +51,8 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<version>1.18.18</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -81,7 +83,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>fr.soro.controller</artifactId>
+            <artifactId>controller</artifactId>
             <version>${project.version}</version>
         </dependency>
 		</dependencies>

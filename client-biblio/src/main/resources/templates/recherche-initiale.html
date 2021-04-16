@@ -19,19 +19,7 @@
     <!-- Custom styles  -->
     <link href="css/selfStyle.css" rel="stylesheet">
 
-<style>
-  body {
-  background: radial-gradient(circle at bottom, #fffa65 0%, #ffcccc 100%);
 
-  }
-  .radial-gradient{
-  background: radial-gradient(circle at bottom, #f5f6fa 0%, #dff9fb 100%);
-  border-radius: 30px;
-  }
-
-
-  }
-  </style>
 </head>
 
 <body>
@@ -77,6 +65,9 @@
                         <form class="form-inline form-group  mx-auto mt-1" th:action="@{/dispo/{ouvrageId}(ouvrageId=${ouvrage.id})}" method="get" >
                             <button class="btn btn-secondary" type="submit">Voir disponibilité</button>
                         </form>
+                        <form class="form-inline form-group  mx-auto mt-1" th:action="@{/infos-reservation/{ouvrageId}(ouvrageId=${ouvrage.id})}" method="get" >
+                            <button class="btn btn-secondary" type="submit">Infos réservation</button>
+                        </form>
 
                     </div>
                     <div class="card-footer text-muted">
@@ -110,7 +101,7 @@
 
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <a class="" th:href ="@{/category/Bande-dessine}">Bande-dessiner</a>
+                            <a class="" th:href ="@{/category/Bande-Dessiné}">Bande-dessiné</a>
                         </li>
                         <li>
                             <a th:href ="@{/category/roman}">Roman</a>

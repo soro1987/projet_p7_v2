@@ -14,13 +14,9 @@ import fr.soro.batch.modele.UserDto;
 
 @Service
 public class UserService {
-	
-	
+
 	@Autowired
 	private EmpruntClient empruntClient;
-	
-	
-
 
 	public List<UserDto> getUsersMailsExpired(){
 		List<EmpruntDto> empruntsExpire = empruntClient.getExpireEmprunts();

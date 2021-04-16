@@ -1,8 +1,6 @@
 package fr.soro.service;
 
-import fr.soro.entities.Bibliotheque;
-import fr.soro.entities.Exemplaire;
-import fr.soro.entities.Ouvrage;
+import fr.soro.entities.*;
 import fr.soro.repositories.BibliothequeRepository;
 import fr.soro.repositories.ExemplaireRepository;
 import fr.soro.repositories.OuvrageRepository;
@@ -12,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,11 +33,10 @@ public class ExemplaireService {
 //	}
 
 	public boolean isDisponible(Long idExemplaire){
-		Exemplaire exemplaire = this.exemplaireRepository.getOne(idExemplaire);
-	if (exemplaire.isDisponible() == false){
-		return false;
-	}else return true;
-   }
+		Optional<Exemplaire> exemplaire = this.exemplaireRepository.findById(idExemplaire);
+		return exemplaire.map(Exemplaire::isDisponible).orElse(false);
+	}
+
 	public void delete(Long id) {
 		this.exemplaireRepository.deleteById(id);
 	}
@@ -73,5 +71,6 @@ public class ExemplaireService {
 		
 		
 	}
-	
+
+
 }

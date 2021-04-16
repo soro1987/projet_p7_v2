@@ -19,28 +19,11 @@ public class EmpruntClient {
 	@Autowired
 	private RestTemplate securedRestTemplate;
 
-	private RestTemplate restTemplate;
-	
-	public EmpruntClient(RestTemplate restTemplate) {
-		this.restTemplate = restTemplate;
-	}
-	
-//	private static void updateEmployee()
-//	{
-//	   
-//	     
-//	  
-//	     
-//	    restTemplate.put ( uri, updatedEmployee, params );
-//	}
-
 	public void getProlongation(Long empruntId){
 		securedRestTemplate.put(appUrl+"/emprunts/prolongation/"+empruntId, EmpruntDto.class);
 		
 	}
 
-	
-	
 	public List<EmpruntDto> getUserEmprunts(Long userId){		
 		ResponseEntity<EmpruntDto[]> response =securedRestTemplate.getForEntity(appUrl+"/emprunts-user/"+userId, EmpruntDto[].class);
 		EmpruntDto[] emprunt = response.getBody();

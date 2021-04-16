@@ -19,6 +19,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return this.users.findByUsername(username);
+        return this.users.findByUsernameWithAll(username);
     }
 }

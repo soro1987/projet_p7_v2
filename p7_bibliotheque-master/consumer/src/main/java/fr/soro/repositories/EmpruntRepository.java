@@ -2,7 +2,10 @@ package fr.soro.repositories;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import fr.soro.entities.Reservation;
+import fr.soro.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +21,9 @@ public interface EmpruntRepository extends JpaRepository<Emprunt, Long> {
 
 	List<Emprunt> findByDepassement(int depassement);
 
-	
+	List<Emprunt> findAllByUser(User user);
+
+//    Optional<Emprunt> findFirstByExemplaireOuvrageIdOrderByDateEcheanceDesc(Long ouvrageId);
+
 
 }

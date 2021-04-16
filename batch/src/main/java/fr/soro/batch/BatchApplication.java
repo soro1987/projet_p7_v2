@@ -1,5 +1,6 @@
 package fr.soro.batch;
 
+import fr.soro.batch.utils.CustomInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,22 +12,17 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-
 @EnableScheduling
-
 public class BatchApplication {
-
-	
-
-	
-	
 	public static void main(String[] args) {
 		SpringApplication.run(BatchApplication.class, args);
 	}
 
 	 @Bean
-	 public RestTemplate getRestTemplate() {
-	      return new RestTemplate();
+	 public RestTemplate getRestTemplate(CustomInterceptor customInterceptor) {
+		 RestTemplate restTemplate = new RestTemplate();
+		 restTemplate.getInterceptors().add(customInterceptor);
+		 return restTemplate;
 	 }
 	
 	

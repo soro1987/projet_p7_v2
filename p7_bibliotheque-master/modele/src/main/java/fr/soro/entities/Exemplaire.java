@@ -18,28 +18,28 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public class Exemplaire implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private boolean disponible;
-	
+
 	@JsonBackReference(value = "ouvr-ex")
 	@ManyToOne
 	@JoinColumn(name = "ouvrage")
 	private Ouvrage ouvrage;
-	
+
 	@JsonBackReference(value = "ouvr-bib")
-	
+
 	@ManyToOne
 	@JoinColumn(name = "bibliotheque")
 	private Bibliotheque bibliotheque;
 	@JsonBackReference(value = "em-user")
 	private User sysUser;
-	
+
 	@JsonBackReference(value = "ex-emp")
 	@ManyToOne
 	@JoinColumn(name = "emprunt_id")
@@ -61,7 +61,7 @@ public class Exemplaire implements Serializable{
 	public Long getId() {
 		return id;
 	}
-	
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -93,7 +93,7 @@ public class Exemplaire implements Serializable{
 	public void setEmprunt(Emprunt emprunt) {
 		this.emprunt = emprunt;
 	}
-	
+
 	public boolean isDisponible() {
 		return disponible;
 	}
@@ -108,7 +108,7 @@ public class Exemplaire implements Serializable{
 	public void setSysUser(User sysUser) {
 		this.sysUser = sysUser;
 	}
-	
-	
-	
+
+
+
 }
