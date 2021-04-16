@@ -27,6 +27,7 @@ public class Ouvrage implements Serializable {
 	private String titre;
 	private String auteur;
 	private Date dateParution;
+	@Column(length = 1000)
 	private String description;
 	private String categorie;
 	private  int nbreExemplaireDispo=0;

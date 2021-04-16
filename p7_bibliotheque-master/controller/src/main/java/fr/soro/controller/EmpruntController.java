@@ -1,9 +1,11 @@
 package fr.soro.controller;
 
 import fr.soro.dto.EmpruntDto;
+import fr.soro.dto.UserDto;
 import fr.soro.entities.Emprunt;
 import fr.soro.entities.User;
 import fr.soro.mapper.EmpruntMapper;
+import fr.soro.mapper.UserMapper;
 import fr.soro.service.EmpruntService;
 import fr.soro.service.ExemplaireService;
 import fr.soro.service.ReservationService;
@@ -13,9 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +24,9 @@ public class EmpruntController {
 
 	@Autowired
 	private EmpruntMapper empruntMapper;
+
+	@Autowired
+	private UserMapper userMapper;
 
 	@Autowired
 	private EmpruntService empruntService;
@@ -66,16 +68,18 @@ public class EmpruntController {
 	}
 
 	@GetMapping(value = "/emprunts/expired")
-	public ResponseEntity<List<Emprunt>> getExpireEmprunt() {
+	public ResponseEntity<List<EmpruntDto>> getExpireEmprunt() {
 		List<Emprunt> empruntsExpire = empruntService.getAllExpireEmprunt();
-		return new ResponseEntity<List<Emprunt>>(empruntsExpire, HttpStatus.FOUND);
+		return  ResponseEntity.ok(empruntsExpire.stream()
+				.map(emprunt ->empruntMapper.from(emprunt)).collect(Collectors.toList()));
 	}
 
 	@GetMapping(value = "/emprunts/user/expired")
-	public ResponseEntity<List<User>> getUsersEmpruntExpire() {
+	public ResponseEntity<List<UserDto>> getUsersEmpruntExpire() {
 		List<Emprunt> empruntsExpire = empruntService.getAllExpireEmprunt();
 		List<User> empruntsExpireUsers = userService.getUsersEmpruntExpire(empruntsExpire);
-		return new ResponseEntity<List<User>>(empruntsExpireUsers, HttpStatus.FOUND);
+		return  ResponseEntity.ok(empruntsExpireUsers.stream()
+				.map(user ->userMapper.from(user)).collect(Collectors.toList()));
 	}
 
 	@PutMapping(value = "/emprunts/prolongation/{idEmprunt}")

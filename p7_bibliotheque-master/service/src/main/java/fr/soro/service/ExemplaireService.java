@@ -27,10 +27,6 @@ public class ExemplaireService {
 	public List<Exemplaire> getAll(){
 		return exemplaireRepository.findAll();
 	}
-	
-//	public List<Exemplaire> getAllByBiblio(Bibliotheque biblio ,Long biblioId){
-//		return exemplaireRepository.findByIdBibliotheque(biblio,biblioId);
-//	}
 
 	public boolean isDisponible(Long idExemplaire){
 		Optional<Exemplaire> exemplaire = this.exemplaireRepository.findById(idExemplaire);
