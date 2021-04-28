@@ -35,7 +35,7 @@ import java.util.List;
 @AutoConfigureMockMvc
 @SpringBootTest
 @Transactional
-public class EmpruntControllerItTest {
+public class EmpruntControllerITTest {
 
     @Autowired
     private MockMvcBuilder mockMvcBuilder;

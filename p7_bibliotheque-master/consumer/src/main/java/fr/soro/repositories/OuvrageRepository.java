@@ -8,28 +8,20 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface OuvrageRepository extends JpaRepository<Ouvrage, Long> {
-
-	List<Ouvrage> findByTitreContains(String titre);
-
-	List<Ouvrage> findByTitre(String titre);
-
-	List<Ouvrage> findByAuteur(String auteur);
-
-	List<Ouvrage> findByDateParution(Date parution);
-
-
 
 	@Query("Select o from #{#entityName} o where ('%all%' = :auteur or lower(o.auteur) like :auteur ) or ('%all%' = :titre or lower(o.titre) like :titre)")
 	List<Ouvrage> findByTitreAuteur(@Param("titre") String titre,@Param("auteur")String auteur );
 
-	/*@Query("Select o from Ouvrage o where ('%all%' = :categorie or o.categorie like :categorie )")
-	List<Ouvrage> findByCategorie(@Param("categorie") String categorie );*/
-
 	List<Ouvrage> findByCategorieContains(String categorie);
 
-	@Query("select o from #{#entityName} o left join fetch o.exemplaires")
+	@Query("select distinct o from #{#entityName} o left join fetch o.exemplaires")
 	List<Ouvrage> findAllWithExemplaires();
+
+	@Query("select o from #{#entityName} o left join fetch o.exemplaires where o.id = ?1")
+	Optional<Ouvrage> findByIdWithExemplaires(Long ouvrageId);
 
 }

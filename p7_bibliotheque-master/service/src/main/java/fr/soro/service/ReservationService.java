@@ -7,6 +7,7 @@ import fr.soro.exeption.FunctionalException;
 import fr.soro.repositories.*;
 import fr.soro.utilities.UtilitiesComponent;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -146,6 +147,7 @@ public class ReservationService {
         return reservations.indexOf(reservation) + 1;
     }
 
+    @Transactional
     public OuvrageWaitingListInfosDto waitingListCredentials(Long ouvrageId) {
         //Create object to return
         OuvrageWaitingListInfosDto waitingListInfosDto = new OuvrageWaitingListInfosDto();
@@ -157,12 +159,14 @@ public class ReservationService {
         return waitingListInfosDto;
     }
 
+
     public boolean canBeBooked(Long ouvrageId) {
         //Retrieve number of exemplaires and the number of reservation available
-        Optional<Ouvrage> ouvrage = ouvrageRepository.findById(ouvrageId);
+        Optional<Ouvrage> ouvrage = ouvrageRepository.findByIdWithExemplaires(ouvrageId);
         Optional<Long> numberOfReservationForTheBook = reservationRepository.countByOuvrageId(ouvrageId);
         //Check if the number of reservation is less then two time the number of exemplaires
         if (ouvrage.isPresent() && numberOfReservationForTheBook.isPresent()) {
+            ouvrage.get().setNbreExemplaireDispo();
             return ouvrage.get().getNbreExemplaireDispo() * 2L > numberOfReservationForTheBook.get();
         }
         return false;

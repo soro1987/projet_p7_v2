@@ -10,30 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ExemplaireRepository extends JpaRepository<Exemplaire, Long> {
-	public Exemplaire getExemplaireById( Long id );
+	public Exemplaire getExemplaireById(Long id);
 
-//	public List<Exemplaire> findAllWhereBibliothequeId(Long biblioId);
+	Long countByOuvrageIdAndBibliothequeNomAndDisponibleTrue(Long ouvrageId, String biblioId);
 
-//	public List<Exemplaire> findAllWhereBibliotheque(Long biblioId);
+//	Optional<Exemplaire> findFirstByOuvrageIdOrderByEmpruntDateEcheanceAsc(Long ouvrageId);
 
-//	public List<Exemplaire> findByIdBibliotheque(Bibliotheque biblio, Long biblioId);
+	List<Exemplaire> findAllByOuvrageIdOrderByEmpruntDateEcheanceAsc(Long ouvrageId);
 
-//	public List<Exemplaire> findByOuvrageIdGroupbyBibliotheque(Long biblioId);
-	
-	Long countByOuvrageIdAndBibliothequeNomAndDisponibleTrue(Long ouvrageId,String biblioId);
-
-	// get all examplaire for particular ouvrage which is not available disponible
-	public List<Exemplaire> findAllByOuvrageAndDisponible(Ouvrage ouvrage, boolean disponsible);
-
-	Exemplaire findFirstByOuvrageIdAndDisponibleTrue(Long ouvrageId);
-
-	Optional<Exemplaire> findFirstByOuvrageIdOrderByEmpruntDateEcheanceAsc(Long ouvrageId);
-
+    Optional<Exemplaire> findFirstByOuvrageIdAndEmpruntNotNullOrderByEmpruntDateEcheanceAsc(Long ouvrageId);
 }
-
-
-
-// after search button is cliecked, if library does not have bnook, it returns empty
-// else if library has book the book image and details is shown and the user can click a button to
-//  show its availability by library
-//  if library dosen t have the book available -> AvailabilityDTO is returrned  Earlist return date, reservation list count

@@ -110,10 +110,10 @@ public class EmpruntService {
 
 
 	public Date findEmpruntEarliestReturnDate(Long ouvrageId) {
-	Optional<Exemplaire> exemplaire = exemplaireRepository.findFirstByOuvrageIdOrderByEmpruntDateEcheanceAsc(ouvrageId);
+//		List<Exemplaire> Exemplaire =exemplaireRepository.findAllByOuvrageIdOrderByEmpruntDateEcheanceAsc(ouvrageId);
+	Optional<Exemplaire> exemplaire = exemplaireRepository.findFirstByOuvrageIdAndEmpruntNotNullOrderByEmpruntDateEcheanceAsc(ouvrageId);
 	return exemplaire.map(e -> e.getEmprunt().getDateEcheance()).orElse(null);
 	}
-
 
 
 }

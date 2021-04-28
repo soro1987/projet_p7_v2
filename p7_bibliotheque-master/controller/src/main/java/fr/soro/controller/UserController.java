@@ -40,7 +40,7 @@ public class UserController {
     }
     
     @GetMapping(value = "/user/{username}")
-	public ResponseEntity<UserDto> getBytitre(@PathVariable(value = "username") String username) {
+	public ResponseEntity<UserDto> getByUsername(@PathVariable(value = "username") String username) {
 		User user = userService.getUserByUsername(username);
 		UserDto userDto = userMapper.from(user);
 		return ResponseEntity.ok(userDto);

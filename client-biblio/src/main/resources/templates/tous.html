@@ -29,7 +29,7 @@
   <div class="container">
 
     <!-- Page Heading/Breadcrumbs -->
-    <h1 class="mt-4 mb-3 american">Tous nos ouvrages
+    <h1>Tous nos ouvrages
 
     </h1>
 
@@ -42,7 +42,7 @@
     <div class="row">
     <th:block th:each="ouvrage : ${ouvrages}">
         <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-            <a th:href="@{/ouvrages/{id}(id=${ouvrage.id})}"><img class="card-img-top" th:src="${ouvrage.imageUrl}" alt=""> <!--<img class="card-img-top" th:src="@{/ouvrages/{id}/image(id=${ouvrage.id})}"></a> -->
+            <a th:href="@{/ouvrages/{id}(id=${ouvrage.id})}"><img class="card-img-top" th:src="@{/ouvrages/{id}/image(id=${ouvrage.id})}"></a> <!--<img class="card-img-top" th:src="${ouvrage.imageUrl}" alt="">-->
         </div>
     </th:block>
     </div>

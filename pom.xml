@@ -19,5 +19,6 @@
 		<module>batch</module>
 		<module>client-biblio</module>
 		<module>p7_bibliotheque-master</module>
+
 	</modules>
 </project>

@@ -24,9 +24,6 @@ public class ExemplaireService {
 	private OuvrageRepository ouvrageRepository;
 	
 	
-	public List<Exemplaire> getAll(){
-		return exemplaireRepository.findAll();
-	}
 
 	public boolean isDisponible(Long idExemplaire){
 		Optional<Exemplaire> exemplaire = this.exemplaireRepository.findById(idExemplaire);
@@ -52,12 +49,6 @@ public class ExemplaireService {
 		return exemplaireSaved;
 	}
 
-	public Exemplaire getOneById(Long id) {
-		
-		return this.exemplaireRepository.getOne(id);
-	}
-
-	
 	public Map<String, Object> getExempleCountByBibliotheque(Long ouvrageId){
 	return	this.bibliothequeRepository.findAll()
 		.stream()
