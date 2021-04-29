@@ -17,3 +17,4 @@ jobs:
         app: bibliotheque-ocr
       on:
         all_branches: true
+        tags: true
