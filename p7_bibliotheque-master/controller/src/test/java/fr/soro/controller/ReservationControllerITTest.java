@@ -86,7 +86,7 @@ class ReservationControllerITTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.canBeBooked").value("true"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.earliestBookReturnDate").value("2021-05-29T14:17:33.380+00:00"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.earliestBookReturnDate").value("2021-05-29T16:17:33.380+00:00"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.numberOfReservation").value(1));
     }
 
@@ -97,7 +97,7 @@ class ReservationControllerITTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Candide"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.bookEarliestReturnDate").value("2021-05-29T14:17:33.380+00:00"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.bookEarliestReturnDate").value("2021-05-29T16:17:33.380+00:00"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.positionInWaitingList").value(1));
     }
 
