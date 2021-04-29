@@ -15,3 +15,5 @@ jobs:
         provider: heroku
         api_key: ${HEROKU_API_KEY}
         app: bibliotheque-ocr
+      on:
+        all_branches: true
