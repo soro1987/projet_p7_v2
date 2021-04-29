@@ -15,6 +15,6 @@ jobs:
         provider: heroku
         api_key: ${HEROKU_API_KEY}
         app: bibliotheque-ocr
-      on:
-        branch: feature/ticket#3
-        tags: true
+        on:
+          all_branches: true
+          tags: true
