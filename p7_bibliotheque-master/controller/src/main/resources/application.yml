@@ -25,9 +25,9 @@ spring:
 
   datasource: 
       driverClassName: org.postgresql.Driver
-      url: "jdbc:postgresql://localhost:5432/p7"
-      username: "postgres"
-      password: "2305"
+      url: ${SPRING_DATASOURCE_URL}
+      username: ${SPRING_DATASOURCE_USERNAME}
+      password: ${SPRING_DATASOURCE_PASSWORD}
       testOnBorrow: true
       testWhileIdle: true
       timeBetweenEvictionRunsMillis: 60000
